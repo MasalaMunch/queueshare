@@ -2,18 +2,18 @@
 
 const {program} = require(`commander`);
 
-const package = require('./package.json');
+const package = require(`./package.json`);
 
 program.version(package.version);
 
 program.option(
-    `-p|--path <path>`, 
+    `-D|--dir <directory>`, 
     `where data will be stored`,
     `~/QueueShare`,
     );
 
 program.parse(process.argv);
 
-const path = program.path;
+const directory = program.dir;
 
-console.log({path});
+console.log({directory});
