@@ -1,0 +1,15 @@
+{
+  "name": "queueshare",
+  "version": "1.0.0",
+  "description": "a jukebox for your house",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasalaMunch/queueshare.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MasalaMunch/queueshare/issues"
+  },
+  "homepage": "https://github.com/MasalaMunch/queueshare#readme"
+}
