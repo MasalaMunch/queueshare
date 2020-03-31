@@ -14,5 +14,8 @@
   "homepage": "https://github.com/MasalaMunch/queueshare#readme",
   "bin": {
     "queueshare": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^5.0.0"
   }
 }
