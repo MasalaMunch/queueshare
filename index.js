@@ -8,12 +8,20 @@ program.version(package.version);
 
 program.option(
     `-D|--dir <directory>`, 
-    `where data will be stored`,
+    `where the queue will be stored`,
     `~/QueueShare`,
+    );
+
+program.option(
+    `-P|--port <port>`, 
+    `where the queue will be served`,
+    String(42069),
     );
 
 program.parse(process.argv);
 
 const directory = program.dir;
 
-console.log({directory});
+const port = Number(program.port);
+
+console.log({directory, port});
