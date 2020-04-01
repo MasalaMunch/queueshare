@@ -2,28 +2,49 @@
 
 "use strict";
 
-const {program} = require(`commander`);
+console.log();
 
-const package = require(`./package.json`);
+const commanderProgram = require(`commander`).program;
 
-program.version(package.version);
+commanderProgram.version(require(`./package.json`).version);
 
-program.option(
-    `-D|--dir <directory>`, 
-    `where the queue will be stored`,
-    `~/QueueShare`,
+commanderProgram.option(`-D|--dir <directory>`);
+
+commanderProgram.option(`-P|--port <port>`);
+
+// commanderProgram.option(`-DM|--dev-mode`);
+
+commanderProgram.parse(process.argv);
+
+const directory = (
+    (commanderProgram.dir === undefined)? 
+    `~/queueshare` : commanderProgram.dir
     );
 
-program.option(
-    `-P|--port <port>`, 
-    `where the queue will be served`,
-    String(42069),
+const port = (
+    (commanderProgram.port === undefined)? 
+    42069 : Number(commanderProgram.port)
     );
 
-program.parse(process.argv);
+// const isInDevMode = (
+//     (commanderProgram.devMode === undefined)? 
+//     false : commanderProgram.devMode
+//     );
 
-const directory = program.dir;
+const expressApp = require(`express`)();
 
-const port = Number(program.port);
+expressApp.get(`/`, (request, response) => {
+    response.send(`QueueShare!`);
+});
 
-console.log({directory, port});
+console.log(`Starting the server...`);
+
+expressApp.listen(port, () => {
+
+    const url = `http://localhost:${port}`;
+
+    console.log(`Done! QueueShare is now available at ${url}`);
+
+    console.log();
+
+});
