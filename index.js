@@ -39,8 +39,6 @@ expressApp.get(`/`, (request, response) => {
 
 expressApp.listen(port, () => {
 
-    const url = `http://localhost:${port}`;
-
-    console.log(`QueueShare is now available at ${url}`);
+    console.log(`QueueShare is now available at http://localhost:${port}`);
 
 });
