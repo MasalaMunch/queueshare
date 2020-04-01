@@ -2,7 +2,6 @@
   "name": "queueshare",
   "version": "0.0.1",
   "description": "a jukebox for your house",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasalaMunch/queueshare.git"
@@ -13,7 +12,7 @@
   },
   "homepage": "https://github.com/MasalaMunch/queueshare#readme",
   "bin": {
-    "queueshare": "./index.js"
+    "queueshare": "./startServer.js"
   },
   "dependencies": {
     "commander": "^5.0.0",
