@@ -2,8 +2,6 @@
 
 "use strict";
 
-console.log();
-
 const commanderProgram = require(`commander`).program;
 
 commanderProgram.version(require(`./package.json`).version);
@@ -31,20 +29,18 @@ const port = (
 //     false : commanderProgram.devMode
 //     );
 
+console.log(`Starting the server...`);
+
 const expressApp = require(`express`)();
 
 expressApp.get(`/`, (request, response) => {
     response.send(`QueueShare!`);
 });
 
-console.log(`Starting the server...`);
-
 expressApp.listen(port, () => {
 
     const url = `http://localhost:${port}`;
 
-    console.log(`Done! QueueShare is now available at ${url}`);
-
-    console.log();
+    console.log(`QueueShare is now available at ${url}`);
 
 });
