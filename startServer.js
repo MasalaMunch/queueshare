@@ -2,48 +2,105 @@
 
 "use strict";
 
-const commanderProgram = require(`commander`).program;
+const path = require(`path`);
 
-commanderProgram.version(require(`./package.json`).version, `-v|--version`);
+const [directory, port] = (() => {
 
-commanderProgram.option(
-    `-d|--dir <directory>`, 
-    `where the queue will be stored`, 
-    `~/queueshare`,
-    );
+    // parse command line input
 
-commanderProgram.option(
-    `-p|--port <port>`, 
-    `where the queue will be served`, 
-    String(42069),
-    );
+    const {program} = require(`commander`);
 
-commanderProgram.parse(process.argv);
+    program.version(require(`./package.json`).version, `-v|--version`);
 
-const directory = commanderProgram.dir;
+    program.option(
+        `-d|--dir <directory>`, 
+        `where the queue will be stored`, 
+        path.join(require('os').homedir(), `queueshare`),
+        );
 
-const port = Number(commanderProgram.port);
+    program.option(
+        `-p|--port <port>`, 
+        `where the queue will be served`, 
+        String(42069),
+        );
 
-console.log(`Starting the server...`);
+    program.parse(process.argv);  
 
-const expressApp = require(`express`)();
+    return [program.dir, Number(program.port)];
 
-expressApp.get(`/`, (request, response) => {
+})();
 
-    response.send(`QueueShare!`);
+const syncedState = (() => {
 
-});
+    console.log(`Opening the database...`);
 
-expressApp.get(`/syncedState/ChangesSince/:version`, (request, response) => {
+    const fs = require(`fs`);
 
-    const version = Number(request.params.version);
+    fs.mkdirSync(directory, {recursive: true});
 
-    response.send(`changes since version ${version}!`);
+    const syncedStateDirectory = path.join(directory, `syncedState`);
 
-});
+    fs.mkdirSync(syncedStateDirectory, {recursive: true});
 
-expressApp.listen(port, () => {
+    return new (require(`./SyncedServerState.js`))({
 
-    console.log(`QueueShare is now available at http://localhost:${port}`);
+        storedJsonLog: new (require(`./StringLogViaFile.js`))({
 
-});
+            path: path.join(syncedStateDirectory, `jsonLog`),
+            separator: `\n`,
+
+            }),
+
+        });
+
+})();
+
+(() => {
+
+    console.log(`Starting the server...`);
+
+    const app = require(`express`)();
+
+    app.get(`/`, (request, response) => {
+
+        response.send(`QueueShare!`);
+
+    });
+
+    const syncedStateRoute = app.route(`/syncedState`);
+
+    const AsJson = require(`./AsJson.js`);
+
+    syncedStateRoute.get((request, response) => {
+
+        const version = Number(request.query.version);
+
+        response.send(AsJson({
+
+            changes: syncedState.ChangesSince(version),
+
+            version: syncedState.CurrentVersion(),
+
+            }));
+
+    });
+
+    //TODO next up figure out server id system
+
+    syncedStateRoute.put((request, response) => {
+
+        const changesAsJson = request.query.changesAsJson;
+
+        syncedState.write(changesAsJson);
+
+        response.end();
+
+    });
+
+    app.listen(port, () => {
+
+        console.log(`QueueShare is now available at http://localhost:${port}`);
+
+    });
+
+})();
