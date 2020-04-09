@@ -1,5 +1,6 @@
 "use strict";
 
+const assert = require(`assert`);
 const fs = require(`fs`);
 
 const encoding = `utf8`;
@@ -10,10 +11,11 @@ module.exports = class {
 
         this._path = path;
 
-        this._separator = separator;
-
         this._appendStream = 
             fs.createWriteStream(this._path, {encoding, flags: `a`});
+
+        assert(typeof separator === `string`);
+        this._separator = separator;
 
     }
 
@@ -53,10 +55,9 @@ module.exports = class {
 
     addToWriteQueue (entry) {
 
-        const s = this._appendStream;
+        assert(typeof entry === `string`);
 
-        s.write(entry);
-        s.write(this._separator);
+        this._appendStream.write(entry + this._separator);
 
     }
 

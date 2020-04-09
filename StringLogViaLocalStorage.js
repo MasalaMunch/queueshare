@@ -2,8 +2,6 @@
 
 const EscapedForRegExp = require(`escape-string-regexp`);
 
-const PrefixRegExp = (string) => new RegExp(`^` + EscapedForRegExp(string));
-
 const firstNumber = 0;
 
 const KeyAndNumberComparison = (a, b) => a[1] - b[1];
@@ -11,6 +9,9 @@ const KeyAndNumberComparison = (a, b) => a[1] - b[1];
 module.exports = class {
 
     constructor ({path}) {
+
+        assert(typeof path === `string`);
+        //TODO make a parent class for both stringlogs
         
         this._prefix = (path[path.length-1] === `/`)? path : path+`/`;
 
@@ -34,7 +35,7 @@ module.exports = class {
             let i;
             const localStorageLength = localStorage.length;
             let key;
-            const prefixRegExp = PrefixRegExp(this._prefix);
+            const keyRegExp = new RegExp(`^`+EscapedForRegExp(this._prefix));
             const keysAndNumbers = [];
             const prefixLength = this._prefix.length;
 
@@ -42,7 +43,7 @@ module.exports = class {
 
                 key = localStorage.key(i);
 
-                if (prefixRegExp.test(key)) {
+                if (keyRegExp.test(key)) {
 
                     keysAndNumbers.push(
                         [key, Number(key.substring(prefixLength, key.length))]

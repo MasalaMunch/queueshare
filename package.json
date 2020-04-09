@@ -15,7 +15,13 @@
     "queueshare": "./startServer.js"
   },
   "dependencies": {
+    "bintrees": "^1.0.2",
+    "body-parser": "^1.19.0",
     "commander": "^5.0.0",
-    "express": "^4.17.1"
+    "escape-string-regexp": "^3.0.0",
+    "express": "^4.17.1",
+    "fast-json-stable-stringify": "^2.1.0",
+    "short-uuid": "^3.1.1",
+    "uuid": "^7.0.3"
   }
 }

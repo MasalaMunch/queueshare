@@ -2,6 +2,8 @@
 
 "use strict";
 
+//TODO separate this into multiple files and bring back index.js
+
 const path = require(`path`);
 
 const [directory, port] = (() => {
@@ -42,9 +44,13 @@ const syncedState = (() => {
 
     fs.mkdirSync(syncedStateDirectory, {recursive: true});
 
-    return new (require(`./SyncedServerState.js`))({
+    const SyncedServerState = require(`./SyncedServerState.js`);
 
-        storedJsonLog: new (require(`./StringLogViaFile.js`))({
+    const StringLogViaFile = require(`./StringLogViaFile.js`);
+
+    return new SyncedServerState({
+
+        storedJsonLog: new StringLogViaFile({
 
             path: path.join(syncedStateDirectory, `jsonLog`),
             separator: `\n`,
@@ -61,23 +67,19 @@ const syncedState = (() => {
 
     const app = require(`express`)();
 
-    app.get(`/`, (request, response) => {
-
-        response.send(`QueueShare!`);
-
-    });
-
     const syncedStateRoute = app.route(`/syncedState`);
 
     const AsJson = require(`./AsJson.js`);
 
     syncedStateRoute.get((request, response) => {
 
-        const version = Number(request.query.version);
+        response.set(`Content-Type`, `text/plain`);
 
         response.send(AsJson({
 
-            changes: syncedState.ChangesSince(version),
+            changesAsJson: AsJson(
+                syncedState.ChangesSince(Number(request.query.version))
+                ),
 
             version: syncedState.CurrentVersion(),
 
@@ -85,13 +87,17 @@ const syncedState = (() => {
 
     });
 
-    //TODO next up figure out server id system
+    syncedStateRoute.put(require(`body-parser`).text(), (request, response) => {
 
-    syncedStateRoute.put((request, response) => {
+        try {
 
-        const changesAsJson = request.query.changesAsJson;
+            syncedState.write(request.body);
 
-        syncedState.write(changesAsJson);
+        } catch (error) {
+
+            response.status(400);
+
+        }
 
         response.end();
 
