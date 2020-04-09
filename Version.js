@@ -32,7 +32,7 @@ const Newer = (version) => {
 
 };
 
-const AsString = (version) => {
+const Mappable = (version) => {
 
     return String(version._number) + ` ` + version._tiebreaker;
 
@@ -42,25 +42,25 @@ const VersionMap = class {
 
     constructor () {
 
-        this._stringMap = new Map();
+        this._map = new Map();
 
     }
 
     get (version) {
 
-        return this._stringMap.get(AsString(version));
+        return this._map.get(Mappable(version));
 
     }
 
     set (version, value) {
 
-        return this._stringMap.set(AsString(version), value);
+        return this._map.set(Mappable(version), value);
 
     }
 
     delete (version) {
 
-        return this._stringMap.delete(AsString(version));
+        return this._map.delete(Mappable(version));
 
     }
 

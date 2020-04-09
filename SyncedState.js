@@ -1,23 +1,23 @@
 "use strict";
 
 const RedBlackTree = require(`bintrees`).RBTree;
-const versions = require(`./versions.js`);
+const Version = require(`./Version.js`);
 
 module.exports = class {
 
     constructor () {
 
-        this._currentLocalVersion = versions.oldest;
+        this._currentLocalVersion = Version.oldest;
 
-        this._localVersionChanges = new versions.Map();
+        this._localVersionChanges = new Version.Map();
 
-        this._localVersionTree = new RedBlackTree(versions.Comparison);
+        this._localVersionTree = new RedBlackTree(Version.Comparison);
 
     }
 
     ChangesSince (version) {
 
-        version = versions.Normalized(version);
+        version = Version.Normalized(version);
 
         const versionIterator = this._localVersionTree.upperBound(version);
 
@@ -69,7 +69,7 @@ module.exports = class {
 
         const {change} = newParsedChange;
 
-        this._currentLocalVersion = versions.Newer(this._currentLocalVersion);
+        this._currentLocalVersion = Version.Newer(this._currentLocalVersion);
 
         this._localVersionChanges.set(this._currentLocalVersion, change);
 

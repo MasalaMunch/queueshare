@@ -4,7 +4,7 @@ const assert = require(`assert`);
 const EscapedForRegExp = require(`escape-string-regexp`);
 const RedBlackTree = require(`bintrees`).RBTree;
 const SyncedMap = require(`./SyncedMap.js`);
-const versions = require(`./versions.js`);
+const Version = require(`./Version.js`);
 
 const stringSeparator = `\n`;
 
@@ -99,7 +99,7 @@ module.exports = class extends SyncedMap {
             const version = fullPathVersions[i];
 
             const versionComparison = 
-                versions.Comparison(version, this._VersionOfKey(key));
+                Version.Comparison(version, this._VersionOfKey(key));
 
             if (versionComparison !== 0) {
 
@@ -143,7 +143,7 @@ module.exports = class extends SyncedMap {
 
             const lastVersion = fullPathVersions[fullPath.length-1];
 
-            fullPathVersions[fullPath.length-1] = versions.Newer(lastVersion);
+            fullPathVersions[fullPath.length-1] = Version.Newer(lastVersion);
 
         }
         else {
@@ -152,7 +152,7 @@ module.exports = class extends SyncedMap {
 
             assert(fullPathVersions.length === fullPath.length);
 
-            fullPathVersions = fullPathVersions.map(versions.Normalized);
+            fullPathVersions = fullPathVersions.map(Version.Normalized);
 
         }
 

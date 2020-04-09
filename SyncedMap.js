@@ -1,7 +1,7 @@
 "use strict";
 
 const SyncedState = require(`./SyncedState.js`);
-const versions = require(`./versions.js`);
+const Version = require(`./Version.js`);
 
 module.exports = class extends SyncedState {
 
@@ -19,7 +19,7 @@ module.exports = class extends SyncedState {
 
         const storedVersion = this._keyLocalVersions.get(key);
 
-        return storedVersion === undefined? versions.oldest : storedVersion;
+        return storedVersion === undefined? Version.oldest : storedVersion;
 
     }
 
@@ -27,7 +27,7 @@ module.exports = class extends SyncedState {
 
         const storedVersion = this._keyVersions.get(key);
 
-        return storedVersion === undefined? versions.oldest : storedVersion;
+        return storedVersion === undefined? Version.oldest : storedVersion;
 
     }
 
