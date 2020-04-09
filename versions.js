@@ -54,13 +54,13 @@ const VersionMap = class {
 
     set (version, value) {
 
-        this._stringMap.set(AsString(version), value);
+        return this._stringMap.set(AsString(version), value);
 
     }
 
     delete (version) {
 
-        this._stringMap.delete(AsString(version));
+        return this._stringMap.delete(AsString(version));
 
     }
 
