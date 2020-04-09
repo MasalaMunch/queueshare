@@ -2,7 +2,6 @@
 
 const assert = require(`assert`);
 const EscapedForRegExp = require(`escape-string-regexp`);
-const freeze = require(`deep-freeze`);
 const RedBlackTree = require(`bintrees`).RBTree;
 const SyncedMap = require(`./SyncedMap.js`);
 const SyncableVersion = require(`./SyncableVersion.js`);
