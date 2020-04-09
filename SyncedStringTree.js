@@ -8,7 +8,6 @@ const SyncedMap = require(`./SyncedMap.js`);
 const SyncableVersion = require(`./SyncableVersion.js`);
 
 const stringSeparator = `\n`;
-
 const rootKey = ``;
 
 module.exports = class extends SyncedMap {
