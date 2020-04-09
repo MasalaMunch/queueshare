@@ -9,25 +9,7 @@ const SyncableVersion = require(`./SyncableVersion.js`);
 
 const stringSeparator = `\n`;
 
-const validatePath = (path) => {
-
-    assert(Array.isArray(path));
-
-    for (const string of path) {
-
-        assert(typeof string === `string`);
-        assert(string.length > 0);
-        assert(!string.includes(stringSeparator));
-
-    }
-
-};
-
 const rootKey = ``;
-
-const FullPath = (path) => [rootKey].concat(path);
-
-const Key = (fullPath) => fullPath.join(stringSeparator);
 
 module.exports = class extends SyncedMap {
 
@@ -37,18 +19,6 @@ module.exports = class extends SyncedMap {
 
         this._keyTree = new RedBlackTree((a, b) => a.localeCompare(b));
     
-    }
-
-    Version (path) {
-
-        validatePath(path);
-
-        const version = this._VersionOfKey(Key(FullPath(path)));
-
-        freeze(version);
-
-        return version;
-
     }
 
     _ChildKeys (key) {
@@ -128,15 +98,23 @@ module.exports = class extends SyncedMap {
 
         let {path, fullPathVersions} = change;
 
-        validatePath(path);
+        assert(Array.isArray(path));
 
-        const fullPath = FullPath(path);
+        for (const string of path) {
+
+            assert(typeof string === `string`);
+            assert(string.length > 0);
+            assert(!string.includes(stringSeparator));
+
+        }
+
+        const fullPath = [rootKey].concat(path);
 
         const fullPathKeys = new Array(fullPath.length);
 
         for (let i=0; i<fullPath.length; i++) {
 
-            fullPathKeys[i] = Key(fullPath.slice(0, i+1));
+            fullPathKeys[i] = fullPath.slice(0, i+1).join(stringSeparator);
 
         }
 
