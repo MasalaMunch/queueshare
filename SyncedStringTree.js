@@ -2,13 +2,14 @@
 
 const assert = require(`assert`);
 const EscapedForRegExp = require(`escape-string-regexp`);
+const freeze = require(`deep-freeze`);
 const RedBlackTree = require(`bintrees`).RBTree;
 const SyncedMap = require(`./SyncedMap.js`);
-const Version = require(`./Version.js`);
+const SyncableVersion = require(`./SyncableVersion.js`);
 
 const stringSeparator = `\n`;
 
-const NormalizedPath = (path) => {
+const validatePath = (path) => {
 
     assert(Array.isArray(path));
 
@@ -19,8 +20,6 @@ const NormalizedPath = (path) => {
         assert(!string.includes(stringSeparator));
 
     }
-
-    return path;
 
 };
 
@@ -42,9 +41,13 @@ module.exports = class extends SyncedMap {
 
     Version (path) {
 
-        path = NormalizedPath(path);
+        validatePath(path);
 
-        return this._VersionOfKey(Key(FullPath(path)));
+        const version = this._VersionOfKey(Key(FullPath(path)));
+
+        freeze(version);
+
+        return version;
 
     }
 
@@ -99,7 +102,7 @@ module.exports = class extends SyncedMap {
             const version = fullPathVersions[i];
 
             const versionComparison = 
-                Version.Comparison(version, this._VersionOfKey(key));
+                SyncableVersion.Comparison(version, this._VersionOfKey(key));
 
             if (versionComparison !== 0) {
 
@@ -125,7 +128,7 @@ module.exports = class extends SyncedMap {
 
         let {path, fullPathVersions} = change;
 
-        path = NormalizedPath(path);
+        validatePath(path);
 
         const fullPath = FullPath(path);
 
@@ -141,9 +144,9 @@ module.exports = class extends SyncedMap {
 
             fullPathVersions = fullPathKeys.map(this._VersionOfKey, this);
 
-            const lastVersion = fullPathVersions[fullPath.length-1];
+            const i = fullPath.length-1;
 
-            fullPathVersions[fullPath.length-1] = Version.Newer(lastVersion);
+            fullPathVersions[i] = SyncableVersion.Newer(fullPathVersions[i]);
 
         }
         else {
@@ -152,9 +155,12 @@ module.exports = class extends SyncedMap {
 
             assert(fullPathVersions.length === fullPath.length);
 
-            fullPathVersions = fullPathVersions.map(Version.Normalized);
+            fullPathVersions.forEach(SyncableVersion.validate);
 
         }
+
+        change = {path, fullPathVersions};
+
 
         return {
             change: {path, fullPathVersions}, 

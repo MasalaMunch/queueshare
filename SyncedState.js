@@ -1,5 +1,6 @@
 "use strict";
 
+const freeze = require(`deep-freeze`);
 const RedBlackTree = require(`bintrees`).RBTree;
 const Version = require(`./Version.js`);
 
@@ -9,7 +10,7 @@ module.exports = class {
 
         this._currentLocalVersion = Version.oldest;
 
-        this._localVersionChanges = new Version.Map();
+        this._localVersionChanges = new Map();
 
         this._localVersionTree = new RedBlackTree(Version.Comparison);
 
@@ -17,7 +18,7 @@ module.exports = class {
 
     ChangesSince (version) {
 
-        version = Version.Normalized(version);
+        Version.validate(version);
 
         const versionIterator = this._localVersionTree.upperBound(version);
 
@@ -31,11 +32,15 @@ module.exports = class {
 
         }
 
+        freeze(changes);
+
         return changes;
 
     }
 
     get currentVersion () {
+
+        freeze(this._currentLocalVersion);
 
         return this._currentLocalVersion;
 
