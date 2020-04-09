@@ -2,6 +2,18 @@
 
 module.exports = (func) => new Promise((resolve, reject) => {
 
-    setTimeout(() => resolve(func()), 0);
+    setTimeout(() => {
+
+        try {
+
+            resolve(func());
+            
+        } catch (error) {
+
+            reject(error);
+
+        }
+
+    }, 0);
 
 });
