@@ -26,13 +26,15 @@ module.exports = class {
 
         while (versionIterator.data() !== null) {
 
-            changes.push(this._localVersionChanges.get(versionIterator.data()));
+            const c = this._localVersionChanges.get(versionIterator.data());
+
+            freeze(c);
+
+            changes.push(c);
 
             versionIterator.next();
 
         }
-
-        freeze(changes);
 
         return changes;
 
@@ -46,7 +48,7 @@ module.exports = class {
 
     }
 
-    receive (change) {
+    write (change) {
 
         const parsedChange = this._Parsed(change);
 
