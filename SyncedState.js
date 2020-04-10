@@ -1,5 +1,6 @@
 "use strict";
 
+const eventually = require(`./eventually.js`);
 const freeze = require(`deep-freeze`);
 const RedBlackTree = require(`bintrees`).RBTree;
 const Version = require(`./Version.js`);
@@ -48,21 +49,23 @@ module.exports = class {
 
     }
 
-    write (change) {
+    receieve (change) {
 
-        const parsedChange = this._Parsed(change);
+        return new Promise((resolve, reject) => {
 
-        if (this._IsNew(parsedChange)) {
+            this._receive(this._Parsed(change), resolve, reject);
 
-            this._write(parsedChange);
-
-        }
+        });
 
     }
 
-    _IsNew (parsedChange) {
+    write (localChange) {
 
-        throw new Error(`method not implemented`);
+        const parsedChange = this._Parsed(localChange);
+
+        assert(parsedChange.isLocal);
+
+        this._write(parsedChange);
 
     }
 
@@ -72,7 +75,13 @@ module.exports = class {
 
     }
 
-    _write (newParsedChange) {
+    _receive (parsedChange, resolve, reject) {
+
+        throw new Error(`method not implemented`);
+
+    }
+
+    _write (parsedChange) {
 
         const {change} = newParsedChange;
 

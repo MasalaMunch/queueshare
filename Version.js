@@ -2,7 +2,7 @@
 
 const assert = require(`assert`);
 
-const Comparison = (a, b) => a - b;
+const Comparison = (aVersion, bVersion) => aVersion - bVersion;
 
 const oldest = 0;
 

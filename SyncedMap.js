@@ -36,11 +36,11 @@ module.exports = class extends SyncedState {
 
     }
 
-    _write (newParsedChange) {
+    _write (parsedChange) {
 
-        super._write(newParsedChange);
+        super._write(parsedChange);
 
-        const {key, version} = newParsedChange;
+        const {key, version} = parsedChange;
 
         const previousLocalVersion = this._LocalVersionOfKey(key);
 

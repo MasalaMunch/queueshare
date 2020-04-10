@@ -2,15 +2,27 @@
 
 module.exports = (func) => new Promise((resolve, reject) => {
 
-    setTimeout(() => {
+    setTimeout(async () => {
+
+        let output, wasRejected;
 
         try {
 
-            resolve(func());
+            output = await func();
+
+            wasRejected = false;
             
         } catch (error) {
 
             reject(error);
+
+            wasRejected = true;
+
+        }
+
+        if (!wasRejected) {
+
+            resolve(output);
 
         }
 
