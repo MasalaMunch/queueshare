@@ -11,8 +11,6 @@ module.exports = class extends SyncedStringTree {
 
         const parsedChange = super._Parsed(change);
 
-        assert(change.hasOwnProperty(`value`));
-
         let {value} = change;
 
         if (value !== undefined) {
