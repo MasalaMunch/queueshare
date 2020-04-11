@@ -20,7 +20,7 @@ module.exports = class {
 
     }
 
-    get changes () {
+    Changes () {
 
         return ChangesSince(undefined);
 
@@ -58,7 +58,7 @@ module.exports = class {
 
     }
 
-    get currentVersion () {
+    CurrentVersion () {
 
         freeze(this._currentLocalVersion);
 
