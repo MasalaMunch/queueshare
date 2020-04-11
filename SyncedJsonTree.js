@@ -1,5 +1,6 @@
 "use strict";
 
+const assert = require(`assert`);
 const AsJsonWithSortedKeys = require(`./AsJsonWithSortedKeys.js`);
 const FromJson = require(`./FromJson.js`);
 const SyncedStringTree = require(`./SyncedStringTree.js`);
