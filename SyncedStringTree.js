@@ -113,7 +113,6 @@ module.exports = class extends SyncedMap {
 
         return {
             change: {path, fullPathVersions}, 
-            fullPath, 
             fullPathKeys,
             isLocal,
             key: fullPathKeys[fullPath.length-1],
@@ -124,11 +123,11 @@ module.exports = class extends SyncedMap {
 
     _receive (parsedChange, resolve, reject) {
 
-        const {fullPath, fullPathKeys, change: {fullPathVersions}} = parsedChange;
+        const {fullPathKeys, change: {fullPathVersions}} = parsedChange;
 
         let isPending = false;
 
-        for (let i=0; i<fullPath.length; i++) {
+        for (let i=0; i<fullPathKeys.length; i++) {
 
             const key = fullPathKeys[i];
             const version = fullPathVersions[i];
@@ -140,7 +139,7 @@ module.exports = class extends SyncedMap {
 
                 if (versionComparison > 0) {
 
-                    if (i === fullPath.length-1) {
+                    if (i === fullPathKeys.length-1) {
 
                         try {
 
