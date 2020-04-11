@@ -1,6 +1,7 @@
 "use strict";
 
 const AsJson = require(`./AsJson.js`);
+const assert = require(`assert`);
 const FromJson = require(`./FromJson.js`);
 const SyncedStringTree = require(`./SyncedStringTree.js`);
 
@@ -21,6 +22,14 @@ module.exports = class extends SyncedStringTree {
         parsedChange.change.value = value;
 
         return parsedChange;
+
+    }
+
+    write (localChange) {
+
+        assert(localChange.hasOwnProperty(`value`));
+
+        super.write(localChange);
 
     }
 
