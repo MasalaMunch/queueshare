@@ -75,7 +75,6 @@ module.exports = class extends SyncedMap {
         for (const string of path) {
 
             assert(typeof string === `string`);
-            assert(string.length > 0);
             assert(!string.includes(stringSeparator));
 
         }
