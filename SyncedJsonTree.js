@@ -1,7 +1,7 @@
 "use strict";
 
+const AsJson = require(`./AsJson.js`);
 const assert = require(`assert`);
-const AsJsonWithSortedKeys = require(`./AsJsonWithSortedKeys.js`);
 const FromJson = require(`./FromJson.js`);
 const SyncedStringTree = require(`./SyncedStringTree.js`);
 
@@ -17,7 +17,7 @@ module.exports = class extends SyncedStringTree {
 
         if (value !== undefined) {
 
-            value = FromJson(AsJsonWithSortedKeys(value));
+            value = FromJson(AsJson(value));
 
         }
 
