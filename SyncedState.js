@@ -20,9 +20,23 @@ module.exports = class {
 
     }
 
+    get changes () {
+
+        return ChangesSince(undefined);
+
+    }
+
     ChangesSince (version) {
 
-        Version.validate(version);
+        if (version === undefined) {
+
+            version = Version.oldest;
+
+        } else {
+
+            Version.validate(version);
+
+        }
 
         const versionIterator = this._localVersionTree.upperBound(version);
 
