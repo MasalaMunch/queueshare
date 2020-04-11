@@ -58,23 +58,20 @@ module.exports = class {
 
             this._taskQueue.add(() => {
 
-                let parsedChange, wasParsed;
+                let parsedChange;
 
                 try {
 
                     parsedChange = this._Parsed(change);
-                    wasParsed = true;
 
                 } catch (error) {
 
                     reject(error);
-                    wasParsed = false;
+                    return;
 
                 }
 
-                if (wasParsed) {
-                    this._receive(parsedChange, resolve, reject);
-                }
+                this._receive(parsedChange, resolve, reject);
 
             });
 

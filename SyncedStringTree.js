@@ -94,7 +94,7 @@ module.exports = class extends SyncedMap {
 
         if (isLocal) {
 
-            fullPathVersions = fullPathKeys.map(this._VersionOfKey, this);
+            fullPathVersions = fullPathKeys.map((k) => this._VersionOfKey(k));
 
             const i = fullPath.length-1;
 
