@@ -37,7 +37,19 @@ module.exports = class {
 
         setTimeout(() => {
 
-            this._firstNode.task();
+            let error, threwAnError;
+
+            try {
+
+                this._firstNode.task();
+                threwAnError = false;
+
+            } catch (e) {
+
+                error = e;
+                threwAnError = true;
+
+            }
 
             this._firstNode = this._firstNode.nextNode;
 
@@ -49,6 +61,12 @@ module.exports = class {
             else {
 
                 this._start();
+
+            }
+
+            if (threwAnError) {
+
+                throw error;
 
             }
 
