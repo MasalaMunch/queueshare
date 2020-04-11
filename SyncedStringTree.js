@@ -31,7 +31,7 @@ module.exports = class extends SyncedMap {
 
         const keyIterator = this._keyTree.lowerBound(childKeyPrefix);
 
-        const childKeyRegExp = new RegExp(`^`+EscapedForRegExp(childKeyPrefix));
+        const childKeyRegExp = new RegExp(`^` + EscapedForRegExp(childKeyPrefix));
 
         const childKeys = [];
 
