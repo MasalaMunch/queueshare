@@ -1,8 +1,9 @@
 "use strict";
 
-const eventually = require(`./eventually.js`);
-const freeze = require(`deep-freeze`);
+const freeze = require(`./freeze.js`);
 const RedBlackTree = require(`bintrees`).RBTree;
+const TaskQueue = require(`./TaskQueue.js`);
+const thrower = require(`./thrower.js`);
 const Version = require(`./Version.js`);
 
 module.exports = class {
@@ -14,6 +15,8 @@ module.exports = class {
         this._localVersionChanges = new Map();
 
         this._localVersionTree = new RedBlackTree(Version.Comparison);
+
+        this._taskQueue = new Queue();
 
     }
 
@@ -49,11 +52,27 @@ module.exports = class {
 
     }
 
-    receieve (change) {
+    recieve (change) {
 
         return new Promise((resolve, reject) => {
 
-            this._receive(this._Parsed(change), resolve, reject);
+            this._taskQueue.add(() => {
+
+                let parsedChange;
+
+                try {
+
+                    parsedChange = this._Parsed(change);
+
+                } catch (error) {
+
+                    reject(error);
+
+                }
+
+                this._receive(parsedChange, resolve, reject);
+
+            });
 
         });
 

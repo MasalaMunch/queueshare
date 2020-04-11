@@ -19,9 +19,7 @@ module.exports = class extends SyncedMap {
 
         super();
 
-        this._keyPendingParsedChanges = new LazyMap(EmptyArray);
-        this._keyPendingResolvers = new LazyMap(EmptyArray);
-        this._keyPendingRejecters = new LazyMap(EmptyArray);
+        this._keyPendingTasks = new LazyMap(EmptyArray);
 
         this._keyTree = new RedBlackTree(KeyComparison);
     
@@ -62,25 +60,9 @@ module.exports = class extends SyncedMap {
         
         this._keyVersions.delete(key);
 
-        this._keyPendingParsedChanges.delete(key);
-        this._keyPendingResolvers.delete(key);
-        this._keyPendingRejecters.delete(key);
+        this._keyPendingTasks.delete(key);
 
         this._keyTree.remove(key);
-
-    }
-
-    async _eventuallyReceive (parsedChanges, resolvers, rejecters) {
-
-        for (let i=0; i<parsedChanges.length; i++) {
-
-            await eventually(() => {
-
-                this._receive(parsedChanges[i], resolvers[i], rejecters[i]);
-
-            });
-
-        }
 
     }
 
@@ -176,10 +158,11 @@ module.exports = class extends SyncedMap {
 
                         isPending = true;
 
-                        this._keyPendingParsedChanges.get(key).push(parsedChange);
-                        this._keyPendingResolvers.get(key).push(resolve);
-                        this._keyPendingRejecters.get(key).push(reject);
+                        this._keyPendingTasks.get(key).push(() => {
 
+                            this._receive(parsedChange, resolve, reject);
+
+                        });
 
                     }
 
@@ -205,27 +188,13 @@ module.exports = class extends SyncedMap {
 
         const {key} = parsedChange;
 
+        this._keyPendingTasks.get(key).forEach((t) => this._taskQueue.add(t));
+
+        this._keyPendingTasks.delete(key);
+
+        this._ChildKeys(key).forEach((k) => this._delete(k));
+
         this._keyTree.insert(key);
-
-        for (const childKey of this._ChildKeys(key)) {
-
-            this._delete(childKey);
-
-        }
-
-        const pendingParsedChanges = this._keyPendingParsedChanges.get(key);
-        const pendingResolvers = this._keyPendingResolvers.get(key);
-        const pendingRejecters = this._keyPendingRejecters.get(key);
-
-        this._keyPendingParsedChanges.delete(key);
-        this._keyPendingResolvers.delete(key);
-        this._keyPendingRejecters.delete(key);
-
-        this._eventuallyReceive(
-            pendingParsedChanges, 
-            pendingResolvers, 
-            pendingRejecters,
-            );
 
     }
 
