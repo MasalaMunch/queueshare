@@ -1,19 +1,16 @@
-T = require(`./SyncedJsonTree.js`);
+T = require(`./SyncedStringTree.js`);
 V = require(`./SyncableVersion.js`);
 
 t = new T();
 
-bigV = V.Newer(V.oldest);
+newerV = V.Newer(V.oldest);
 
 (async () => {
 
-    console.log("starting");
+    await t.receive({path: [`t`], fullPathVersions: [newerV, newerV]});
 
-    await t.receive({path: [`t`], value: `t`, fullPathVersions: [bigV, bigV]});
-
-    console.log("done");
-    console.log(t);
+    console.log(t.ChangesSince(0));
 
 })();
 
-t.receive({path: [], value: ``, fullPathVersions: [bigV]});
+t.receive({path: [], fullPathVersions: [newerV]});
