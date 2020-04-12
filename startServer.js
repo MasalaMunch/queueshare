@@ -69,15 +69,13 @@ const syncedState = (() => {
 
     const syncedStateRoute = app.route(`/syncedState`);
 
-    const AsJson = require(`./AsJson.js`);
-
     syncedStateRoute.get((request, response) => {
 
         response.set(`Content-Type`, `text/plain`);
 
-        response.send(AsJson({
+        response.send(JSON.stringify({
 
-            changesAsJson: AsJson(
+            changesAsJson: JSON.stringify(
                 syncedState.ChangesSince(Number(request.query.version))
                 ),
 

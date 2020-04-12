@@ -1,1 +1,1 @@
-a jukebox for your house
+A jukebox for your house.
