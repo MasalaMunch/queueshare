@@ -1,7 +1,7 @@
 {
   "name": "queueshare",
   "version": "0.0.1",
-  "description": "A jukebox for your house.",
+  "description": "a jukebox for your house",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MasalaMunch/queueshare.git"
