@@ -4,7 +4,7 @@
 
 //TODO separate this into multiple files and bring back index.js
 
-const path = require(`path`);
+const Path = require(`path`);
 
 const [directory, port] = (() => {
 
