@@ -1,18 +1,22 @@
-#!/usr/bin/env node
-
 "use strict";
 
 const assert = require(`assert`);
 const {dir, port} = require(`./command.js`);
 const express = require(`express`);
 const Path = require(`path`);
-const JsonLogViaFile = require(`json-log-via-file`);
+const JsonLog = require(`json-log-via-fs`);
 const SyncedJsonTree = require(`synced-json-tree`);
-const urlEncodedUupid = require(`url-encoded-uupid`);
+const UrlEncodedUuid = require(`url-encoded-uuid`);
+const Uudid = require(`uudid-via-fs`);
+const uupid = require(`uupid`);
+
+const pid = UrlEncodedUuid(uupid);
+
+const did = UrlEncodedUuid(Uudid({dir: Path.join(dir, `did`, `uudid`)}));
 
 const syncedState = new SyncedJsonTree();
 
-const syncedStateStorage = new JsonLogViaFile({
+const syncedStateStorage = new JsonLog({
 
     dir: Path.join(dir, `syncedState`, `jsonLog`),
 
@@ -28,13 +32,19 @@ for (const {changes} of syncedStateStorage.Entries()) {
 
 }
 
-syncedStateStorage.clear();
+const compressSyncedStateStorage = () => {
 
-syncedStateStorage.addToWriteQueue({
+    syncedStateStorage.clear();
 
-    changes: Array.from(syncedState.Changes()),
+    syncedStateStorage.addToWriteQueue({
 
-    });
+        changes: Array.from(syncedState.Changes()),
+
+        });
+
+};
+
+compressSyncedStateStorage();
 
 const server = express();
 
@@ -42,7 +52,13 @@ server.use(express.json());
 
 server.route(`/pid`).get((request, response) => {
 
-    response.json(urlEncodedUupid);
+    response.json(pid);
+
+});
+
+server.route(`/did`).get((request, response) => {
+
+    response.json(did);
 
 });
 
