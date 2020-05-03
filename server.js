@@ -4,21 +4,21 @@ const assert = require(`assert`);
 const {dir, port} = require(`./command.js`);
 const express = require(`express`);
 const Path = require(`path`);
-const JsonLog = require(`json-log-via-fs`);
+const StoredJsonLog = require(`stored-json-log`);
 const SyncedJsonTree = require(`synced-json-tree`);
 const UrlEncodedUuid = require(`url-encoded-uuid`);
-const Uudid = require(`uudid-via-fs`);
-const uupid = require(`uupid`);
+const Uudid = require(`uudid`);
+const Uupid = require(`uupid`);
 
-const pid = UrlEncodedUuid(uupid);
+const pid = UrlEncodedUuid(Uupid());
 
 const did = UrlEncodedUuid(Uudid({dir: Path.join(dir, `did`, `uudid`)}));
 
 const syncedState = new SyncedJsonTree();
 
-const syncedStateStorage = new JsonLog({
+const syncedStateStorage = new StoredJsonLog({
 
-    dir: Path.join(dir, `syncedState`, `jsonLog`),
+    dir: Path.join(dir, `syncedState`, `storedJsonLog`),
 
     });
 
