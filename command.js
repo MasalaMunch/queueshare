@@ -24,4 +24,4 @@ program.option(
 
 program.parse(process.argv);
 
-module.exports = {dir: program.dir, port: Number(program.port)};
+module.exports = {dir: Path.resolve(program.dir), port: Number(program.port)};
