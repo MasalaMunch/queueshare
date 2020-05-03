@@ -12,12 +12,14 @@
   },
   "homepage": "https://github.com/MasalaMunch/queueshare#readme",
   "bin": {
-    "queueshare": "./startServer.js"
+    "queueshare": "index.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
     "commander": "^5.0.0",
     "express": "^4.17.1",
-    "fast-json-stable-stringify": "^2.1.0",
+    "nodemon": "^2.0.3",
+    "synced-json-tree": "file:local_node_modules/synced-json-tree",
+    "url-encoded-uupid": "file:local_node_modules/url-encoded-uupid"
   }
 }
