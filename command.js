@@ -1,7 +1,7 @@
 "use strict";
 
 const homeDir = require(`os`).homedir();
-const Path = require(`path`);
+const JoinedPaths = require(`path`).join;
 const {program} = require(`commander`);
 const {version} = require(`./package.json`);
 
@@ -13,7 +13,7 @@ program.version(
 program.option(
     `-d|--dir <dir>`, 
     `where the queue will be stored`, 
-    Path.join(homeDir, `queueshare`),
+    JoinedPaths(homeDir, `queueshare`),
     );
 
 program.option(
