@@ -2,11 +2,14 @@
 
 "use strict";
 
-const {dir, port} = require(`./command.js`);
+const {dir} = require(`./command.js`);
 const fs = require(`fs`);
+const log = require(`log`);
 const nodemon = require(`nodemon`);
 const onExit = require(`exit-hook`);
 const Path = require(`path`);
+
+console.log();
 
 fs.mkdirSync(dir, {recursive: true});
 
@@ -14,7 +17,7 @@ const lockFile = Path.join(dir, `lock`);
 
 if (fs.existsSync(lockFile)) {
 
-    console.error(
+    log(
         `It looks like there's already a QueueShare process serving "${dir}".`
         + ` Multiple processes serving the same data can cause errors and data`
         + ` corruption, so this process will be terminated. If you're certain` 
@@ -27,8 +30,26 @@ else {
 
     fs.writeFileSync(lockFile, ``);
 
-    onExit(() => fs.unlinkSync(lockFile));
+    onExit(() => {
 
-    nodemon(`server.js -d ${dir} -p ${port}`);    
+        fs.unlinkSync(lockFile);
+
+        console.log();
+
+    });
+
+    nodemon({
+
+        script: `server.js`,
+
+        args: process.argv.slice(2),
+
+        verbose: false,
+
+        });
+
+    nodemon.on(`exit`, () => process.exit());
+
+    nodemon.on(`crash`, () => process.exit(1));
 
 }

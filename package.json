@@ -18,6 +18,7 @@
     "commander": "^5.0.0",
     "exit-hook": "^2.2.0",
     "express": "^4.17.1",
+    "log": "file:local_node_modules/log",
     "nodemon": "^2.0.3",
     "stored-json-log": "file:local_node_modules/stored-json-log",
     "synced-json-tree": "file:local_node_modules/synced-json-tree",

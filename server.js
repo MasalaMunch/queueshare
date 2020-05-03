@@ -3,6 +3,7 @@
 const assert = require(`assert`);
 const {dir, port} = require(`./command.js`);
 const express = require(`express`);
+const log = require(`log`);
 const Path = require(`path`);
 const StoredJsonLog = require(`stored-json-log`);
 const SyncedJsonTree = require(`synced-json-tree`);
@@ -123,10 +124,10 @@ server.route(`/syncedState/changes`).post((request, response) => {
 
 });
 
-console.log(`Starting server...`);
+log(`Starting server...`);
 
 server.listen(port, () => {
 
-    console.log(`QueueShare is now available at http://localhost:${port}`);
+    log(`QueueShare is now available at http://localhost:${port}`);
 
 });
