@@ -5,10 +5,36 @@
 const assert = require(`assert`);
 const {dir, port} = require(`./command.js`);
 const express = require(`express`);
+const Path = require(`path`);
+const JsonLogViaFile = require(`json-log-via-file`);
 const SyncedJsonTree = require(`synced-json-tree`);
 const urlEncodedUupid = require(`url-encoded-uupid`);
 
 const syncedState = new SyncedJsonTree();
+
+const syncedStateStorage = new JsonLogViaFile({
+
+    dir: Path.join(dir, `syncedState`, `jsonLog`),
+
+    });
+
+for (const {changes} of syncedStateStorage.Entries()) {
+
+    for (const c of changes) {
+
+        syncedState.restore(c);
+
+    }
+
+}
+
+syncedStateStorage.clear();
+
+syncedStateStorage.addToWriteQueue({
+
+    changes: Array.from(syncedState.Changes()),
+
+    });
 
 const server = express();
 
@@ -65,7 +91,17 @@ server.route(`/syncedState/changes`).get((request, response) => {
 
 server.route(`/syncedState/changes`).post((request, response) => {
 
+    const localVersion = syncedState.LocalVersion();
+
     syncedState.receive(request.body);
+
+    const changes = Array.from(syncedState.ChangesSince(localVersion));
+
+    if (changes.length > 0) {
+
+        syncedStateStorage.addToWriteQueue({changes});
+
+    }
 
     response.end();
 
@@ -78,15 +114,3 @@ server.listen(port, () => {
     console.log(`QueueShare is now available at http://localhost:${port}`);
 
 });
-
-(() => {
-
-    const sjt = new SyncedJsonTree();
-
-    sjt.write({path: [`your mom`], value: `ugly`});
-
-    console.log(JSON.stringify([...sjt.Changes()][0]));
-
-})();
-
-module.exports = server;
