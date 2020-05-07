@@ -1,55 +1,37 @@
-#!/usr/bin/env node
-
 "use strict";
 
-const {dir} = require(`./command.js`);
-const fs = require(`fs`);
-const log = require(`log`);
-const nodemon = require(`nodemon`);
-const onExit = require(`exit-hook`);
-const Path = require(`path`);
+const ChildProcess = require(`child_process`);
+const processMessages = require(`./processMessages.js`);
+const ShallowCopy = require(`shallow-copy`);
 
-console.log();
+const start = (configAsString) => {
 
-fs.mkdirSync(dir, {recursive: true});
+    const qsProcess = ChildProcess.fork(`queueshare.js`, [configAsString]);
 
-const lockFile = Path.join(dir, `lock`);
+    let shouldRestart = false;
 
-if (fs.existsSync(lockFile)) {
+    qsProcess.on(`message`, (message) => {
 
-    log(
-        `It looks like there's already a QueueShare process serving "${dir}".`
-        + ` Multiple processes serving the same data can cause errors and data`
-        + ` corruption, so this process will be terminated. If you're certain` 
-        + ` that there are no other processes serving this data, delete`
-        + ` "${lockFile}" and try again.`
-        );
+        if (message === processMessages.restartCommand) {
 
-}
-else {
+            shouldRestart = true;
 
-    fs.writeFileSync(lockFile, ``);
+            qsProcess.send(processMessages.restartConfirmation);
 
-    onExit(() => {
-
-        fs.unlinkSync(lockFile);
-
-        console.log();
+        }
 
     });
 
-    nodemon({
+    qsProcess.on(`exit`, () => {
 
-        script: `server.js`,
+        if (shouldRestart) {
 
-        args: process.argv.slice(2),
+            start(configAsString);
 
-        verbose: false,
+        }
 
-        });
+    });
 
-    nodemon.on(`exit`, () => process.exit());
+};
 
-    nodemon.on(`crash`, () => process.exit(1));
-
-}
+module.exports = (config) => start(JSON.stringify(ShallowCopy(config)));
