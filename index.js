@@ -34,4 +34,10 @@ const start = (configAsString) => {
 
 };
 
-module.exports = (config) => start(JSON.stringify(ShallowCopy(config)));
+module.exports = (config) => {
+
+    console.log();
+
+    start(JSON.stringify(ShallowCopy(config)));
+
+};

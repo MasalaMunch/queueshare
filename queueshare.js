@@ -1,18 +1,21 @@
 "use strict";
 
+const beforeExiting = require(`./beforeExiting.js`);
 const clArgs = require(`cl-args`);
 const defaultConfig = require(`./defaultConfig.js`);
 const define = require(`define`);
-const beforeExiting = require(`./beforeExiting.js`);
+const log = require(`./log.js`);
 const processMessages = require(`./processMessages.js`);
+
+log(`Setting up...`);
 
 const config = JSON.parse(clArgs[0]);
 
 define(config, defaultConfig);
 
-console.log(config);
+log(config);
 
-beforeExiting(() => console.log(`cleaning up my mess ;)`));
+beforeExiting(() => log(`cleaning up my mess ;)`));
 
 process.on(`message`, (message) => {
 
