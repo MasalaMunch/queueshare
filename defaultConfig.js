@@ -9,7 +9,4 @@ module.exports = {
 
     port: 42069,
 
-    shouldOpen: true,
-
-
     };
