@@ -1,7 +1,7 @@
 "use strict";
 
 const os = require(`os`);
-const Path = require(`Path`);
+const Path = require(`path`);
 
 module.exports = {
 

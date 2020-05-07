@@ -18,11 +18,13 @@
     "add": "file:local_node_modules/add",
     "cl-args": "file:local_node_modules/cl-args",
     "commander": "^5.0.0",
+    "define": "file:local_node_modules/define",
     "express": "^4.17.1",
     "open": "^7.0.3",
     "shallow-copy": "file:local_node_modules/shallow-copy",
     "stored-json-log": "file:local_node_modules/stored-json-log",
     "synced-json-tree": "file:local_node_modules/synced-json-tree",
+    "transform": "file:local_node_modules/transform",
     "url-encoded-uuid": "file:local_node_modules/url-encoded-uuid"
   },
   "devDependencies": {}

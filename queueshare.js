@@ -1,12 +1,18 @@
 "use strict";
 
 const clArgs = require(`cl-args`);
-const beforeQueueshareExits = require(`./beforeQueueshareExits.js`);
+const defaultConfig = require(`./defaultConfig.js`);
+const define = require(`define`);
+const beforeExiting = require(`./beforeExiting.js`);
 const processMessages = require(`./processMessages.js`);
 
-beforeQueueshareExits(() => console.log(`cleaning up my mess ;)`));
+const config = JSON.parse(clArgs[0]);
 
-console.log(clArgs);
+define(config, defaultConfig);
+
+console.log(config);
+
+beforeExiting(() => console.log(`cleaning up my mess ;)`));
 
 process.on(`message`, (message) => {
 
@@ -27,7 +33,7 @@ process.send(processMessages.restartCommand);
 // const fs = require(`fs`);
 // const open = require(`open`);
 // const os = require(`os`);
-// const Path = require(`Path`);
+// const Path = require(`path`);
 // const {program} = require(`commander`);
 // const Space = require(`scope`);
 // const StoredJsonLog = require(`stored-json-log`);

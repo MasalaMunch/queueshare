@@ -1,6 +1,6 @@
 "use strict";
 
-const Path = require(`Path`);
+const Path = require(`path`);
 const ShallowCopy = require(`shallow-copy`);
 const transform = require(`transform`);
 
