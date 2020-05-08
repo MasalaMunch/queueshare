@@ -1,6 +1,6 @@
 "use strict";
 
-const Path = require(`path`);
+const path = require(`path`);
 const transform = require(`transform`);
 
 module.exports = (dir) => {
@@ -15,7 +15,7 @@ module.exports = (dir) => {
 
         };
 
-    transform(paths, (relPath) => Path.join(dir, relPath));
+    transform(paths, (relPath) => path.join(dir, relPath));
 
     return paths;
 

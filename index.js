@@ -1,12 +1,12 @@
 "use strict";
 
-const ChildProcess = require(`child_process`);
+const child_process = require(`child_process`);
 const processMessages = require(`./processMessages.js`);
 const ShallowCopy = require(`shallow-copy`);
 
 const start = (configAsString) => {
 
-    const qsProcess = ChildProcess.fork(`queueshare.js`, [configAsString]);
+    const qsProcess = child_process.fork(`queueshare.js`, [configAsString]);
 
     let shouldRestart = false;
 

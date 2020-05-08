@@ -5,7 +5,7 @@ const express = require(`express`);
 const fs = require(`fs`);
 const lock = require(`./lock.js`);
 const log = require(`./log.js`);
-const Path = require(`path`);
+const path = require(`path`);
 const Paths = require(`./Paths.js`);
 const requireNodeVersion = require(`require-node-version`);
 const UrlEncodedUuid = require(`url-encoded-uuid`);
@@ -98,7 +98,7 @@ module.exports = (dir, port) => {
 
     server.route(`/`).get((request, response) => {
 
-        response.sendFile(Path.resolve(`index.html`));
+        response.sendFile(path.resolve(`index.html`));
 
     });
 

@@ -1,11 +1,11 @@
 "use strict";
 
 const os = require(`os`);
-const Path = require(`path`);
+const path = require(`path`);
 
 module.exports = {
 
-    dir: Path.join(os.homedir(), `queueshareData`),
+    dir: path.join(os.homedir(), `queueshareData`),
 
     npmCommand: `npm`,
 
