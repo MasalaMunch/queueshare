@@ -102,6 +102,8 @@ module.exports = (dir, port) => {
 
     });
 
+    assert(typeof port === `number`);
+
     server.listen(port, () => {
 
         log(`QueueShare is now available at http://localhost:${port}`);

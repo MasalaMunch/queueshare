@@ -18,4 +18,4 @@ const {dir, npmCommand, port} = config;
 
 periodicallyUpdate(npmCommand);    
 
-serve(path.resolve(dir), port);
+serve(dir, port);
