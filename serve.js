@@ -13,9 +13,9 @@ const UuDeviceId = require(`uu-device-id`);
 const UuProcessId = require(`uu-process-id`);
 const SyncedServerState = require(`./SyncedServerState.js`);
 
-const processId = UrlEncodedUuid(UuProcessId());
-
 requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
+
+const processId = UrlEncodedUuid(UuProcessId());
 
 module.exports = (dir, port) => {
 
