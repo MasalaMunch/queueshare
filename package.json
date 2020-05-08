@@ -20,7 +20,7 @@
     "commander": "^5.0.0",
     "define": "file:local_node_modules/define",
     "express": "^4.17.1",
-    "semver": "^7.3.2",
+    "require-node-version": "file:local_node_modules/require-node-version",
     "shallow-copy": "file:local_node_modules/shallow-copy",
     "stored-json-log": "file:local_node_modules/stored-json-log",
     "synced-json-tree": "file:local_node_modules/synced-json-tree",

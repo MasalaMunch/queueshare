@@ -7,17 +7,17 @@ const lock = require(`./lock.js`);
 const log = require(`./log.js`);
 const Path = require(`path`);
 const Paths = require(`./Paths.js`);
+const requireNodeVersion = require(`require-node-version`);
 const UrlEncodedUuid = require(`url-encoded-uuid`);
 const UuDeviceId = require(`uu-device-id`);
 const UuProcessId = require(`uu-process-id`);
-const semver = require(`semver`);
 const SyncedServerState = require(`./SyncedServerState.js`);
 
 const processId = UrlEncodedUuid(UuProcessId());
 
 module.exports = (dir, port) => {
 
-    assert(semver.gte(process.version, `10.12.0`)); 
+    requireNodeVersion(`10.12.0`);
 
     //^ so that recursive mkdir is supported
 
