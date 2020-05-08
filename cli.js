@@ -14,7 +14,7 @@ program.option(
 
 program.option(
     `-npm|--npm-command <command>`, 
-    "`${command} update` will be run to update QueueShare", 
+    "`${command} update` will be run to update queueshare", 
     defaultConfig.npmCommand,
     );
 
