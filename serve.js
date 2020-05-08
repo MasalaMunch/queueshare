@@ -15,11 +15,9 @@ const SyncedServerState = require(`./SyncedServerState.js`);
 
 const processId = UrlEncodedUuid(UuProcessId());
 
+requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
+
 module.exports = (dir, port) => {
-
-    requireNodeVersion(`10.12.0`);
-
-    //^ so that recursive mkdir is supported
 
     fs.mkdirSync(dir, {recursive: true});
 
