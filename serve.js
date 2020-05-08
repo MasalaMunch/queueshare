@@ -70,7 +70,7 @@ module.exports = (dir, port) => {
 
         }
 
-        limit = Math.min(limit, 100);
+        limit = Math.min(limit, 1000);
 
         const changes = [];
 
