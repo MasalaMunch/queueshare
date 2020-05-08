@@ -7,6 +7,8 @@ module.exports = {
 
     dir: Path.join(os.homedir(), `queueshareData`),
 
+    npmCommand: `npm`,
+
     port: 42069,
 
     };

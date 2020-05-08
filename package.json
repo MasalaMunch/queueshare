@@ -24,7 +24,9 @@
     "stored-json-log": "file:local_node_modules/stored-json-log",
     "synced-json-tree": "file:local_node_modules/synced-json-tree",
     "transform": "file:local_node_modules/transform",
-    "url-encoded-uuid": "file:local_node_modules/url-encoded-uuid"
+    "url-encoded-uuid": "file:local_node_modules/url-encoded-uuid",
+    "uu-device-id": "file:local_node_modules/uu-device-id",
+    "uu-process-id": "file:local_node_modules/uu-process-id"
   },
   "devDependencies": {}
 }

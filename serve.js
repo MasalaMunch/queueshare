@@ -1,0 +1,105 @@
+"use strict";
+
+const assert = require(`assert`);
+const express = require(`express`);
+const lock = require(`./lock.js`);
+const log = require(`./log.js`);
+const Path = require(`path`);
+const Paths = require(`./Paths.js`);
+const UrlEncodedUuid = require(`url-encoded-uuid`);
+const UuDeviceId = require(`uu-device-id`);
+const UuProcessId = require(`uu-process-id`);
+const SyncedServerState = require(`./SyncedServerState.js`);
+
+const processId = UrlEncodedUuid(UuProcessId());
+
+module.exports = (dir, port) => {
+
+    lock(dir);
+
+    const {deviceIdFile, syncedStateFile} = Paths(dir);
+
+    const deviceId = UrlEncodedUuid(UuDeviceId(deviceIdFile));
+
+    const syncedState = new SyncedServerState({file: syncedStateFile});
+
+    const server = express();
+
+    server.use(express.json());
+
+    server.route(`/processId`).get((request, response) => {
+
+        response.json(processId);
+
+    });
+
+    server.route(`/deviceId`).get((request, response) => {
+
+        response.json(deviceId);
+
+    });
+
+    server.route(`/syncedState/changes`).get((request, response) => {
+
+        let {localVersion, limit} = request.query;
+
+        if (localVersion !== undefined) {
+
+            localVersion = JSON.parse(localVersion);
+
+        }
+
+        if (limit === undefined) {
+
+            limit = Infinity;
+
+        }
+        else {
+
+            limit = Number(limit);
+
+            assert(!isNaN(limit));
+
+        }
+
+        limit = Math.min(limit, 100);
+
+        const changes = [];
+
+        for (const c of syncedState.ChangesSince(localVersion)) {
+
+            if (changes.length >= limit) {
+
+                break;
+
+            }
+
+            changes.push(c);
+
+        }
+
+        response.json(changes);
+
+    });
+
+    server.route(`/syncedState/changes`).post((request, response) => {
+
+        syncedState.receive(request.body);
+
+        response.end();
+
+    });
+
+    server.route(`/`).get((request, response) => {
+
+        response.sendFile(Path.resolve(`index.html`));
+
+    });
+
+    server.listen(port, () => {
+
+        log(`QueueShare is now available at http://localhost:${port}`);
+
+    });
+
+};

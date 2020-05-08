@@ -1,22 +1,19 @@
 "use strict";
 
 const Path = require(`path`);
-const ShallowCopy = require(`shallow-copy`);
 const transform = require(`transform`);
-
-const relPaths = {
-
-    deviceIdFile: `deviceId`,
-
-    lockFile: `lock`,
-
-    syncedStateFile: `syncedState`,
-
-    };
 
 module.exports = (dir) => {
 
-    const paths = ShallowCopy(relPaths);
+    const paths = {
+
+        deviceIdFile: `deviceId`,
+
+        lockFile: `lock`,
+
+        syncedStateFile: `syncedState`,
+
+        };
 
     transform(paths, (relPath) => Path.join(dir, relPath));
 
