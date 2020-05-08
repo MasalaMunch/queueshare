@@ -28,7 +28,7 @@ module.exports = class extends SyncedJsonTree {
 
     compressStorage () {
 
-        this._storage.overwrite({changes: Array.from(this.Changes())});
+        this._storage.write({changes: Array.from(this.Changes())});
 
     }
 
@@ -42,7 +42,7 @@ module.exports = class extends SyncedJsonTree {
 
         if (changes.length > 0) {
 
-            this._storage.addToWriteQueue({changes});
+            this._storage.eventuallyAppend({changes});
 
         }
 
