@@ -98,7 +98,7 @@ module.exports = (dir, port) => {
 
     server.route(`/`).get((request, response) => {
 
-        response.sendFile(path.resolve(`index.html`));
+        response.sendFile(path.join(__dirname, `index.html`));
 
     });
 
