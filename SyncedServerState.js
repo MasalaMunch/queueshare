@@ -1,6 +1,5 @@
 "use strict";
 
-const add = require(`add`);
 const StoredJsonLog = require(`stored-json-log`);
 const SyncedJsonTree = require(`synced-json-tree`);
 
@@ -12,7 +11,7 @@ module.exports = class extends SyncedJsonTree {
 
         const {file} = config;
 
-        add(this, {_storage: new StoredJsonLog(file)});
+        this._storage = new StoredJsonLog(file);
 
         for (const {changes} of this._storage.Entries()) {
 
