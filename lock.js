@@ -19,7 +19,7 @@ module.exports = (dir) => {
         if (error.code === `EEXIST`) {
 
             log(
-                `It looks like there's already a QueueShare process serving`
+                `It looks like there's already a queueshare process serving`
                 + ` "${dir}". Multiple processes serving the same data can`
                 + ` cause errors and data corruption, so this process will be` 
                 + ` terminated. If you're certain that there are no other`
