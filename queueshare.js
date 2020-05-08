@@ -4,7 +4,7 @@ const clArgs = require(`cl-args`);
 const defaultConfig = require(`./defaultConfig.js`);
 const define = require(`define`);
 const log = require(`./log.js`);
-const Path = require(`path`);
+const path = require(`path`);
 const periodicallyUpdate = require(`./periodicallyUpdate.js`);
 const serve = require(`./serve.js`);
 
@@ -18,4 +18,4 @@ const {dir, npmCommand, port} = config;
 
 periodicallyUpdate(npmCommand);    
 
-serve(Path.resolve(dir), port);
+serve(path.resolve(dir), port);
