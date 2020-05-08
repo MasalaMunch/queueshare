@@ -29,6 +29,8 @@ module.exports = (dir, port) => {
 
     const syncedState = new SyncedServerState({file: syncedStateFile});
 
+    syncedState.compressStorage();
+
     const server = express();
 
     server.use(express.json());

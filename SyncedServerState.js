@@ -1,5 +1,6 @@
 "use strict";
 
+const add = require(`add`);
 const StoredJsonLog = require(`stored-json-log`);
 const SyncedJsonTree = require(`synced-json-tree`);
 
@@ -11,7 +12,7 @@ module.exports = class extends SyncedJsonTree {
 
         const {file} = config;
 
-        this._storage = new StoredJsonLog(file);
+        add(this, {_storage: new StoredJsonLog(file)});
 
         for (const {changes} of this._storage.Entries()) {
 
@@ -23,11 +24,11 @@ module.exports = class extends SyncedJsonTree {
 
         }
 
-        // compress storage
+    }
 
-        this._storage.clear();
+    compressStorage () {
 
-        this._storage.addToWriteQueue({changes: Array.from(this.Changes())});
+        this._storage.overwrite({changes: Array.from(this.Changes())});
 
     }
 
