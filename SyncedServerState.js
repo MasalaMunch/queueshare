@@ -5,15 +5,13 @@ const SyncedJsonTree = require(`synced-json-tree`);
 
 module.exports = class extends SyncedJsonTree {
 
-    constructor (config) {
+    constructor (path) {
 
-        super(config);
+        super();
 
-        const {file} = config;
+        this._storedJsonLog = new StoredJsonLog(path);
 
-        this._storage = new StoredJsonLog(file);
-
-        for (const {changes} of this._storage.Entries()) {
+        for (const {changes} of this._storedJsonLog.Entries()) {
 
             for (const c of changes) {
 
@@ -23,28 +21,19 @@ module.exports = class extends SyncedJsonTree {
 
         }
 
+        this.on(`change`, (c) => {
+
+            this._storedJsonLog.eventuallyAppend({changes: [c]});
+
+        });
+
     }
 
     compressStorage () {
 
-        this._storage.write({changes: Array.from(this.Changes())});
+        this._storedJsonLog.write({changes: Array.from(this.Changes())});
 
     }
 
-    receive (foreignChange) {
-
-        const localVersion = this.LocalVersion();
-
-        super.receive(foreignChange);
-
-        const changes = Array.from(this.ChangesSince(localVersion));
-
-        if (changes.length > 0) {
-
-            this._storage.eventuallyAppend({changes});
-
-        }
-
-    }
 
     };
