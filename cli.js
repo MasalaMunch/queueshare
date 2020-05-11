@@ -15,12 +15,6 @@ program.option(
     );
 
 program.option(
-    `-npm|--npm-command <command>`, 
-    "`${command} update` will be run to update queueshare", 
-    defaultConfig.npmCommand,
-    );
-
-program.option(
     `-p|--port <port>`, 
     `where the queue will be served`, 
     String(defaultConfig.port),
@@ -36,8 +30,6 @@ program.parse(process.argv);
 queueshare({
 
     dir: program.dir,
-
-    npmCommand: program.npmCommand,
 
     port: Number(program.port),
 
