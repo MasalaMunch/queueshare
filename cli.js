@@ -4,7 +4,7 @@
 
 const {program} = require(`commander`);
 
-const defaultConfig = require(`default-queueshare-config`);
+const defaultConfig = require(`./default-queueshare-config`);
 const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
