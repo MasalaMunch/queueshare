@@ -2,8 +2,10 @@
 
 "use strict";
 
-const defaultConfig = require(`./defaultConfig.js`);
 const {program} = require(`commander`);
+
+const defaultConfig = require(`default-queueshare-config`);
+const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
@@ -31,7 +33,7 @@ program.version(
 
 program.parse(process.argv);
 
-require(`.`)({
+queueshare({
 
     dir: program.dir,
 

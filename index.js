@@ -2,34 +2,39 @@
 
 const child_process = require(`child_process`);
 const path = require(`path`);
-const processMessages = require(`./processMessages.js`);
 const ShallowCopy = require(`shallow-copy`);
 
-const qsPath = path.join(__dirname, `queueshare.js`);
+const processMessages = require(`queueshare-process-messages`);
 
-const start = (configAsString) => {
+const start = (config) => {
 
-    const qsProcess = child_process.fork(qsPath, [configAsString]);
+    const childProcess = child_process.fork(
+
+        path.join(__dirname, `childProcess.js`), 
+
+        [JSON.stringify(ShallowCopy(config))],
+
+        );
 
     let shouldRestart = false;
 
-    qsProcess.on(`message`, (message) => {
+    childProcess.on(`message`, (message) => {
 
         if (message === processMessages.restartCommand) {
 
             shouldRestart = true;
 
-            qsProcess.send(processMessages.restartConfirmation);
+            childProcess.send(processMessages.restartConfirmation);
 
         }
 
     });
 
-    qsProcess.on(`exit`, () => {
+    childProcess.on(`exit`, () => {
 
         if (shouldRestart) {
 
-            start(configAsString);
+            start(config);
 
         }
 
@@ -41,6 +46,6 @@ module.exports = (config) => {
 
     console.log();
 
-    start(JSON.stringify(ShallowCopy(config)));
+    start(config);
 
 };

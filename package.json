@@ -15,19 +15,12 @@
     "queueshare": "cli.js"
   },
   "dependencies": {
-    "add": "file:local_node_modules/add",
     "cl-args": "file:local_node_modules/cl-args",
     "commander": "^5.0.0",
-    "define": "file:local_node_modules/define",
-    "express": "^4.17.1",
-    "require-node-version": "file:local_node_modules/require-node-version",
+    "default-queueshare-config": "file:local_node_modules/default-queueshare-config",
+    "queueshare-process-messages": "file:local_node_modules/queueshare-process-messages",
     "shallow-copy": "file:local_node_modules/shallow-copy",
-    "stored-json-log": "file:local_node_modules/stored-json-log",
-    "synced-json-tree": "file:local_node_modules/synced-json-tree",
-    "transform": "file:local_node_modules/transform",
-    "url-encoded-uuid": "file:local_node_modules/url-encoded-uuid",
-    "uu-device-id": "file:local_node_modules/uu-device-id",
-    "uu-process-id": "file:local_node_modules/uu-process-id"
+    "start-queueshare": "file:local_node_modules/start-queueshare"
   },
   "devDependencies": {}
 }
