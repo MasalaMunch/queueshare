@@ -18,9 +18,11 @@
     "cl-args": "file:local_node_modules/cl-args",
     "commander": "^5.0.0",
     "default-queueshare-config": "file:local_node_modules/default-queueshare-config",
+    "execa": "^4.0.1",
     "queueshare-process-messages": "file:local_node_modules/queueshare-process-messages",
     "shallow-copy": "file:local_node_modules/shallow-copy",
     "start-queueshare": "file:local_node_modules/start-queueshare"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "postinstall": "node postinstall.js"
 }
