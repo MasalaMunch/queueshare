@@ -23,6 +23,5 @@
     "shallow-copy": "file:local_node_modules/shallow-copy",
     "start-queueshare": "file:local_node_modules/start-queueshare"
   },
-  "devDependencies": {},
-  "postinstall": "node postinstall.js"
+  "devDependencies": {}
 }
