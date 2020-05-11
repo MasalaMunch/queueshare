@@ -1,6 +1,6 @@
 "use strict";
 
-const child_process = require(`child_process`);
+const execa = require(`execa`);
 const path = require(`path`);
 const ShallowCopy = require(`shallow-copy`);
 
@@ -8,13 +8,15 @@ const processMessages = require(`queueshare-process-messages`);
 
 const start = (config) => {
 
-    const childProcess = child_process.fork(
+    const childProcess = execa.node(
 
         path.join(__dirname, `childProcess.js`), 
 
         [JSON.stringify(ShallowCopy(config))],
 
         );
+
+    childProcess.stdout.pipe(process.stdout);
 
     let shouldRestart = false;
 
