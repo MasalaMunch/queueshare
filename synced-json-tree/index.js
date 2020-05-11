@@ -264,13 +264,15 @@ module.exports = class extends EventEmitter {
 
         tree.localVersion = localVersion;
 
-        tree.pendingFunctions.forEach((f) => f());
-
-        tree.pendingFunctions = [];
-
         tree.version = versions[versions.length-1];
 
         this.emit(`change`, change);
+
+        const {pendingFunctions} = tree;
+
+        tree.pendingFunctions = [];
+
+        pendingFunctions.forEach((f) => f());
 
     }
 
