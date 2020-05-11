@@ -1,8 +1,8 @@
 "use strict";
 
 const execa = require(`execa`);
+const Obj = require(`./obj`);
 const path = require(`path`);
-const ShallowCopy = require(`./shallow-copy`);
 
 const processMessages = require(`./queueshare-process-messages`);
 
@@ -12,7 +12,7 @@ const start = (config) => {
 
         path.join(__dirname, `childProcess.js`), 
 
-        [JSON.stringify(ShallowCopy(config))],
+        [JSON.stringify(Obj(config))],
 
         );
 

@@ -1,33 +1,21 @@
 "use strict";
 
-const add = require(`../add`);
 const assert = require(`assert`);
-const define = require(`../define`);
 const doNothing = require(`../do-nothing`);
-const ShallowCopy = require(`../shallow-copy`);
+const Obj = require(`../obj`);
 const State = require(`../state`);
 
 const AbstractTask = class extends State {
 
     constructor (props) {
 
-        props = ShallowCopy(props);
+        //TODO allow overriding f() in class
 
-        define(props, {prereqs: [], f: doNothing});
+        props = Obj(props);
 
-        const {prereqs, f} = props;
+        Obj.add(props, {
 
-        for (const task of prereqs) {
-
-            assert(task instanceof AbstractTask);
-
-        }
-
-        assert(typeof f === `function`);
-
-        add(props, {
-
-            inputs: prereqs,
+            inputs: props.prereqs,
 
             hasStarted: false,
 
@@ -36,6 +24,16 @@ const AbstractTask = class extends State {
             output: undefined,
 
             });
+
+        Obj.define(props, {prereqs: [], f: doNothing});
+
+        for (const task of props.prereqs) {
+
+            assert(task instanceof AbstractTask);
+
+        }
+
+        assert(typeof props.f === `function`);
 
         super(props);
 

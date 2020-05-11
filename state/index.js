@@ -1,39 +1,28 @@
 "use strict";
 
-const add = require(`../add`);
 const assert = require(`assert`);
-const define = require(`../define`);
 const doNothing = require(`../do-nothing`);
-const ShallowCopy = require(`../shallow-copy`);
-const transform = require(`../transform`);
+const Obj = require(`../obj`);
 
 const State = class {
 
     constructor (props) {
 
-        props = ShallowCopy(props);
+        Obj.add(this, props, {outputs: new Set()});
 
-        transform(props, (v) => (typeof v === `function`? v.bind(this) : v));
-
-        define(props, {inputs: [], update: doNothing});
-
-        const {inputs, update} = props;
-
-        for (const state of inputs) {
-
-            assert(state instanceof State);
-
-        }
-
-        assert(typeof update === `function`);
-
-        add(this, props, {outputs: new Set()});
+        Obj.define(this, {inputs: [], update: doNothing});
 
         for (const state of this.inputs) {
+
+            assert(state instanceof State);
 
             state.outputs.add(this);
 
         }
+
+        assert(typeof this.update === `function`);
+
+        Obj.transform(this, (v) => typeof v === `function`? v.bind(this) : v);
 
     }
 

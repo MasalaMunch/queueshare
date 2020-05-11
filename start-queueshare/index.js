@@ -1,9 +1,7 @@
 "use strict";
 
-
-const define = require(`../define`);
+const Obj = require(`../obj`);
 const path = require(`path`);
-const ShallowCopy = require(`../shallow-copy`);
 
 const defaultConfig = require(`../default-queueshare-config`);
 const keepUpdated = require(`./keepUpdated.js`);
@@ -13,9 +11,9 @@ const serve = require(`../serve-queueshare`);
 
 module.exports = (config) => {
 
-    config = ShallowCopy(config);
+    config = Obj(config);
 
-    define(config, defaultConfig);
+    Obj.define(config, defaultConfig);
 
     const {dir, port} = config;
 

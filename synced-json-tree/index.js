@@ -1,12 +1,10 @@
 "use strict";
 
 const assert = require(`assert`);
-const define = require(`../define`);
 const doNothing = require(`../do-nothing`);
 const EventEmitter = require(`events`);
-const freeze = require(`../freeze`);
+const Obj = require(`../obj`);
 const RedBlackTree = require(`bintrees`).RBTree;
-const ShallowCopy = require(`../shallow-copy`);
 
 const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
@@ -108,7 +106,7 @@ module.exports = class extends EventEmitter {
 
         foreignChange.versions = foreignChange.versions.map(Version.Copy);
 
-        freeze(foreignChange);
+        Obj.deeplyFreeze(foreignChange);
 
     }
 
