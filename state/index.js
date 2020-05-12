@@ -8,7 +8,25 @@ const State = class {
 
     constructor (props) {
 
-        Obj.add(this, props, {outputs: new Set()});
+        Obj.add(this, props);
+
+        this._initialize();
+
+    }
+
+    broadcastChange () {
+
+        for (const state of this.outputs) {
+
+            state.update();
+
+        }
+
+    }
+
+    _initialize () {
+
+        Obj.add(this, {outputs: new Set()});
 
         Obj.define(this, {inputs: [], update: doNothing});
 
@@ -23,16 +41,6 @@ const State = class {
         assert(typeof this.update === `function`);
 
         Obj.transform(this, (v) => typeof v === `function`? v.bind(this) : v);
-
-    }
-
-    broadcastChange () {
-
-        for (const state of this.outputs) {
-
-            state.update();
-
-        }
 
     }
 

@@ -6,9 +6,11 @@ module.exports = class extends AbstractTask {
 
     do () {
 
-        super.do();
+        this._broadcastStart();
 
-        this._broadcastCompletion(this.f());
+        const output = this.f();
+
+        this._broadcastFinish(output);
 
     }
 

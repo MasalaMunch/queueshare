@@ -9,31 +9,9 @@ const AbstractTask = class extends State {
 
     constructor (props) {
 
-        //TODO allow overriding f() in class
-
         props = Obj(props);
 
-        Obj.add(props, {
-
-            inputs: props.prereqs,
-
-            hasStarted: false,
-
-            isDone: false,
-
-            output: undefined,
-
-            });
-
-        Obj.define(props, {prereqs: [], f: doNothing});
-
-        for (const task of props.prereqs) {
-
-            assert(task instanceof AbstractTask);
-
-        }
-
-        assert(typeof props.f === `function`);
+        Obj.add(props, {inputs: props.prereqs});
 
         super(props);
 
@@ -41,11 +19,7 @@ const AbstractTask = class extends State {
 
     do () {
 
-        assert(!this.hasStarted);
-
-        this.hasStarted = true;
-
-        this.broadcastChange();
+        throw new Error(`method not implemented`);
 
     }
 
@@ -71,13 +45,41 @@ const AbstractTask = class extends State {
 
     }
 
-    _broadcastCompletion (output) {
+    _broadcastFinish () {
 
-        this.output = output;
+        assert(!this.isDone);
 
         this.isDone = true;
 
         this.broadcastChange();
+
+    }
+
+    _broadcastStart () {
+
+        assert(!this.hasStarted);
+
+        this.hasStarted = true;
+
+        this.broadcastChange();
+
+    }
+
+    _initialize () {
+
+        Obj.add(this, {hasStarted: false, isDone: false, output: undefined});
+
+        Obj.define(this, {prereqs: [], f: doNothing});
+
+        for (const task of this.prereqs) {
+
+            assert(task instanceof AbstractTask);
+
+        }
+
+        assert(typeof this.f === `function`);
+
+        super._initialize();
 
     }
 

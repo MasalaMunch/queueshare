@@ -7,7 +7,7 @@ const queue = new Queue();
 
 const start = () => setTimeout(() => {
 
-    const {func, resolve, reject} = queue.OldestItem();
+    const {f, resolve, reject} = queue.OldestItem();
 
     queue.deleteOldestItem();
 
@@ -21,7 +21,7 @@ const start = () => setTimeout(() => {
 
     try {
 
-        output = func();
+        output = f();
         handleOutput = resolve;
 
     } catch (error) {
@@ -35,13 +35,13 @@ const start = () => setTimeout(() => {
 
 }, 0);
 
-module.exports = (func) => new Promise((resolve, reject) => {
+module.exports = (f) => new Promise((resolve, reject) => {
 
-    assert(typeof func === `function`);
+    assert(typeof f === `function`);
 
     const isFirstFunc = queue.IsEmpty();
 
-    queue.add({func, resolve, reject});
+    queue.add({f, resolve, reject});
 
     if (isFirstFunc) {
 

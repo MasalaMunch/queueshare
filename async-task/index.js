@@ -6,9 +6,11 @@ module.exports = class extends AbstractTask {
 
     async do () {
 
-        super.do();
+        this._broadcastStart();
 
-        this._broadcastCompletion((await this.f()));
+        const output = await this.f();
+
+        this._broadcastFinish(output);
 
     }
 
