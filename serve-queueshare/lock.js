@@ -28,7 +28,7 @@ module.exports = (dir) => {
                 + ` try again.`
                 );
 
-            crash();
+            process.exit();
 
         }
         else {
