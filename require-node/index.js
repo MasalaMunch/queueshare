@@ -3,10 +3,10 @@
 const assert = require(`assert`);
 const semver = require(`semver`);
 
-const requireNodeVersion = (version) => {
+const requireNode = (version) => {
 
     assert(semver.gte(process.version, version));
 
 };
 
-module.exports = requireNodeVersion;
+module.exports = requireNode;

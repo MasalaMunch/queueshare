@@ -21,6 +21,8 @@ const SyncedState = class extends SyncedJsonTree {
 
         }
 
+        this.compressStorage();
+
         this.on(`change`, (c) => {
 
             this._storedJsonLog.eventuallyAppend({changes: [c]});

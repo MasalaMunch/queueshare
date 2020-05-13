@@ -5,113 +5,62 @@ const express = require(`express`);
 const fs = require(`fs`);
 const HashedString = require(`string-hash`);
 const IntWrapper = require(`../int-wrapper`);
+const ip = require(`ip`);
 const path = require(`path`);
 const portRange = require(`../port-range`);
-const requireNodeVersion = require(`../require-node-version`);
+const requireNode = require(`../require-node`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
 const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
 
 const log = require(`../log-to-queueshare`);
 const Paths = require(`./Paths.js`);
+const routes = require(`./routes.js`);
+const serveSyncedState = require(`./serveSyncedState.js`);
 const SyncedState = require(`./SyncedState.js`);
 
-requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
+requireNode(`10.12.0`); // so that recursive mkdir is supported
 
 const processId = UrlEncodedUuid(UuProcessId());
 
 const serveQueueshare = (dir) => {
 
-    const paths = Paths(dir);
+    const app = express();
+
+    const htmlPath = path.join(__dirname, `index.html`);
+
+    app.route(routes.ui).get((req, res) => res.sendFile(htmlPath));
 
     fs.mkdirSync(dir, {recursive: true});
 
+    const paths = Paths(dir);
+
     const id = UrlEncodedUuid(UuPathId(paths.id));
 
-    const port = IntWrapper(...portRange)(HashedString(UuPathId(paths.port)));
+    app.get(routes.id, (req, res) => res.json(id));
+
+    app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
+
+    app.get(routes.processId, (req, res) => res.json(processId));
 
     const syncedState = new SyncedState(paths.syncedState);
 
-    syncedState.compressStorage();
+    serveSyncedState(app, syncedState);
 
-    const server = express();
+    const port = IntWrapper(...portRange)(HashedString(UuPathId(paths.port)));
 
-    server.use(express.json());
+    const server = app.listen(port);
 
-    server.route(`/id`).get((request, response) => {
+    server.on(`listening`, () => {
 
-        response.json(id);
-
-    });
-
-    server.route(`/processId`).get((request, response) => {
-
-        response.json(processId);
+        log(
+            `QueueShare is now available at`
+            + ` http://localhost:${port}${routes.ui}`
+            );
 
     });
 
-    server.route(`/syncedState/changes`).get((request, response) => {
-
-        let {localVersion, limit} = request.query;
-
-        if (localVersion !== undefined) {
-
-            localVersion = JSON.parse(localVersion);
-
-        }
-
-        if (limit === undefined) {
-
-            limit = Infinity;
-
-        }
-        else {
-
-            limit = Number(limit);
-
-            assert(!isNaN(limit));
-
-        }
-
-        limit = Math.min(limit, 1000);
-
-        const changes = [];
-
-        for (const c of syncedState.ChangesSince(localVersion)) {
-
-            if (changes.length >= limit) {
-
-                break;
-
-            }
-
-            changes.push(c);
-
-        }
-
-        response.json(changes);
-
-    });
-
-    server.route(`/syncedState/changes`).post((request, response) => {
-
-        syncedState.receive(request.body);
-
-        response.end();
-
-    });
-
-    server.route(`/`).get((request, response) => {
-
-        response.sendFile(path.join(__dirname, `index.html`));
-
-    });
-
-    server.listen(port, () => {
-
-        log(`QueueShare is now available at http://localhost:${port}`);
-
-    }).on(`error`, (error) => {
+    server.on(`error`, (error) => {
 
         if (error.code === `EADDRINUSE`) {
 

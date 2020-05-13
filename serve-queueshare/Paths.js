@@ -5,7 +5,7 @@ const path = require(`path`);
 
 const Paths = (dir) => {
 
-    const relPaths = {
+    const relativePaths = {
 
         id: `id`,
 
@@ -15,9 +15,9 @@ const Paths = (dir) => {
 
         };
 
-    Obj.transform(relPaths, (p) => path.join(dir, p));
+    Obj.transform(relativePaths, (rp) => path.join(dir, rp));
 
-    return relPaths;
+    return relativePaths;
 
 };
 
