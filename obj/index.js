@@ -26,7 +26,6 @@ const add = (target, ...sources) => {
 
             }
 
-
         }
 
     }
@@ -54,7 +53,6 @@ add(Obj, {
                     }
 
                 }
-
 
             }
 
