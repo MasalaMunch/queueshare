@@ -15,11 +15,6 @@ program.option(
     path.join(os.homedir(), `queueshareData`),
     );
 
-program.option(
-    `-l|--loud`, 
-    `enable verbose logging`,
-    );
-
 program.version(
     version, 
     `-v|--version`,
@@ -28,8 +23,6 @@ program.version(
 program.parse(process.argv);
 
 queueshare({
-
-    beVerbose: program.loud,
 
     dir: program.dir,
 

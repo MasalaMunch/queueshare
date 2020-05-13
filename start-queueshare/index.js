@@ -6,12 +6,12 @@ const serve = require(`../serve-queueshare`);
 
 module.exports = (config) => {
 
-    const {dir, beVerbose} = config;
+    const {dir} = config;
 
     log(`Setting up...`);
 
     keepUpdated();
 
-    serve(dir, beVerbose);
+    serve(dir);
 
 };

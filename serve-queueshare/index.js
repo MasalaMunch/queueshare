@@ -20,7 +20,7 @@ requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
 
 const processId = UrlEncodedUuid(UuProcessId());
 
-module.exports = (dir, beVerbose) => {
+module.exports = (dir) => {
 
     const paths = Paths(dir);
 
@@ -124,12 +124,6 @@ module.exports = (dir, beVerbose) => {
                 + ` Multiple processes serving the same data can cause errors`
                 + ` and data corruption, so this process will be terminated.` 
                 );
-
-            if (beVerbose) {
-
-                throw error;
-
-            }
 
             process.exit();
 
