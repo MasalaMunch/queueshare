@@ -1,10 +1,8 @@
 "use strict";
 
-const doNothing = require(`./do-nothing`);
 const execa = require(`execa`);
 const Obj = require(`./obj`);
 const path = require(`path`);
-const throwError = require(`./throw-error`);
 
 const processMessages = require(`./queueshare-process-messages`);
 
