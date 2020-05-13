@@ -127,7 +127,7 @@ module.exports = (dir, beVerbose) => {
 
             if (beVerbose) {
 
-                console.error(error);
+                throw error;
 
             }
 

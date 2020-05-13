@@ -10,8 +10,6 @@ const processMessages = require(`./queueshare-process-messages`);
 
 const start = (config) => {
 
-    const {beVerbose} = Obj(config);
-
     const childProcess = execa.node(
 
         path.join(__dirname, `childProcess.js`), 
@@ -23,8 +21,6 @@ const start = (config) => {
     childProcess.stdout.pipe(process.stdout);
 
     childProcess.stderr.pipe(process.stderr);
-
-    childProcess.catch(beVerbose? throwError : doNothing);
 
     let shouldRestart = false;
 
