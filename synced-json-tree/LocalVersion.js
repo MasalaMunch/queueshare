@@ -10,8 +10,6 @@ module.exports = {
 
     Comparison,
 
-    Copy: (localVersion) => localVersion,
-
     oldest,
 
     validate: (localVersion) => {

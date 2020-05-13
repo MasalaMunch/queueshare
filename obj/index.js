@@ -1,7 +1,6 @@
 "use strict";
 
 const assert = require(`assert`);
-const deeplyFreeze = require(`deep-freeze`);
 
 module.exports = (something) => {
 
@@ -36,17 +35,6 @@ Object.assign(module.exports, {
 
         return target;
 
-    },
-
-    deeplyFreeze: (something) => {
-
-        if (something !== undefined && something !== null) {
-
-            deeplyFreeze(something);
-
-        }
-
-        return something;
     },
 
     define: (target, ...sources) => {

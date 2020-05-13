@@ -26,12 +26,6 @@ module.exports = {
 
     Comparison,
 
-    Copy: (version) => {
-
-        return {_number: version._number, _tiebreaker: version._tiebreaker};
-
-    },
-
     oldest,
 
     validate: (version) => {

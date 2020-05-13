@@ -93,20 +93,11 @@ module.exports = class extends EventEmitter {
 
         if (localVersion === undefined) {
 
-            foreignChange.localVersion = LocalVersion.Newer(this._localVersion);
-
-        }
-        else {
-
-            foreignChange.localVersion = LocalVersion.Copy(localVersion);
+            localVersion = LocalVersion.Newer(this._localVersion);
 
         }
 
-        foreignChange.path = Array.from(foreignChange.path);
-
-        foreignChange.versions = foreignChange.versions.map(Version.Copy);
-
-        Obj.deeplyFreeze(foreignChange);
+        foreignChange.localVersion = localVersion;
 
     }
 
