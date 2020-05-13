@@ -11,7 +11,7 @@ const {version} = require(`./package.json`);
 
 program.option(
     `-d|--dir <dir>`, 
-    `store queue data in {dir}`, 
+    `store queue data in <dir>`, 
     path.join(os.homedir(), `queueshareData`),
     );
 
