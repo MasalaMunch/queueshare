@@ -4,9 +4,7 @@ const path = require(`path`);
 
 const names = [
     
-    `deviceId`, 
-
-    `lock`, 
+    `id`, 
 
     `syncedState`,
 

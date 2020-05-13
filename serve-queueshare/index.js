@@ -3,13 +3,14 @@
 const assert = require(`assert`);
 const express = require(`express`);
 const fs = require(`fs`);
+const HashedString = require(`string-hash`);
+const IntWrapper = require(`../int-wrapper`);
 const path = require(`path`);
 const requireNodeVersion = require(`../require-node-version`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
-const UuDeviceId = require(`../uu-device-id`);
+const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
 
-const lock = require(`./lock.js`);
 const log = require(`../log-to-queueshare`);
 const Paths = require(`../queueshare-paths`);
 const SyncedState = require(`./SyncedState.js`);
@@ -18,15 +19,19 @@ requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
 
 const processId = UrlEncodedUuid(UuProcessId());
 
-module.exports = (dir, port) => {
-
-    fs.mkdirSync(dir, {recursive: true});
-
-    lock(dir);
+module.exports = (dir, beVerbose) => {
 
     const paths = Paths(dir);
 
-    const deviceId = UrlEncodedUuid(UuDeviceId(paths.deviceId));
+    fs.mkdirSync(dir, {recursive: true});
+
+    const uuPathId = UuPathId(paths.id);
+
+    const port = IntWrapper(1024, 49151)(HashedString(uuPathId));
+
+    const id = UrlEncodedUuid(uuPathId);
+
+    const deviceId = UrlEncodedUuid(uuPathId);
 
     const syncedState = new SyncedState(paths.syncedState);
 
@@ -36,15 +41,15 @@ module.exports = (dir, port) => {
 
     server.use(express.json());
 
-    server.route(`/processId`).get((request, response) => {
+    server.route(`/id`).get((request, response) => {
 
-        response.json(processId);
+        response.json(id);
 
     });
 
-    server.route(`/deviceId`).get((request, response) => {
+    server.route(`/processId`).get((request, response) => {
 
-        response.json(deviceId);
+        response.json(processId);
 
     });
 
@@ -105,11 +110,31 @@ module.exports = (dir, port) => {
 
     });
 
-    assert(typeof port === `number`);
-
     server.listen(port, () => {
 
         log(`QueueShare is now available at http://localhost:${port}`);
+
+    }).on(`error`, (error) => {
+
+        if (error.code === `EADDRINUSE`) {
+
+            log(
+                `There's already a queueshare process serving "${dir}".`
+                + ` Multiple processes serving the same data can cause errors`
+                + ` and data corruption, so this process will be terminated.` 
+                );
+
+            if (beVerbose) {
+
+                console.error(error);
+
+            }
+
+            process.exit();
+
+        }
+
+        throw error;
 
     });
 

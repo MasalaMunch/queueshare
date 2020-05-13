@@ -2,35 +2,35 @@
 
 "use strict";
 
+const os = require(`os`);
+const path = require(`path`);
 const {program} = require(`commander`);
 
-const defaultConfig = require(`./default-queueshare-config`);
 const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
     `-d|--dir <dir>`, 
-    `where the queue will be stored`, 
-    defaultConfig.dir,
+    `store queue data in {dir}`, 
+    path.join(os.homedir(), `queueshareData`),
     );
 
 program.option(
-    `-p|--port <port>`, 
-    `where the queue will be served`, 
-    String(defaultConfig.port),
+    `-l|--loud`, 
+    `enable verbose logging`,
     );
 
 program.version(
     version, 
-    `-v|--version`
+    `-v|--version`,
     );
 
 program.parse(process.argv);
 
 queueshare({
 
-    dir: program.dir,
+    beVerbose: program.loud,
 
-    port: Number(program.port),
+    dir: program.dir,
 
     });
