@@ -39,11 +39,11 @@ module.exports = (f) => new Promise((resolve, reject) => {
 
     assert(typeof f === `function`);
 
-    const isFirstFunc = queue.IsEmpty();
+    const isFirstInQueue = queue.IsEmpty();
 
     queue.add({f, resolve, reject});
 
-    if (isFirstFunc) {
+    if (isFirstInQueue) {
 
         start();
 
