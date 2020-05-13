@@ -7,6 +7,7 @@ const HashedString = require(`string-hash`);
 const IntWrapper = require(`../int-wrapper`);
 const path = require(`path`);
 const requireNodeVersion = require(`../require-node-version`);
+const tcpPortRange = require(`../tcp-port-range`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
 const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
@@ -27,7 +28,7 @@ module.exports = (dir, beVerbose) => {
 
     const uuPathId = UuPathId(paths.id);
 
-    const port = IntWrapper(1024, 49151)(HashedString(uuPathId));
+    const port = IntWrapper(...tcpPortRange)(HashedString(uuPathId));
 
     const id = UrlEncodedUuid(uuPathId);
 
