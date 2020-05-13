@@ -7,13 +7,13 @@ const HashedString = require(`string-hash`);
 const IntWrapper = require(`../int-wrapper`);
 const path = require(`path`);
 const requireNodeVersion = require(`../require-node-version`);
-const tcpPortRange = require(`../tcp-port-range`);
+const portRange = require(`../port-range`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
 const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
 
 const log = require(`../log-to-queueshare`);
-const Paths = require(`../queueshare-paths`);
+const Paths = require(`.Paths.js`);
 const SyncedState = require(`./SyncedState.js`);
 
 requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
@@ -26,13 +26,9 @@ module.exports = (dir) => {
 
     fs.mkdirSync(dir, {recursive: true});
 
-    const uuPathId = UuPathId(paths.id);
+    const id = UrlEncodedUuid(UuPathId(paths.id));
 
-    const port = IntWrapper(...tcpPortRange)(HashedString(uuPathId));
-
-    const id = UrlEncodedUuid(uuPathId);
-
-    const deviceId = UrlEncodedUuid(uuPathId);
+    const port = IntWrapper(...portRange)(HashedString(UuPathId(paths.port)));
 
     const syncedState = new SyncedState(paths.syncedState);
 
@@ -122,7 +118,9 @@ module.exports = (dir) => {
             log(
                 `There's already a queueshare process serving "${dir}".`
                 + ` Multiple processes serving the same data can cause errors`
-                + ` and data corruption, so this process will be terminated.` 
+                + ` and data corruption, so this process will be terminated. If` 
+                + ` you're certain that there are no other processes serving`
+                + ` this data, delete "${paths.port}" and try again.`
                 );
 
             process.exit();
