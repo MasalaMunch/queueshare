@@ -241,11 +241,11 @@ const SyncedJsonTree = class extends EventEmitter {
 
         const tree = this._tree.build(path);
 
-        for (const {localVersion: oldLocalVersion} of tree.Traversal()) {
+        for (const {localVersion} of tree.Traversal()) {
 
-            this._localVersionChanges.delete(oldLocalVersion);
+            this._localVersionChanges.delete(localVersion);
 
-            this._localVersionTree.remove(oldLocalVersion);
+            this._localVersionTree.remove(localVersion);
 
         }
 
