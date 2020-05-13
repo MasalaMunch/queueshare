@@ -35,7 +35,7 @@ const start = () => setTimeout(() => {
 
 }, 0);
 
-module.exports = (f) => new Promise((resolve, reject) => {
+const eventually = (f) => new Promise((resolve, reject) => {
 
     assert(typeof f === `function`);
 
@@ -50,3 +50,5 @@ module.exports = (f) => new Promise((resolve, reject) => {
     }
 
 });
+
+module.exports = eventually;

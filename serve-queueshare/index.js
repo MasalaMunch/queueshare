@@ -20,7 +20,7 @@ requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
 
 const processId = UrlEncodedUuid(UuProcessId());
 
-module.exports = (dir) => {
+const serveQueueshare = (dir) => {
 
     const paths = Paths(dir);
 
@@ -132,3 +132,5 @@ module.exports = (dir) => {
     });
 
 };
+
+module.exports = serveQueueshare;

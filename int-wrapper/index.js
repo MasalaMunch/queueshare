@@ -1,8 +1,8 @@
 "use strict";
 
 const assert = require(`assert`);
-    
-module.exports = (min, max) => {
+
+const IntWrapper = (min, max) => {
 
     assert(Number.isInteger(min));
 
@@ -19,3 +19,5 @@ module.exports = (min, max) => {
     };
 
 };
+
+module.exports = IntWrapper;

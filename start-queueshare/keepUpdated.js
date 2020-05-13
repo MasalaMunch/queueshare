@@ -16,7 +16,7 @@ const start = () => {
 
 };
 
-module.exports = () => {
+const keepUpdated = () => {
 
     process.on(`message`, (message) => {
 
@@ -31,3 +31,5 @@ module.exports = () => {
     start();
 
 };
+
+module.exports = keepUpdated;

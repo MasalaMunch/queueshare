@@ -4,7 +4,7 @@ const uuid = require(`uuid`);
 
 let uuProcessId;
 
-module.exports = () => {
+const UuProcessId = () => {
 
     if (uuProcessId === undefined) {
 
@@ -15,3 +15,5 @@ module.exports = () => {
     return uuProcessId;
 
 };
+
+module.exports = UuProcessId;

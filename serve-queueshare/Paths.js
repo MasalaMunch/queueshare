@@ -3,7 +3,7 @@
 const Obj = require(`../obj`);
 const path = require(`path`);
 
-module.exports = (dir) => {
+const Paths = (dir) => {
 
     const relPaths = {
 
@@ -20,3 +20,5 @@ module.exports = (dir) => {
     return relPaths;
 
 };
+
+module.exports = Paths;

@@ -2,7 +2,7 @@
 
 const AbstractTask = require(`../abstract-task`);
 
-module.exports = class extends AbstractTask {
+const Task = class extends AbstractTask {
 
     do () {
 
@@ -15,3 +15,5 @@ module.exports = class extends AbstractTask {
     }
 
     };
+
+module.exports = Task;

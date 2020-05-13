@@ -3,7 +3,7 @@
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
-module.exports = class extends SyncedJsonTree {
+const SyncedState = class extends SyncedJsonTree {
 
     constructor (path) {
 
@@ -37,3 +37,5 @@ module.exports = class extends SyncedJsonTree {
 
 
     };
+
+module.exports = SyncedState;

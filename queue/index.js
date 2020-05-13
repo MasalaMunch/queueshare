@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = class {
+const Queue = class {
 
     constructor () {
 
@@ -53,3 +53,5 @@ module.exports = class {
     }
 
     };
+
+module.exports = Queue;

@@ -1,3 +1,5 @@
 "use strict";
 
-module.exports = () => {};
+const doNothing = () => {};
+
+module.exports = doNothing;

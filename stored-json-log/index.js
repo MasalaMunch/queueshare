@@ -19,7 +19,7 @@ const entryAsStringSeparator = `\n`;
 
 const fileEncoding = `utf8`;
 
-module.exports = class {
+const StoredJsonLog = class {
 
     constructor (path) {
 
@@ -96,3 +96,5 @@ module.exports = class {
     }
 
     };
+
+module.exports = StoredJsonLog;

@@ -46,10 +46,12 @@ const start = (config) => {
 
 };
 
-module.exports = (config) => {
+const queueshare = (config) => {
 
     console.log();
 
     start(config);
 
 };
+
+module.exports = queueshare;

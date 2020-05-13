@@ -22,7 +22,7 @@ const oldest = {_number: 0, _tiebreaker: ``};
 
 const myTiebreaker = UrlEncodedUuid(UuProcessId());
 
-module.exports = {
+const Version = {
 
     Comparison,
 
@@ -45,3 +45,5 @@ module.exports = {
     },
 
     };
+
+module.exports = Version;

@@ -10,7 +10,7 @@ const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
 const Version = require(`./Version.js`);
 
-module.exports = class extends EventEmitter {
+const SyncedJsonTree = class extends EventEmitter {
 
     constructor () {
 
@@ -266,3 +266,5 @@ module.exports = class extends EventEmitter {
     }
 
     };
+
+module.exports = SyncedJsonTree;

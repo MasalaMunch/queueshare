@@ -5,7 +5,7 @@ const uuid = require(`uuid`);
 
 const fileEncoding = `utf8`;
 
-module.exports = (path) => {
+const UuPathId = (path) => {
 
     let uuPathId;
 
@@ -34,3 +34,5 @@ module.exports = (path) => {
     return uuPathId;
 
 };
+
+module.exports = UuPathId;

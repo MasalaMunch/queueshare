@@ -6,7 +6,7 @@ const Comparison = (a, b) => a - b;
 
 const oldest = 0;
 
-module.exports = {
+const LocalVersion = {
 
     Comparison,
 
@@ -23,3 +23,5 @@ module.exports = {
     Newer: (localVersion) => localVersion + 1,
 
     };
+
+module.exports = LocalVersion;

@@ -2,7 +2,7 @@
 
 const assert = require(`assert`);
 
-module.exports = (something) => {
+const Obj = (something) => {
 
     const obj = {};
 
@@ -12,30 +12,32 @@ module.exports = (something) => {
 
 };
 
-Object.assign(module.exports, {
+const add = (target, ...sources) => {
 
-    add: (target, ...sources) => {
+    for (const s of sources) {
 
-        for (const s of sources) {
+        for (const key in s) {
 
-            for (const key in s) {
+            if (s.hasOwnProperty(key)) {
 
-                if (s.hasOwnProperty(key)) {
+                assert(!(key in target));
 
-                    assert(!(key in target));
-
-                    target[key] = s[key];                
-
-                }
-
+                target[key] = s[key];                
 
             }
 
+
         }
 
-        return target;
+    }
 
-    },
+    return target;
+
+};
+
+add(Obj, {
+
+    add,
 
     define: (target, ...sources) => {
 
@@ -79,3 +81,5 @@ Object.assign(module.exports, {
     },
 
     });
+
+module.exports = Obj;
