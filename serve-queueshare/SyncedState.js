@@ -31,7 +31,7 @@ module.exports = class extends SyncedJsonTree {
 
     compressStorage () {
 
-        this._storedJsonLog.write({changes: Array.from(this.Changes())});
+        this._storedJsonLog.write({changes: [...this.Changes()]});
 
     }
 
