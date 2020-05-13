@@ -13,7 +13,7 @@ const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
 
 const log = require(`../log-to-queueshare`);
-const Paths = require(`.Paths.js`);
+const Paths = require(`./Paths.js`);
 const SyncedState = require(`./SyncedState.js`);
 
 requireNodeVersion(`10.12.0`); // so that recursive mkdir is supported
