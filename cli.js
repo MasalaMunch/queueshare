@@ -11,18 +11,13 @@ const {version} = require(`./package.json`);
 
 program.option(
     `-d|--dev`, 
-    `run QueueShare in developer mode`, 
+    `run in developer mode`, 
     );
 
 program.option(
     `-f|--folder <folder>`, 
-    `store queue data in <folder>`, 
+    `store data in <folder>`, 
     path.join(os.homedir(), `QueueShare Data`),
-    );
-
-program.option(
-    `-nu|--no-update`, 
-    `don't automatically update QueueShare`, 
     );
 
 program.version(
@@ -37,7 +32,5 @@ queueshare({
     folder: program.folder,
 
     isDev: program.dev,
-
-    shouldUpdate: program.update,
 
     });

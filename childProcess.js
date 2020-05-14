@@ -9,7 +9,7 @@ const serve = require(`./serve-queueshare`);
 
 log(`Setting up...`);
 
-const {folder, isDev, shouldUpdate} = JSON.parse(clArgs[0]);
+const {folder, isDev} = JSON.parse(clArgs[0]);
 
 const pkgPath = __dirname;
 
@@ -18,7 +18,7 @@ if (isDev) {
     monitor(pkgPath);
 
 }
-else if (shouldUpdate) {
+else {
 
     keepUpdated(pkgPath);
 
