@@ -1,18 +1,39 @@
 "use strict";
 
+const execa = require(`execa`);
+const fs = require(`fs`);
 const path = require(`path`);
 
 const processMessages = require(`../queueshare-process-messages`);
 
-const start = () => {
+const pkgPath = path.resolve(__dirname, `..`);
 
-    //TODO run npm up using execa
+const PkgLockModTime = async () => {
+    
+    const pkgLockPath = path.join(pkgPath, `package-lock.json`);
 
-    const packageLockPath = path.resolve(__dirname, `..`, `package-lock.json`);
+    return (await fs.promises.stat(pkgLockPath)).mtimeMs;
 
-    //TODO use this^ to check if changes happened and restart if they did
+};
 
-    setTimeout(() => start(), 1000 * 60 * 60);
+const start = async () => {
+
+    const pkgLockModTime = await PkgLockModTime();
+
+    await execa(`npm`, [`install`], {cwd: pkgPath});
+
+    const newPkgLockModTime = await PkgLockModTime();
+
+    if (pkgLockModTime === newPkgLockModTime) {
+
+        setTimeout(start, 1000 * 60 * 60);        
+
+    }
+    else {
+
+        process.send(processMessages.restartCommand);
+
+    }
 
 };
 

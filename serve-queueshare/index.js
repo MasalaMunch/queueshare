@@ -21,8 +21,6 @@ const SyncedState = require(`./SyncedState.js`);
 
 requireNode(`10.12.0`); // so that recursive mkdir is supported
 
-const processId = UrlEncodedUuid(UuProcessId());
-
 const serveQueueshare = (dir) => {
 
     const app = express();
@@ -40,6 +38,8 @@ const serveQueueshare = (dir) => {
     app.get(routes.id, (req, res) => res.json(id));
 
     app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
+
+    const processId = UrlEncodedUuid(UuProcessId());
 
     app.get(routes.processId, (req, res) => res.json(processId));
 
