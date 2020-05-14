@@ -6,6 +6,7 @@ const os = require(`os`);
 const path = require(`path`);
 const {program} = require(`commander`);
 
+const log = require(`./log-to-queueshare`);
 const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
@@ -20,10 +21,35 @@ program.option(
     `run in developer mode`, 
     );
 
-program.version(
-    version, 
+program.option(
     `-v|--version`,
+    `output the current version`,
     );
+
+program.on(`option:version`, () => {
+
+    console.log();
+
+    log(version);
+
+    process.exit();
+
+});
+
+program.option(
+    `-h|--help`,
+    `output help for command`,
+    );
+
+program.on(`option:help`, () => {
+
+    console.log();
+
+    console.log(program.helpInformation());
+
+    process.exit();
+
+});
 
 program.parse(process.argv);
 
