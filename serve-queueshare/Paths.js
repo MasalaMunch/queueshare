@@ -3,7 +3,7 @@
 const Obj = require(`../obj`);
 const path = require(`path`);
 
-const Paths = (dir) => {
+const Paths = (folder) => {
 
     const relativePaths = {
 
@@ -15,7 +15,7 @@ const Paths = (dir) => {
 
         };
 
-    Obj.transform(relativePaths, (rp) => path.join(dir, rp));
+    Obj.transform(relativePaths, (rp) => path.join(folder, rp));
 
     return relativePaths;
 

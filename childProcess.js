@@ -10,4 +10,4 @@ log(`Setting up...`);
 
 keepUpdated(__dirname);
 
-serve(JSON.parse(clArgs[0]).dir);
+serve(JSON.parse(clArgs[0]).folder);

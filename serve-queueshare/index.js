@@ -19,7 +19,7 @@ const routes = require(`./routes.js`);
 const serveSyncedState = require(`./serveSyncedState.js`);
 const SyncedState = require(`./SyncedState.js`);
 
-const serveQueueshare = (dir) => {
+const serveQueueshare = (folder) => {
 
     const app = express();
 
@@ -27,9 +27,9 @@ const serveQueueshare = (dir) => {
 
     app.route(routes.ui).get((req, res) => res.sendFile(htmlPath));
 
-    mkdirp.sync(dir);
+    mkdirp.sync(folder);
 
-    const paths = Paths(dir);
+    const paths = Paths(folder);
 
     const id = UrlEncodedUuid(UuPathId(paths.id));
 
@@ -63,7 +63,7 @@ const serveQueueshare = (dir) => {
         if (error.code === `EADDRINUSE`) {
 
             log(
-                `There's already a QueueShare process serving "${dir}".`
+                `There's already a QueueShare process serving "${folder}".`
                 + ` Multiple processes serving the same data can cause errors`
                 + ` and data corruption, so this process will be terminated.`
                 );

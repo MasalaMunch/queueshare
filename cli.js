@@ -10,8 +10,8 @@ const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
-    `-d|--dir <dir>`, 
-    `store queue data in <dir>`, 
+    `-f|--folder <folder>`, 
+    `store queue data in <folder>`, 
     path.join(os.homedir(), `queueshareData`),
     );
 
@@ -24,6 +24,6 @@ program.parse(process.argv);
 
 queueshare({
 
-    dir: program.dir,
+    folder: program.folder,
 
     });
