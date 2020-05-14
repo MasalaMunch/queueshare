@@ -2,4 +2,10 @@
 
 const processMessages = require(`../queueshare-process-messages`);
 
-//TODO
+const monitorQueueshare = (pkgPath) => {
+
+    //TODO
+
+};
+
+module.exports = monitorQueueshare;
