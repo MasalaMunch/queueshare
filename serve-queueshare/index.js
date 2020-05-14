@@ -6,6 +6,7 @@ const fs = require(`fs`);
 const HashedString = require(`string-hash`);
 const IntWrapper = require(`../int-wrapper`);
 const ip = require(`ip`);
+const mkdirp = require(`mkdirp`);
 const path = require(`path`);
 const portRange = require(`../port-range`);
 const requireNode = require(`../require-node`);
@@ -19,8 +20,6 @@ const routes = require(`./routes.js`);
 const serveSyncedState = require(`./serveSyncedState.js`);
 const SyncedState = require(`./SyncedState.js`);
 
-requireNode(`10.12.0`); // so that recursive mkdir is supported
-
 const serveQueueshare = (dir) => {
 
     const app = express();
@@ -29,7 +28,7 @@ const serveQueueshare = (dir) => {
 
     app.route(routes.ui).get((req, res) => res.sendFile(htmlPath));
 
-    fs.mkdirSync(dir, {recursive: true});
+    mkdirp.sync(dir);
 
     const paths = Paths(dir);
 
@@ -67,9 +66,7 @@ const serveQueueshare = (dir) => {
             log(
                 `There's already a QueueShare process serving "${dir}".`
                 + ` Multiple processes serving the same data can cause errors`
-                + ` and data corruption, so this process will be terminated. If` 
-                + ` you're certain that there are no other processes serving`
-                + ` this data, delete "${paths.port}" and try again.`
+                + ` and data corruption, so this process will be terminated.`
                 );
 
             process.exit();
