@@ -9,7 +9,6 @@ const ip = require(`ip`);
 const mkdirp = require(`mkdirp`);
 const path = require(`path`);
 const portRange = require(`../port-range`);
-const requireNode = require(`../require-node`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
 const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
