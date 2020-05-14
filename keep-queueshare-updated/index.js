@@ -9,7 +9,7 @@ const processMessages = require(`../queueshare-process-messages`);
 
 const ModTime = async (path) => (await fs.promises.stat(path)).mtimeMs;
 
-const start = async (pkgPath) => {
+const keepQueueshareUpdated = async (pkgPath) => {
 
     const pkgLockPath = path.join(pkgPath, `package-lock.json`);
 
@@ -21,7 +21,7 @@ const start = async (pkgPath) => {
 
     if (pkgLockModTime === newPkgLockModTime) {
 
-        setTimeout(() => start(pkgPath), 1000 * 60 * 60);        
+        setTimeout(() => keepQueueshareUpdated(pkgPath), 1000 * 60 * 60);        
 
     }
     else {
@@ -31,22 +31,6 @@ const start = async (pkgPath) => {
         process.send(processMessages.restartCommand);
 
     }
-
-};
-
-const keepQueueshareUpdated = (pkgPath) => {
-
-    process.on(`message`, (message) => {
-
-        if (message === processMessages.restartConfirmation) {
-
-            process.exit();
-
-        }
-
-    });
-
-    start(pkgPath);
 
 };
 
