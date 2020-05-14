@@ -169,7 +169,9 @@ const SyncedJsonTree = class extends EventEmitter {
 
             path,
 
-            value: value === undefined? value : JSON.parse(JSON.stringify(value)),
+            value: (
+                value === undefined? value : JSON.parse(JSON.stringify(value))
+                ),
 
             };
 
