@@ -4,6 +4,7 @@ const execa = require(`execa`);
 const fs = require(`fs`);
 const path = require(`path`);
 
+const log = require(`../log-to-queueshare`);
 const processMessages = require(`../queueshare-process-messages`);
 
 const ModTime = async (path) => (await fs.promises.stat(path)).mtimeMs;
@@ -24,6 +25,8 @@ const start = async (pkgPath) => {
 
     }
     else {
+
+        log(`QueueShare was updated. Restarting...`);
 
         process.send(processMessages.restartCommand);
 

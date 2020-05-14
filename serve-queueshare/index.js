@@ -65,7 +65,7 @@ const serveQueueshare = (dir) => {
         if (error.code === `EADDRINUSE`) {
 
             log(
-                `There's already a queueshare process serving "${dir}".`
+                `There's already a QueueShare process serving "${dir}".`
                 + ` Multiple processes serving the same data can cause errors`
                 + ` and data corruption, so this process will be terminated. If` 
                 + ` you're certain that there are no other processes serving`
