@@ -20,7 +20,7 @@ const SyncedJsonTree = class extends EventEmitter {
 
         this._localVersionChanges = new Map();
 
-        this._localVersionTree = new RedBlackTree(LocalVersion.Comparison);
+        this._orderedLocalVersions = new RedBlackTree(LocalVersion.Comparison);
 
         this._tree = new Tree();
 
@@ -45,7 +45,7 @@ const SyncedJsonTree = class extends EventEmitter {
 
         }
 
-        const iterator = this._localVersionTree.upperBound(localVersion);
+        const iterator = this._orderedLocalVersions.upperBound(localVersion);
 
         while (iterator.data() !== null) {
 
@@ -237,7 +237,7 @@ const SyncedJsonTree = class extends EventEmitter {
 
         this._localVersionChanges.set(localVersion, change);
 
-        this._localVersionTree.insert(localVersion);
+        this._orderedLocalVersions.insert(localVersion);
 
         const tree = this._tree.build(path);
 
@@ -245,7 +245,7 @@ const SyncedJsonTree = class extends EventEmitter {
 
             this._localVersionChanges.delete(localVersion);
 
-            this._localVersionTree.remove(localVersion);
+            this._orderedLocalVersions.remove(localVersion);
 
         }
 
