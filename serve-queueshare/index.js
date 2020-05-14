@@ -18,11 +18,13 @@ const routes = require(`./routes.js`);
 const serveSyncedState = require(`./serveSyncedState.js`);
 const SyncedState = require(`./SyncedState.js`);
 
+const htmlPath = path.join(__dirname, `index.html`);
+
+const processId = UrlEncodedUuid(UuProcessId());
+
 const serveQueueshare = (folder) => {
 
     const app = express();
-
-    const htmlPath = path.join(__dirname, `index.html`);
 
     app.route(routes.ui).get((req, res) => res.sendFile(htmlPath));
 
@@ -35,8 +37,6 @@ const serveQueueshare = (folder) => {
     app.get(routes.id, (req, res) => res.json(id));
 
     app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
-
-    const processId = UrlEncodedUuid(UuProcessId());
 
     app.get(routes.processId, (req, res) => res.json(processId));
 
