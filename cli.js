@@ -10,14 +10,14 @@ const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
-    `-d|--dev`, 
-    `run in developer mode`, 
-    );
-
-program.option(
     `-f|--folder <folder>`, 
     `store data in <folder>`, 
     path.join(os.homedir(), `QueueShare Data`),
+    );
+
+program.option(
+    `-d|--dev`, 
+    `run in developer mode`, 
     );
 
 program.version(
