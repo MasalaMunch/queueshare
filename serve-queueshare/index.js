@@ -8,7 +8,6 @@ const IntWrapper = require(`../int-wrapper`);
 const ip = require(`ip`);
 const path = require(`path`);
 const portRange = require(`../port-range`);
-const requireNode = require(`../require-node`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
 const UuPathId = require(`../uu-path-id`);
 const UuProcessId = require(`../uu-process-id`);
@@ -18,8 +17,6 @@ const Paths = require(`./Paths.js`);
 const routes = require(`./routes.js`);
 const serveSyncedState = require(`./serveSyncedState.js`);
 const SyncedState = require(`./SyncedState.js`);
-
-requireNode(`10.12.0`); // so that recursive mkdir is supported
 
 const serveQueueshare = (folder) => {
 
