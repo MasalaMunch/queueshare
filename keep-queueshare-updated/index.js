@@ -6,27 +6,21 @@ const path = require(`path`);
 
 const processMessages = require(`../queueshare-process-messages`);
 
-const pkgPath = path.resolve(__dirname, `..`);
+const ModTime = async (path) => (await fs.promises.stat(path)).mtimeMs;
 
-const PkgLockModTime = async () => {
-    
+const start = async (pkgPath) => {
+
     const pkgLockPath = path.join(pkgPath, `package-lock.json`);
 
-    return (await fs.promises.stat(pkgLockPath)).mtimeMs;
-
-};
-
-const start = async () => {
-
-    const pkgLockModTime = await PkgLockModTime();
+    const pkgLockModTime = await ModTime(pkgLockPath);
 
     await execa(`npm`, [`install`], {cwd: pkgPath});
 
-    const newPkgLockModTime = await PkgLockModTime();
+    const newPkgLockModTime = await ModTime(pkgLockPath);
 
     if (pkgLockModTime === newPkgLockModTime) {
 
-        setTimeout(start, 1000 * 60 * 60);        
+        setTimeout(() => start(pkgPath), 1000 * 60 * 60);        
 
     }
     else {
@@ -37,7 +31,7 @@ const start = async () => {
 
 };
 
-const keepUpdated = () => {
+const keepQueueshareUpdated = (pkgPath) => {
 
     process.on(`message`, (message) => {
 
@@ -49,8 +43,8 @@ const keepUpdated = () => {
 
     });
 
-    start();
+    start(pkgPath);
 
 };
 
-module.exports = keepUpdated;
+module.exports = keepQueueshareUpdated;
