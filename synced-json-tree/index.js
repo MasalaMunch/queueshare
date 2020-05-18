@@ -131,8 +131,6 @@ const SyncedJsonTree = class extends EventEmitter {
 
         LocalVersion.validate(localVersion);
 
-        assert(!this._localVersionChanges.has(localVersion));
-
         this._changify(foreignChange, localVersion);
 
         return foreignChange;
@@ -230,6 +228,8 @@ const SyncedJsonTree = class extends EventEmitter {
         const change = foreignChangeOrChange;
 
         const {path, versions, localVersion} = change;
+
+        assert(!this._localVersionChanges.has(localVersion));
 
         if (LocalVersion.Comparison(localVersion, this._localVersion) > 0) {
 
