@@ -1,6 +1,6 @@
 "use strict";
 
-const queueshareProcessMessages = {
+const qssProcessMessages = {
 
     restartCommand: `Revive me the next time I die, please.`,
 
@@ -8,4 +8,4 @@ const queueshareProcessMessages = {
 
     };
 
-module.exports = queueshareProcessMessages;
+module.exports = qssProcessMessages;

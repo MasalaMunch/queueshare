@@ -4,7 +4,7 @@ const execa = require(`execa`);
 const Obj = require(`./obj`);
 const path = require(`path`);
 
-const processMessages = require(`./queueshare-process-messages`);
+const processMessages = require(`./qss-process-messages`);
 
 const start = (config) => {
 
@@ -30,7 +30,7 @@ const start = (config) => {
 
             childProcess.send(processMessages.restartConfirmation);
 
-        }
+        }   
 
     });
 

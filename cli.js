@@ -6,7 +6,7 @@ const os = require(`os`);
 const path = require(`path`);
 const {program} = require(`commander`);
 
-const log = require(`./log-to-queueshare`);
+const log = require(`./log-to-qss`);
 const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
