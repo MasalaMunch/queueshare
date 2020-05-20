@@ -4,11 +4,9 @@ const EventEmitter = require(`events`);
 
 const qssEvents = new EventEmitter();
 
-const emitMaintenance = () => qssEvents.emit(`maintenance`);
-
 qssEvents.on(`folderLockAcquisition`, () => process.nextTick(() => {
 
-    emitMaintenance();
+    qssEvents.emit(`maintenance`);
 
     qssEvents.emit(`setupCompletion`);
 
@@ -20,7 +18,13 @@ const resetMaintenanceTimeout = () => {
 
     clearTimeout(maintenanceTimeout);
 
-    maintenanceTimeout = setTimeout(emitMaintenance, 1000 * 60 * 60);
+    maintenanceTimeout = setTimeout(
+
+        () => qssEvents.emit(`maintenance`), 
+
+        1000 * 60 * 60,
+
+        );
 
 };
 
