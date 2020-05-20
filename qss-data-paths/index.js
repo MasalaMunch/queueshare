@@ -3,11 +3,13 @@
 const Obj = require(`../obj`);
 const path = require(`path`);
 
-const Paths = (folder) => {
+const QssDataPaths = (folder) => {
 
     const relativePaths = {
 
         id: `id`,
+
+        media: `media`,
 
         port: `port`,
 
@@ -21,4 +23,4 @@ const Paths = (folder) => {
 
 };
 
-module.exports = Paths;
+module.exports = QssDataPaths;

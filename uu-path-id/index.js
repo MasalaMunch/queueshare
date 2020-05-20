@@ -1,33 +1,20 @@
 "use strict";
 
+const FileContents = require(`../file-contents`);
 const fs = require(`fs`);
 const uuid = require(`uuid`);
 
-const fileEncoding = `utf8`;
+const fileOptions = {encoding: `utf8`};
 
 const UuPathId = (path) => {
 
-    let uuPathId;
+    let uuPathId = FileContents(path, fileOptions);
 
-    try {
+    if (uuPathId === undefined) {
 
-        uuPathId = fs.readFileSync(path, {encoding: fileEncoding});
+        uuPathId = uuid.v4();
 
-    }
-    catch (error) {
-
-        if (error.code === `ENOENT`) {
-
-            uuPathId = uuid.v4();
-
-            fs.writeFileSync(path, uuPathId, {encoding: fileEncoding});
-
-        }
-        else {
-
-            throw error;
-
-        }
+        fs.writeFileSync(path, uuPathId, fileOptions);
 
     }
 

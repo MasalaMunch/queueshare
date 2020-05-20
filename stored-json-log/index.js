@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require(`assert`);
+const FileContents = require(`../file-contents`);
 const fs = require(`fs`);
 
 const EntryAsString = (entry) => {
@@ -23,11 +24,11 @@ const StoredJsonLog = class {
 
     constructor (path) {
 
-        this._file = path;
+        this._filePath = path;
 
         this._fileAppendStream = fs.createWriteStream(
 
-            this._file, 
+            this._filePath, 
 
             {encoding: fileEncoding, flags: `a`},
 
@@ -37,31 +38,17 @@ const StoredJsonLog = class {
 
     Entries () {
 
-        let fileAsString;
+        let fileAsString = FileContents(
 
-        try {
+            this._filePath, 
 
-            fileAsString = fs.readFileSync(
+            {encoding: fileEncoding},
 
-                this._file, 
+            );
 
-                {encoding: fileEncoding},
+        if (fileAsString === undefined) {
 
-                );
-
-        } 
-        catch (error) {
-
-            if (error.code === `ENOENT`) {
-
-                fileAsString = ``;
-
-            }
-            else {
-
-                throw error;
-                
-            }
+            fileAsString = ``;
 
         }
 
@@ -85,7 +72,7 @@ const StoredJsonLog = class {
 
         fs.writeFileSync(
 
-            this._file, 
+            this._filePath, 
 
             EntryAsString(entry) + entryAsStringSeparator,
 
