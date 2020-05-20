@@ -57,22 +57,18 @@ fs.mkdirSync(folder, {recursive: true});
 
 const port = Port(dataPaths);
 
-const server = App(dataPaths).listen(port);
+events.once(`setupCompletion`, () => {
 
-server.on(`listening`, () => {
-
-    events.emit(`folderLockAcquisition`);
-
-    events.once(`maintenance`, () => {
-
-        log(
-            `QueueShare is now available at`
-            + ` http://localhost:${port}${routes.client}`
-            );
-
-    });
+    log(
+        `QueueShare is now available at`
+        + ` http://localhost:${port}${routes.client}`
+        );
 
 });
+
+const server = App(dataPaths).listen(port);
+
+server.once(`listening`, () => events.emit(`folderLockAcquisition`));
 
 server.on(`error`, (error) => {
 

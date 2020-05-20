@@ -6,7 +6,13 @@ const qssEvents = new EventEmitter();
 
 const emitMaintenance = () => qssEvents.emit(`maintenance`);
 
-qssEvents.on(`folderLockAcquisition`, () => process.nextTick(emitMaintenance));
+qssEvents.on(`folderLockAcquisition`, () => process.nextTick(() => {
+
+    emitMaintenance();
+
+    qssEvents.emit(`setupCompletion`);
+
+}));
 
 let maintenanceTimeout;
 
