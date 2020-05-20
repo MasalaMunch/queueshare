@@ -14,26 +14,12 @@ const SyncedState = class extends SyncedJsonTree {
 
         this._hasLoadedStorage = false;
 
-        this._isLoadingStorage = false;
-
         this._storage = new StoredJsonLog(dataPaths.syncedState);
-
-        this.on(`change`, (c) => {
-
-            if (!this._isLoadingStorage) {
-
-                this._storage.eventuallyAppend({changes: [c]});                
-
-            }
-
-        });
 
         // in the future, on change, when a media key is referenced, 
         // check if it exists and if it doesn't, try downloading it
 
         process.nextTick(() => {
-
-            this._isLoadingStorage = true;
 
             for (const {changes} of this._storage.Entries()) {
 
@@ -45,9 +31,13 @@ const SyncedState = class extends SyncedJsonTree {
 
             }
 
-            this._isLoadingStorage = false;
-
             this._hasLoadedStorage = true;
+
+            this.on(`change`, (c) => {
+
+                this._storage.eventuallyAppend({changes: [c]});                
+
+            });
 
         });
 
