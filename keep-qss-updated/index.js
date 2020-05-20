@@ -6,7 +6,7 @@ const path = require(`path`);
 
 const events = require(`../qss-events`);
 const packagePath = require(`../qss-package-path`);
-const restartQss = require(`../restart-qss`);
+const restart = require(`../restart-qss`);
 
 const packageLockPath = path.join(packagePath, `package-lock.json`);
 
@@ -22,7 +22,7 @@ const update = () => {
 
     if (pkgLockModTime !== newPkgLockModTime) {
 
-        restartQss(`QueueShare was updated.`);
+        restart(`QueueShare was updated.`);
 
     }
 

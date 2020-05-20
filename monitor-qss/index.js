@@ -3,7 +3,7 @@
 const chokidar = require(`chokidar`);
 
 const packagePath = require(`../qss-package-path`);
-const restartQss = require(`../restart-qss`);
+const restart = require(`../restart-qss`);
 
 const monitorQss = () => {
 
@@ -21,7 +21,7 @@ const monitorQss = () => {
 
     });
 
-    watcher.on(`all`, () => restartQss(`A change was detected.`));
+    watcher.on(`all`, () => restart(`A change was detected.`));
 
 };
 
