@@ -12,12 +12,28 @@ const SyncedState = class extends SyncedJsonTree {
 
         super();
 
+        this._hasLoadedStorage = false;
+
+        this._isLoadingStorage = false;
+
         this._storage = new StoredJsonLog(dataPaths.syncedState);
+
+        this.on(`change`, (c) => {
+
+            if (!this._isLoadingStorage) {
+
+                this._storage.eventuallyAppend({changes: [c]});                
+
+            }
+
+        });
 
         // in the future, on change, when a media key is referenced, 
         // check if it exists and if it doesn't, try downloading it
 
-        events.on(`folderLockAcquisition`, () => {
+        process.nextTick(() => {
+
+            this._isLoadingStorage = true;
 
             for (const {changes} of this._storage.Entries()) {
 
@@ -29,19 +45,24 @@ const SyncedState = class extends SyncedJsonTree {
 
             }
 
-            this.on(`change`, (c) => {
+            this._isLoadingStorage = false;
 
-                this._storage.eventuallyAppend({changes: [c]});
+            this._hasLoadedStorage = true;
 
-            });
+        });
+
+        events.on(`folderLockAcquisition`, () => {
 
             events.on(`maintenance`, () => {
 
-                //TODO delete dereferenced media
+                if (this._hasLoadedStorage) {
 
-                //TODO compress this server's queue (remove tombstones)
+                    this._storage.write({changes: [...this.Changes()]});
 
-                this._storage.write({changes: [...this.Changes()]});
+                    //TODO delete dereferenced media
+
+                    //TODO compress this server's queue (i.e. remove tombstones)
+                }
 
             });
 
