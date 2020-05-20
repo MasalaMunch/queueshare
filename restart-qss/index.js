@@ -1,7 +1,5 @@
 "use strict";
 
-const doNothing = require(`../do-nothing`);
-
 const log = require(`../log-to-qss`);
 const processMessages = require(`../qss-process-messages`);
 
