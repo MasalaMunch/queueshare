@@ -2,9 +2,10 @@
 
 const clArgs = require(`./cl-args`);
 const fs = require(`fs`);
+const Obj = require(`./obj`);
+const path = require(`path`);
 
 const App = require(`./qss-app`);
-const DataPaths = require(`./qss-data-paths`);
 const events = require(`./qss-events`);
 const keepUpdated = require(`./keep-qss-updated`);
 const log = require(`./log-to-qss`);
@@ -38,7 +39,19 @@ else {
 
 }
 
-const dataPaths = DataPaths(folder);
+const dataPaths = {
+
+    id: `id`,
+
+    media: `media`,
+
+    port: `port`,
+
+    syncedState: `syncedState`,
+
+    };
+
+Obj.transform(dataPaths, (relativePath) => path.join(folder, relativePath));
 
 fs.mkdirSync(folder, {recursive: true});
 

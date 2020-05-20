@@ -14,10 +14,10 @@ const SyncedState = class extends SyncedJsonTree {
 
         this._storage = new StoredJsonLog(dataPaths.syncedState);
 
-        events.on(`folderLockAcquisition`, () => {
+        // in the future, on change, when a media key is referenced, 
+        // check if it exists and if it doesn't, try downloading it
 
-            // in the future, on change, when a media key is referenced, 
-            // check if it exists and if it doesn't, try downloading it
+        events.on(`folderLockAcquisition`, () => {
 
             for (const {changes} of this._storage.Entries()) {
 
