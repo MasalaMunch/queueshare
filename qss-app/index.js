@@ -96,7 +96,7 @@ const App = (dataPaths) => {
 
         }
 
-        limit = Math.min(limit, 1000);
+        limit = Math.min(limit, 100);
 
         const changes = [];
 
