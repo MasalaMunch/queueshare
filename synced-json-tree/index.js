@@ -98,6 +98,13 @@ const SyncedJsonTree = class {
             localVersion = LocalVersion.Newer(this._localVersion);
 
         }
+        else {
+
+            const c = LocalVersion.Comparison(localVersion, this._localVersion);
+
+            assert(c > 0);
+
+        }
 
         foreignChange.localVersion = localVersion;
 
@@ -231,13 +238,7 @@ const SyncedJsonTree = class {
 
         const {path, versions, localVersion} = change;
 
-        assert(!this._localVersionChanges.has(localVersion));
-
-        if (LocalVersion.Comparison(localVersion, this._localVersion) > 0) {
-
-            this._localVersion = localVersion;
-
-        }
+        this._localVersion = localVersion;
 
         this._localVersionChanges.set(localVersion, change);
 
