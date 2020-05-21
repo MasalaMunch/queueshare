@@ -9,8 +9,6 @@ const restartQss = (...thingsToLog) => {
 
     log(...thingsToLog, `Restarting...`);
 
-    log.disable();
-
 };
 
 module.exports = restartQss;

@@ -10,15 +10,19 @@ const restart = require(`../restart-qss`);
 
 const packageLockPath = path.join(packagePath, `package-lock.json`);
 
-const PackageLockModTime = () => fs.statSync(packageLockPath).mtimeMs;
+const PackageLockModTime = async () => {
 
-const update = () => {
+    return (await fs.promises.stat(packageLockPath)).mtimeMs;
 
-    const pkgLockModTime = PackageLockModTime();
+};
 
-    execa.sync(`npm`, [`install`], {cwd: packagePath});
+const update = async () => {
 
-    const newPkgLockModTime = PackageLockModTime();
+    const pkgLockModTime = await PackageLockModTime();
+
+    await execa(`npm`, [`install`], {cwd: packagePath});
+
+    const newPkgLockModTime = await PackageLockModTime();
 
     if (pkgLockModTime !== newPkgLockModTime) {
 

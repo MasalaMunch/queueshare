@@ -49,9 +49,10 @@ const SyncedState = class extends SyncedJsonTree {
 
                     this._storage.write({changes: [...this.Changes()]});
 
-                    //TODO delete dereferenced media
+                    //TODO syncronously delete dereferenced media
 
-                    //TODO compress this server's queue (i.e. remove tombstones)
+                    //TODO syncronously remove tombstones
+
                 }
 
             });
