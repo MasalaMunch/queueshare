@@ -5,7 +5,7 @@ newerV = V.Newer(V.oldest)
 
 s = new S()
 
-s.on(`change`, (c) => console.log(c.path, `was set to`, c.value))
+s.events.on(`change`, (c) => console.log(c.path, `was set to`, c.value))
 
 s.receive({path: [`a`], versions: [newerV, newerV], value: 1})
 

@@ -33,7 +33,7 @@ const SyncedState = class extends SyncedJsonTree {
 
             this._hasLoadedStorage = true;
 
-            this.on(`change`, (c) => {
+            this.events.on(`change`, (c) => {
 
                 this._storage.eventuallyAppend([c]);                
 
@@ -47,11 +47,13 @@ const SyncedState = class extends SyncedJsonTree {
 
                 if (this._hasLoadedStorage) {
 
+                    // this.write({path: [], value: this._tree});
+
+                    //TODO syncronously remove tombstones
+
                     this._storage.write([...this.Changes()]);
 
                     //TODO syncronously delete dereferenced media
-
-                    //TODO syncronously remove tombstones
 
                 }
 

@@ -10,11 +10,13 @@ const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
 const Version = require(`./Version.js`);
 
-const SyncedJsonTree = class extends EventEmitter {
+const SyncedJsonTree = class {
 
     constructor () {
 
         super();
+
+        this.events = new EventEmitter();
 
         this._localVersion = LocalVersion.oldest;
 
@@ -257,7 +259,7 @@ const SyncedJsonTree = class extends EventEmitter {
 
         tree.version = versions[versions.length-1];
 
-        this.emit(`change`, change);
+        this.events.emit(`change`, change);
 
         const {pendingFunctions} = tree;
 
