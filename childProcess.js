@@ -41,8 +41,6 @@ else {
 
 const dataPaths = {
 
-    id: `id`,
-
     media: `media`,
 
     port: `port`,
