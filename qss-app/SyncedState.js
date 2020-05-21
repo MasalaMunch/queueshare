@@ -7,7 +7,7 @@ const SyncedJsonTree = require(`../synced-json-tree`);
 
 const events = require(`../qss-events`);
 
-const IsPrimitive = (json) => (typeof json !== `object` || Array.isArray(json));
+const IsPrimitive = (json) => typeof json !== `object` || Array.isArray(json);
 
 const SyncedState = class extends SyncedJsonTree {
 
