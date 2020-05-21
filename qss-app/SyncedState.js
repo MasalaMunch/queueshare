@@ -1,10 +1,13 @@
 "use strict";
 
 const assert = require(`assert`);
+const JsonCopy = require(`../json-copy`);
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
 const events = require(`../qss-events`);
+
+const IsPrimitive = (json) => (typeof json !== `object` || Array.isArray(json));
 
 const SyncedState = class extends SyncedJsonTree {
 
@@ -12,14 +15,12 @@ const SyncedState = class extends SyncedJsonTree {
 
         super();
 
-        this._hasLoadedStorage = false;
-
         this._storage = new StoredJsonLog(dataPaths.syncedState);
 
         // in the future, on change, when a media key is referenced, 
         // check if it exists and if it doesn't, try downloading it
 
-        process.nextTick(() => {
+        events.on(`folderLockAcquisition`, () => {
 
             for (const changes of this._storage.Entries()) {
 
@@ -31,35 +32,80 @@ const SyncedState = class extends SyncedJsonTree {
 
             }
 
-            this._hasLoadedStorage = true;
+            const eventuallyWriteToStorage = (change) => {
 
-            this.events.on(`change`, (c) => {
+                this._storage.eventuallyAppend([change]);
 
-                this._storage.eventuallyAppend([c]);                
+            };
 
-            });
-
-        });
-
-        events.on(`folderLockAcquisition`, () => {
+            this.events.on(`change`, eventuallyWriteToStorage);
 
             events.on(`maintenance`, () => {
 
-                if (this._hasLoadedStorage) {
+                this.events.off(`change`, eventuallyWriteToStorage);
 
-                    // this.write({path: [], value: this._tree});
+                this.write({path: [], value: this._AsJson()});
 
-                    //TODO syncronously remove tombstones
+                this._storage.write([...this.Changes()]);
 
-                    this._storage.write([...this.Changes()]);
+                this.events.on(`change`, eventuallyWriteToStorage);
 
-                    //TODO syncronously delete dereferenced media
-
-                }
+                //TODO syncronously delete dereferenced media
 
             });
 
         });
+
+    }
+
+    _AsJson () {
+
+        let asJson = {};
+
+        for (let {path, value} of this.Changes()) {
+
+            value = JsonCopy(value);
+
+            if (path.length === 0) {
+
+                asJson = value;
+
+            } else {
+
+                if (IsPrimitive(asJson)) {
+
+                    asJson = {};
+
+                }
+
+                let currentJson = asJson;
+
+                for (const [i, child] of path.entries()) {
+
+                    if (i === path.length-1) {
+
+                        currentJson[child] = value;
+
+                    }
+                    else {
+
+                        if (IsPrimitive(currentJson[child])) {
+
+                            currentJson[child] = {};
+
+                        }
+
+                        currentJson = currentJson[child];                        
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return asJson;
 
     }
 
