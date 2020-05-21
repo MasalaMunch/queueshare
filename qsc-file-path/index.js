@@ -2,6 +2,6 @@
 
 const path = require(`path`);
 
-const qscFilePath = path.join(__dirname, `index.html`);
+const filePath = path.join(__dirname, `index.html`);
 
-module.exports = qscFilePath;
+module.exports = filePath;

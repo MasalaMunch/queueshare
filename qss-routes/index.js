@@ -1,6 +1,6 @@
 "use strict";
 
-const qssRoutes = {
+const routes = {
 
     client: ``,
 
@@ -16,4 +16,4 @@ const qssRoutes = {
 
     };
 
-module.exports = qssRoutes;
+module.exports = routes;

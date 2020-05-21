@@ -2,6 +2,6 @@
 
 const path = require(`path`);
 
-const qssPackagePath = path.resolve(__dirname, `..`);
+const packagePath = path.resolve(__dirname, `..`);
 
-module.exports = qssPackagePath;
+module.exports = packagePath;

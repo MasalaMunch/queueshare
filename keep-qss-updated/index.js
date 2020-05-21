@@ -32,10 +32,10 @@ const update = async () => {
 
 };
 
-const keepQssUpdated = () => {
+const keepUpdated = () => {
 
     events.on(`maintenance`, update);
 
 };
 
-module.exports = keepQssUpdated;
+module.exports = keepUpdated;

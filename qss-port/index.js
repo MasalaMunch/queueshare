@@ -6,7 +6,7 @@ const RandomPort = require(`../random-port`);
 
 const fileOptions = {encoding: `utf8`};
 
-const QssPort = (dataPaths) => {
+const Port = (dataPaths) => {
 
     let port = Number(FileContents(dataPaths.port, fileOptions));
 
@@ -22,4 +22,4 @@ const QssPort = (dataPaths) => {
 
 };
 
-module.exports = QssPort;
+module.exports = Port;

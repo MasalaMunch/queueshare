@@ -5,7 +5,7 @@ const chokidar = require(`chokidar`);
 const packagePath = require(`../qss-package-path`);
 const restart = require(`../restart-qss`);
 
-const monitorQss = () => {
+const monitor = () => {
 
     const watcher = chokidar.watch(packagePath, {
 
@@ -25,4 +25,4 @@ const monitorQss = () => {
 
 };
 
-module.exports = monitorQss;
+module.exports = monitor;

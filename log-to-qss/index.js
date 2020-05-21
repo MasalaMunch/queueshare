@@ -1,6 +1,6 @@
 "use strict";
 
-const logToQss = (...things) => {
+const log = (...things) => {
 
     console.log(...things);
 
@@ -8,4 +8,4 @@ const logToQss = (...things) => {
 
 };
 
-module.exports = logToQss;
+module.exports = log;

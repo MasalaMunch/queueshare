@@ -3,7 +3,7 @@
 const log = require(`../log-to-qss`);
 const processMessages = require(`../qss-process-messages`);
 
-const restartQss = (...thingsToLog) => {
+const restart = (...thingsToLog) => {
 
     process.send(processMessages.restartCommand);
 
@@ -11,4 +11,4 @@ const restartQss = (...thingsToLog) => {
 
 };
 
-module.exports = restartQss;
+module.exports = restart;

@@ -2,13 +2,13 @@
 
 const EventEmitter = require(`events`);
 
-const qssEvents = new EventEmitter();
+const events = new EventEmitter();
 
-qssEvents.on(`folderLockAcquisition`, () => process.nextTick(() => {
+events.on(`folderLockAcquisition`, () => process.nextTick(() => {
 
-    qssEvents.emit(`maintenance`);
+    events.emit(`maintenance`);
 
-    qssEvents.emit(`setupCompletion`);
+    events.emit(`setupCompletion`);
 
 }));
 
@@ -20,7 +20,7 @@ const resetMaintenanceTimeout = () => {
 
     maintenanceTimeout = setTimeout(
 
-        () => qssEvents.emit(`maintenance`), 
+        () => events.emit(`maintenance`), 
 
         1000 * 60 * 60,
 
@@ -28,8 +28,8 @@ const resetMaintenanceTimeout = () => {
 
 };
 
-qssEvents.on(`maintenance`, resetMaintenanceTimeout);
+events.on(`maintenance`, resetMaintenanceTimeout);
 
-qssEvents.on(`usage`, resetMaintenanceTimeout);
+events.on(`usage`, resetMaintenanceTimeout);
 
-module.exports = qssEvents;
+module.exports = events;

@@ -1,6 +1,6 @@
 "use strict";
 
-const qssProcessMessages = {
+const processMessages = {
 
     restartCommand: `Revive me the next time I die, please.`,
 
@@ -8,4 +8,4 @@ const qssProcessMessages = {
 
     };
 
-module.exports = qssProcessMessages;
+module.exports = processMessages;
