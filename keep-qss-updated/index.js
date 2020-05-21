@@ -20,7 +20,7 @@ const update = async () => {
 
     const pkgLockModTime = await PackageLockModTime();
 
-    await execa(`npm`, [`install`], {cwd: packagePath});
+    await execa(`npm`, [`update`], {cwd: packagePath});
 
     const newPkgLockModTime = await PackageLockModTime();
 
