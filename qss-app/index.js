@@ -10,7 +10,6 @@ const path = require(`path`);
 const clientFilePath = require(`../qsc-file-path`);
 const events = require(`../qss-events`);
 const MediaFilename = require(`./MediaFilename.js`);
-const Id = require(`./Id.js`);
 const processId = require(`./processId.js`);
 const routes = require(`../qss-routes`);
 const SyncedState = require(`./SyncedState.js`);
@@ -28,10 +27,6 @@ const App = (dataPaths) => {
     });
 
     app.get(routes.client, (req, res) => res.sendFile(clientFilePath));
-
-    const id = Id(dataPaths);
-
-    app.get(routes.id, (req, res) => res.json(id));
 
     app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
 

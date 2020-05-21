@@ -21,7 +21,7 @@ const SyncedState = class extends SyncedJsonTree {
 
         process.nextTick(() => {
 
-            for (const {changes} of this._storage.Entries()) {
+            for (const changes of this._storage.Entries()) {
 
                 for (const c of changes) {
 
@@ -35,7 +35,7 @@ const SyncedState = class extends SyncedJsonTree {
 
             this.on(`change`, (c) => {
 
-                this._storage.eventuallyAppend({changes: [c]});                
+                this._storage.eventuallyAppend([c]);                
 
             });
 
@@ -47,7 +47,7 @@ const SyncedState = class extends SyncedJsonTree {
 
                 if (this._hasLoadedStorage) {
 
-                    this._storage.write({changes: [...this.Changes()]});
+                    this._storage.write([...this.Changes()]);
 
                     //TODO syncronously delete dereferenced media
 

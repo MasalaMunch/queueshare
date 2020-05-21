@@ -2,7 +2,7 @@
 
 const assert = require(`assert`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
-const UuProcessId = require(`../uu-process-id`);
+const uuProcessId = require(`../uu-process-id`);
 
 const Comparison = (a, b) => {
 
@@ -20,7 +20,7 @@ const Comparison = (a, b) => {
 
 const oldest = {_number: 0, _tiebreaker: ``};
 
-const myTiebreaker = UrlEncodedUuid(UuProcessId());
+const myTiebreaker = UrlEncodedUuid(uuProcessId);
 
 const Version = {
 
