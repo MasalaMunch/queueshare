@@ -13,7 +13,7 @@ const {version} = require(`./package.json`);
 program.option(
     `-f|--folder <folder>`, 
     `store data in <folder>`, 
-    path.join(os.homedir(), `QueueShare Data`),
+    path.join(os.homedir(), `QueueShare`),
     );
 
 program.option(
