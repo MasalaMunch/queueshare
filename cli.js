@@ -21,20 +21,11 @@ program.option(
     `run in developer mode`, 
     );
 
-program.option(
+program.version(
+    version,
     `-v|--version`,
     `output the current version`,
     );
-
-program.on(`option:version`, () => {
-
-    console.log();
-
-    log(version);
-
-    process.exit();
-
-});
 
 program.option(
     `-h|--help`,
