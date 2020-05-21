@@ -11,24 +11,24 @@ const queueshare = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
-    `-f|--folder <folder>`, 
+    `-f, --folder <folder>`, 
     `store data in <folder>`, 
     path.join(os.homedir(), `QueueShare`),
     );
 
 program.option(
-    `-d|--dev`, 
+    `-d, --dev`, 
     `run in developer mode`, 
     );
 
 program.version(
     version,
-    `-v|--version`,
+    `-v, --version`,
     `output the current version`,
     );
 
 program.option(
-    `-h|--help`,
+    `-h, --help`,
     `output help for command`,
     );
 
