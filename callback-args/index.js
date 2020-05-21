@@ -10,8 +10,6 @@ const CallbackArgs = (f) => {
 
     } catch (error) {
 
-        console.error(`error`, error);
-
         args = [error];
 
     }
