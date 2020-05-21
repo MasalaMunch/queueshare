@@ -14,8 +14,6 @@ const SyncedJsonTree = class {
 
     constructor () {
 
-        super();
-
         this.events = new EventEmitter();
 
         this._localVersion = LocalVersion.oldest;
