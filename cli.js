@@ -2,10 +2,9 @@
 
 "use strict";
 
-const os = require(`os`);
-const path = require(`path`);
 const {program} = require(`commander`);
 
+const defaultConfig = require(`./default-qss-config`);
 const log = require(`./log-to-qss`);
 const queueshare = require(`.`);
 const {version} = require(`./package.json`);
@@ -13,7 +12,7 @@ const {version} = require(`./package.json`);
 program.option(
     `-f, --folder <folder>`, 
     `store data in <folder>`, 
-    path.join(os.homedir(), `QueueShare`),
+    defaultConfig.folder,
     );
 
 program.option(

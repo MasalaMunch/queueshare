@@ -6,6 +6,7 @@ const Obj = require(`./obj`);
 const path = require(`path`);
 
 const App = require(`./qss-app`);
+const defaultConfig = require(`./default-qss-config`);
 const events = require(`./qss-events`);
 const keepUpdated = require(`./keep-qss-updated`);
 const log = require(`./log-to-qss`);
@@ -14,7 +15,11 @@ const Port = require(`./qss-port`);
 const processMessages = require(`./qss-process-messages`);
 const routes = require(`./qss-routes`);
 
-const {folder, isDev} = JSON.parse(clArgs[0]);
+const config = JSON.parse(clArgs[0]);
+
+Obj.define(config, defaultConfig);
+
+const {folder, isDev} = config;
 
 process.on(`message`, (message) => {
 
