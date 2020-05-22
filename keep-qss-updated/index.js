@@ -8,39 +8,21 @@ const events = require(`../qss-events`);
 const packagePath = require(`../qss-package-path`);
 const restart = require(`../restart-qss`);
 
-const packageLockPath = path.join(packagePath, `package-lock.json`);
+const PackageModTime = async () => {
 
-const PackageLockModTime = async () => {
-
-    let modTime;
-
-    try {
-
-        modTime = (await fs.promises.stat(packageLockPath)).mtimeMs;
-
-    } catch (error) {
-
-        if (error.code !== `ENOENT`) {
-
-            throw error;
-
-        }
-
-    }
-
-    return modTime;
+    return (await fs.promises.stat(packagePath)).mtimeMs;
 
 };
 
 const update = async () => {
 
-    const pkgLockModTime = await PackageLockModTime();
+    const pkgModTime = await PackageModTime();
 
     await execa(`npm`, [`update`], {cwd: packagePath});
 
-    const newPkgLockModTime = await PackageLockModTime();
+    const newPkgModTime = await PackageModTime();
 
-    if (pkgLockModTime !== newPkgLockModTime) {
+    if (pkgModTime !== newPkgModTime) {
 
         restart(`QueueShare was updated.`);
 
