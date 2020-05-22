@@ -12,7 +12,23 @@ const packageLockPath = path.join(packagePath, `package-lock.json`);
 
 const PackageLockModTime = async () => {
 
-    return (await fs.promises.stat(packageLockPath)).mtimeMs;
+    let modTime;
+
+    try {
+
+        modTime = (await fs.promises.stat(packageLockPath)).mtimeMs;
+
+    } catch (error) {
+
+        if (error.code !== `ENOENT`) {
+
+            throw error;
+
+        }
+
+    }
+
+    return modTime;
 
 };
 
