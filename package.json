@@ -1,6 +1,6 @@
 {
   "name": "queueshare",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "a jukebox for your house",
   "repository": {
     "type": "git",
@@ -27,6 +27,5 @@
     "sanitize-filename": "^1.6.3",
     "short-uuid": "^3.1.1",
     "uuid": "^8.1.0"
-  },
-  "devDependencies": {}
+  }
 }
