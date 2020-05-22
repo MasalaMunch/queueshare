@@ -14,11 +14,13 @@ const PackageModTime = async () => {
 
 };
 
+const parentPackagePath = path.resolve(packagePath, `..`, `..`);
+
 const update = async () => {
 
     const pkgModTime = await PackageModTime();
 
-    await execa(`npm`, [`update`], {cwd: packagePath});
+    await execa(`npm`, [`update`, `queueshare`], {cwd: parentPackagePath});
 
     const newPkgModTime = await PackageModTime();
 

@@ -21,11 +21,6 @@ program.option(
     `run in developer mode`, 
     );
 
-program.option(
-    `-nu, --no-update`, 
-    `don't automatically update`, 
-    );
-
 program.version(
     version,
     `-v, --version`,
@@ -54,7 +49,5 @@ queueshare({
     folder: program.folder,
 
     isDev: program.dev,
-
-    shouldUpdate: program.update,
 
     });

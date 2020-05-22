@@ -14,7 +14,7 @@ const Port = require(`./qss-port`);
 const processMessages = require(`./qss-process-messages`);
 const routes = require(`./qss-routes`);
 
-const {folder, isDev, shouldUpdate} = JSON.parse(clArgs[0]);
+const {folder, isDev} = JSON.parse(clArgs[0]);
 
 process.on(`message`, (message) => {
 
@@ -33,7 +33,7 @@ if (isDev) {
     monitor();
 
 }
-else if (shouldUpdate) {
+else {
 
     keepUpdated();
 
