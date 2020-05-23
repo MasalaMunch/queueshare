@@ -1,9 +1,7 @@
 "use strict";
 
 const assert = require(`assert`);
-const doNothing = require(`../do-nothing`);
 const EventEmitter = require(`events`);
-const Obj = require(`../obj`);
 const RedBlackTree = require(`bintrees`).RBTree;
 
 const LocalVersion = require(`./LocalVersion.js`);
