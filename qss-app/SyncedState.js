@@ -32,25 +32,25 @@ const SyncedState = class extends SyncedJsonTree {
 
             }
 
-            const eventuallyWriteToStorage = (change) => {
+            const eventuallyStore = (change) => {
 
                 this._storage.eventuallyAppend([change]);
 
             };
 
-            this.events.on(`change`, eventuallyWriteToStorage);
+            this.events.on(`change`, eventuallyStore);
 
             events.on(`maintenance`, () => {
 
-                this.events.off(`change`, eventuallyWriteToStorage);
+                this.events.off(`change`, eventuallyStore);
 
                 this.write({path: [], value: this._AsJson()});
 
                 this._storage.write([...this.Changes()]);
 
-                this.events.on(`change`, eventuallyWriteToStorage);
+                this.events.on(`change`, eventuallyStore);
 
-                //TODO syncronously delete dereferenced media
+                //TODO delete dereferenced media
 
             });
 
