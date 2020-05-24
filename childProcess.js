@@ -36,6 +36,7 @@ if (isDev) {
 
     const buildClient = require(`./build-qsc`);
     const monitor = require(`./monitor-qss`);
+
     //^ only require these if isDev because they might require dev dependencies
 
     buildClient().then(monitor);
