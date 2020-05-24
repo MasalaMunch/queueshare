@@ -5,26 +5,28 @@ const fs = require(`fs`);
 const path = require(`path`);
 
 const events = require(`../qss-events`);
-const packagePath = require(`../qss-package-path`);
+const packageFolder = require(`../qss-package-folder`);
 const restart = require(`../restart-qss`);
+
+const parentPackageFolder = path.resolve(packageFolder, `..`, `..`);
+
+const packageFile = path.join(packageFolder, `package.json`);
 
 const PackageModTime = async () => {
 
-    return (await fs.promises.stat(packagePath)).mtimeMs;
+    return (await fs.promises.stat(packageFile)).mtimeMs;
 
 };
 
-const parentPackagePath = path.resolve(packagePath, `..`, `..`);
-
 const update = async () => {
 
-    const pkgModTime = await PackageModTime();
+    const packageModTime = await PackageModTime();
 
-    await execa(`npm`, [`update`, `queueshare`], {cwd: parentPackagePath});
+    await execa(`npm`, [`update`, `queueshare`], {cwd: parentPackageFolder});
 
-    const newPkgModTime = await PackageModTime();
+    const newPackageModTime = await PackageModTime();
 
-    if (pkgModTime !== newPkgModTime) {
+    if (packageModTime !== newPackageModTime) {
 
         restart(`QueueShare was updated.`);
 

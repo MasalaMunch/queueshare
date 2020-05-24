@@ -2,12 +2,12 @@
 
 const chokidar = require(`chokidar`);
 
-const packagePath = require(`../qss-package-path`);
+const packageFolder = require(`../qss-package-folder`);
 const restart = require(`../restart-qss`);
 
 const monitor = () => {
 
-    const watcher = chokidar.watch(packagePath, {
+    const watcher = chokidar.watch(packageFolder, {
 
         ignored: [
 

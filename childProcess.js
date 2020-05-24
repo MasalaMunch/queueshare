@@ -10,7 +10,6 @@ const defaultConfig = require(`./default-qss-config`);
 const events = require(`./qss-events`);
 const keepUpdated = require(`./keep-qss-updated`);
 const log = require(`./log-to-qss`);
-const monitor = require(`./monitor-qss`);
 const Port = require(`./qss-port`);
 const processMessages = require(`./qss-process-messages`);
 const routes = require(`./qss-routes`);
@@ -35,7 +34,11 @@ log(`Setting up...`);
 
 if (isDev) {
 
-    monitor();
+    const buildClient = require(`./build-qsc`);
+    const monitor = require(`./monitor-qss`);
+    //^ only require these if isDev because they might require dev dependencies
+
+    buildClient().then(monitor);
 
 }
 else {

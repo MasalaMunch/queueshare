@@ -7,8 +7,8 @@ const ip = require(`ip`);
 const multer = require(`multer`);
 const path = require(`path`);
 
-const clientAssetsPath = require(`../qsc-assets-path`);
-const clientFilePath = require(`../qsc-file-path`);
+const clientAssetFolder = require(`../qsc-asset-folder`);
+const clientFile = require(`../qsc-file`);
 const events = require(`../qss-events`);
 const MediaFilename = require(`./MediaFilename.js`);
 const processId = require(`./processId.js`);
@@ -27,9 +27,9 @@ const App = (dataPaths) => {
 
     });
 
-    app.use(routes.clientAssets, express.static(clientAssetsPath));
+    app.get(routes.client, (req, res) => res.sendFile(clientFile));
 
-    app.get(routes.client, (req, res) => res.sendFile(clientFilePath));
+    app.use(routes.clientAssets, express.static(clientAssetFolder));
 
     app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
 
