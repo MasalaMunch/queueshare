@@ -4,6 +4,8 @@ const routes = {
 
     client: ``,
 
+    clientAssets: `/clientAssets`,
+
     ipAddress: `/ipAddress`,
 
     media: `/media`,

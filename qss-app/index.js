@@ -7,6 +7,7 @@ const ip = require(`ip`);
 const multer = require(`multer`);
 const path = require(`path`);
 
+const clientAssetsPath = require(`../qsc-assets-path`);
 const clientFilePath = require(`../qsc-file-path`);
 const events = require(`../qss-events`);
 const MediaFilename = require(`./MediaFilename.js`);
@@ -25,6 +26,8 @@ const App = (dataPaths) => {
         next();
 
     });
+
+    app.use(routes.clientAssets, express.static(clientAssetsPath));
 
     app.get(routes.client, (req, res) => res.sendFile(clientFilePath));
 
