@@ -2,11 +2,18 @@
 
 const assert = require(`assert`);
 const EventEmitter = require(`events`);
+const JsonCopy = require(`../json-copy`);
 const RedBlackTree = require(`bintrees`).RBTree;
 
 const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
 const Version = require(`./Version.js`);
+
+const IsPrimitive = (value) => {
+
+    return typeof value !== `object` || Array.isArray(value);
+
+};
 
 const SyncedJsonTree = class {
 
@@ -24,9 +31,9 @@ const SyncedJsonTree = class {
 
     }
 
-    *Changes () {
+    Changes () {
 
-        yield* this.ChangesSince();
+        return this.ChangesSince();
 
     }
 
@@ -74,6 +81,57 @@ const SyncedJsonTree = class {
         change = this._NormalizedChange(change);
 
         this._receive(change);
+
+    }
+
+    Value () {
+
+        let rootValue = {};
+
+        for (let {path, value} of this.Changes()) {
+
+            value = JsonCopy(value);
+
+            if (path.length === 0) {
+
+                rootValue = value;
+
+            } else {
+
+                if (IsPrimitive(rootValue)) {
+
+                    rootValue = {};
+
+                }
+
+                let currentValue = rootValue;
+
+                for (const [i, child] of path.entries()) {
+
+                    if (i === path.length-1) {
+
+                        currentValue[child] = value;
+
+                    }
+                    else {
+
+                        if (IsPrimitive(currentValue[child])) {
+
+                            currentValue[child] = {};
+
+                        }
+
+                        currentValue = currentValue[child];
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return rootValue;
 
     }
 

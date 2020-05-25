@@ -1,13 +1,10 @@
 "use strict";
 
 const assert = require(`assert`);
-const JsonCopy = require(`../json-copy`);
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
 const events = require(`../qss-events`);
-
-const IsPrimitive = (json) => typeof json !== `object` || Array.isArray(json);
 
 const SyncedState = class extends SyncedJsonTree {
 
@@ -44,7 +41,7 @@ const SyncedState = class extends SyncedJsonTree {
 
                 this.events.off(`change`, eventuallyStore);
 
-                this.write({path: [], value: this._AsJson()});
+                this.write({path: [], value: this.Value()});
 
                 this._storage.write([...this.Changes()]);
 
@@ -55,57 +52,6 @@ const SyncedState = class extends SyncedJsonTree {
             });
 
         });
-
-    }
-
-    _AsJson () {
-
-        let asJson = {};
-
-        for (let {path, value} of this.Changes()) {
-
-            value = JsonCopy(value);
-
-            if (path.length === 0) {
-
-                asJson = value;
-
-            } else {
-
-                if (IsPrimitive(asJson)) {
-
-                    asJson = {};
-
-                }
-
-                let currentJson = asJson;
-
-                for (const [i, child] of path.entries()) {
-
-                    if (i === path.length-1) {
-
-                        currentJson[child] = value;
-
-                    }
-                    else {
-
-                        if (IsPrimitive(currentJson[child])) {
-
-                            currentJson[child] = {};
-
-                        }
-
-                        currentJson = currentJson[child];                        
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        return asJson;
 
     }
 
