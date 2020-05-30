@@ -43,7 +43,7 @@ const SyncedState = class extends SyncedJsonTree {
 
         });
 
-        events.once(`folderCreated`, () => {
+        events.once(`folderIsReady`, () => {
 
             events.on(`maintenance`, () => {
 

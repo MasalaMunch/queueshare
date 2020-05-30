@@ -26,12 +26,12 @@ program.version(
     `output the current version`,
     );
 
-program.option(
+program.option( 
     `-h, --help`,
     `output help for command`,
     );
 
-program.once(`option:help`, () => {
+program.on(`option:help`, () => {
 
     console.log();
 

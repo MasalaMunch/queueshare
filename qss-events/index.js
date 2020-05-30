@@ -4,11 +4,11 @@ const EventEmitter = require(`events`);
 
 const events = new EventEmitter();
 
-events.once(`folderCreated`, () => process.nextTick(() => {
+events.once(`folderIsReady`, () => process.nextTick(() => {
 
     events.emit(`maintenance`);
 
-    events.emit(`setupComplete`);
+    events.emit(`setupIsComplete`);
 
 }));
 

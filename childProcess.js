@@ -79,11 +79,11 @@ server.once(`listening`, () => {
 
     storedPort.write(port);
 
-    process.nextTick(() => events.emit(`folderCreated`));
+    process.nextTick(() => events.emit(`folderIsReady`));
 
 });
 
-events.once(`setupComplete`, () => {
+events.once(`setupIsComplete`, () => {
 
     log(
         `QueueShare is now available at`
