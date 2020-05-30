@@ -37,7 +37,7 @@ const SyncedState = class extends SyncedJsonTree {
 
             for (const change of storage.Entries()) {
 
-                this.restore(change);
+                this.receive(change);
 
             }
 

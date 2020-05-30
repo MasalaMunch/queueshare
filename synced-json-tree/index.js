@@ -56,12 +56,6 @@ const SyncedJsonTree = class {
 
     }
 
-    restore (change) {
-
-        this._receive(this._ValidChange(change));
-
-    }
-
     write (localChange) {
 
         localChange = this._ValidLocalChange(localChange);
@@ -70,15 +64,15 @@ const SyncedJsonTree = class {
 
     }
 
-    _Change (foreignChange, localVersion = undefined) {
+    _Change (foreignChange) {
 
-        if (localVersion === undefined) {
+        return {
 
-            localVersion = LocalVersion.Newer(this.currentLocalVersion);
+            ...foreignChange,
 
-        }
+            localVersion: LocalVersion.Newer(this.currentLocalVersion),
 
-        return {...foreignChange, localVersion};
+            };
 
     }
 
@@ -95,12 +89,6 @@ const SyncedJsonTree = class {
         }
 
         return {...localChange, versions};
-
-    }
-
-    _IsChange (foreignChange) {
-
-        return (foreignChange.localVersion !== undefined);
 
     }
 
@@ -127,18 +115,6 @@ const SyncedJsonTree = class {
             yield tree;
 
         }
-
-    }
-
-    _ValidChange (change) {
-
-        return this._Change(
-
-            this._ValidForeignChange(change), 
-
-            LocalVersion.Valid(change.localVersion),
-
-            );
 
     }
 
@@ -250,17 +226,9 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
-        const change = (
-
-            this._IsChange(foreignChange)?
-
-            foreignChange : this._Change(foreignChange)
-
-            );
+        const change = this._Change(foreignChange);
 
         const {localVersion} = change;
-
-        assert(localVersion >= this.currentLocalVersion);
 
         this.currentLocalVersion = localVersion;
 
