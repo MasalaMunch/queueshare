@@ -31,7 +31,7 @@ program.option(
     `output help for command`,
     );
 
-program.on(`option:help`, () => {
+program.once(`option:help`, () => {
 
     console.log();
 

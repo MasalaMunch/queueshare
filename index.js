@@ -33,7 +33,7 @@ const start = (config) => {
 
     });
 
-    childProcess.on(`exit`, () => {
+    childProcess.once(`exit`, () => {
 
         if (shouldRestart) {
 

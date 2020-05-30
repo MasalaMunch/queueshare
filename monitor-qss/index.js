@@ -21,7 +21,7 @@ const monitor = () => {
 
     });
 
-    watcher.on(`all`, () => restart(`A change was detected.`));
+    watcher.once(`all`, () => restart(`A change was detected.`));
 
 };
 
