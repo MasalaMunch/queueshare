@@ -3,6 +3,7 @@
 const execa = require(`execa`);
 const path = require(`path`);
 
+const log = require(`./log-to-qss`);
 const processMessages = require(`./qss-process-messages`);
 
 const start = (config) => {
@@ -47,7 +48,7 @@ const start = (config) => {
 
 const queueshare = (config) => {
 
-    console.log();
+    log.start();
 
     start(config);
 
