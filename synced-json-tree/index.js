@@ -272,9 +272,9 @@ const SyncedJsonTree = class {
 
         }
 
-        tree.change = change;
-
         tree.childTrees = new Map();
+
+        tree.change = change;
 
         this.events.emit(`change`, change);
 
