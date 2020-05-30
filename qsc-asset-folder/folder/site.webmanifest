@@ -1,0 +1,19 @@
+{
+    "name": "QueueShare",
+    "short_name": "QueueShare",
+    "icons": [
+        {
+            "src": "/clientAssets/android-chrome-192x192.png?v=PYqpWpM5eQ",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/clientAssets/android-chrome-512x512.png?v=PYqpWpM5eQ",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
