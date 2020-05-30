@@ -1,82 +1,71 @@
 "use strict";
 
-const assert = require(`assert`);
 const FileContents = require(`../file-contents`);
 const fs = require(`fs`);
+const JsonString = require(`../json-string`);
+const stringFileEncoding = require(`../string-file-encoding`);
 
-const EntryAsString = (entry) => {
-
-    const entryAsString = JSON.stringify(entry);
-
-    assert(typeof entryAsString === `string`);
-
-    return entryAsString;
-
-};
-
-const EntryFromString = JSON.parse;
-
-const entryAsStringSeparator = `\n`;
-
-const fileEncoding = `utf8`;
+const jsonStringSeparator = `\n`;
 
 const StoredJsonLog = class {
 
     constructor (path) {
 
-        this._filePath = path;
+        this._file = path;
 
-        this._fileAppendStream = fs.createWriteStream(
-
-            this._filePath, 
-
-            {encoding: fileEncoding, flags: `a`},
-
-            );
+        this._fileAppendStream = undefined;
 
     }
 
     Entries () {
 
-        let fileAsString = FileContents(
+        const fileContents = FileContents(
 
-            this._filePath, 
+            this._file, 
 
-            {encoding: fileEncoding},
+            {encoding: stringFileEncoding},
 
             );
 
-        if (fileAsString === undefined) {
+        const fileAsString = fileContents === undefined? `` : fileContents;
 
-            fileAsString = ``;
+        return (
 
-        }
+            fileAsString.split(jsonStringSeparator).slice(0, -1).map(JSON.parse)
 
-        const entriesAsStrings = fileAsString.split(entryAsStringSeparator);
-
-        entriesAsStrings.pop();
-
-        return entriesAsStrings.map(EntryFromString);
+            );
 
     }
 
     eventuallyAppend (entry) {
 
-        this._fileAppendStream.write(EntryAsString(entry));
+        if (this._fileAppendStream === undefined) {
 
-        this._fileAppendStream.write(entryAsStringSeparator);
+            this._fileAppendStream = fs.createWriteStream(
+
+                this._file, 
+
+                {encoding: stringFileEncoding, flags: `a`},
+
+                );
+
+        }
+
+        this._fileAppendStream.write(JsonString(entry) + jsonStringSeparator);
 
     }
 
-    write (entry) {
+    write (entries) {
+
+        const jsonStrings = entries.map(JsonString);
 
         fs.writeFileSync(
 
-            this._filePath, 
+            this._file, 
 
-            EntryAsString(entry) + entryAsStringSeparator,
+            jsonStrings.join(jsonStringSeparator) + jsonStringSeparator,
 
-            {encoding: fileEncoding},
+            {encoding: stringFileEncoding},
 
             );
 

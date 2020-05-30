@@ -1,9 +1,9 @@
 "use strict";
 
-const urlSafeChars = require(`../url-safe-chars`);
+const urlChars = require(`../url-chars`);
 const UuidTranslator = require(`short-uuid`);
 
-const uuidTranslator = UuidTranslator(urlSafeChars);
+const uuidTranslator = UuidTranslator(urlChars);
 
 const UrlEncodedUuid = (uuid) => uuidTranslator.fromUUID(uuid);
 

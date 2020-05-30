@@ -1,24 +1,22 @@
 "use strict";
 
 const clArgs = require(`./cl-args`);
+const Defaultified = require(`./defaultified`);
 const fs = require(`fs`);
-const Obj = require(`./obj`);
 const path = require(`path`);
+const RandomPort = require(`./random-port`);
+const StoredJson = require(`./stored-json`);
 
+const apiPaths = require(`./qss-api-paths`);
 const App = require(`./qss-app`);
+const folderPaths = require(`./qss-folder-paths`);
 const defaultConfig = require(`./default-qss-config`);
 const events = require(`./qss-events`);
 const keepUpdated = require(`./keep-qss-updated`);
 const log = require(`./log-to-qss`);
-const Port = require(`./qss-port`);
 const processMessages = require(`./qss-process-messages`);
-const routes = require(`./qss-routes`);
 
-const config = JSON.parse(clArgs[0]);
-
-Obj.define(config, defaultConfig);
-
-const {folder, isDev} = config;
+const {isDev, folder} = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
 
 process.on(`message`, (message) => {
 
@@ -34,12 +32,9 @@ log(`Setting up...`);
 
 if (isDev) {
 
-    const buildClient = require(`./build-qsc`);
     const monitor = require(`./monitor-qss`);
 
-    //^ only require these if isDev because they might require dev dependencies
-
-    buildClient().then(monitor);
+    monitor();
 
 }
 else {
@@ -48,43 +43,26 @@ else {
 
 }
 
-const dataPaths = {
+const storedPortPath = path.join(folder, folderPaths.port);
 
-    media: `media`,
+const storedPort = new StoredJson(storedPortPath);
 
-    port: `port`,
+const storedPortValue = storedPort.Value();
 
-    syncedState: `syncedState`,
+const port = storedPortValue === undefined? RandomPort() : storedPortValue;
 
-    };
-
-Obj.transform(dataPaths, (relativePath) => path.join(folder, relativePath));
-
-fs.mkdirSync(folder, {recursive: true});
-
-const port = Port(dataPaths);
-
-events.on(`setupCompletion`, () => {
-
-    log(
-        `QueueShare is now available at`
-        + ` http://localhost:${port}${routes.client}`
-        );
-
-});
-
-const server = App(dataPaths).listen(port);
-
-server.on(`listening`, () => events.emit(`folderLockAcquisition`));
+const server = App(folder, isDev).listen(port);
 
 server.on(`error`, (error) => {
 
     if (error.code === `EADDRINUSE`) {
 
         log(
-            `There's already a QueueShare process serving "${folder}".`
-            + ` Multiple processes serving the same data can cause errors`
-            + ` and data corruption, so this process will be terminated.`
+            `It looks like there's already a QueueShare process serving`
+            + ` "${folder}". Multiple processes serving the same data can cause`
+            + ` errors and data corruption, so this process will be terminated.`
+            + ` If you're sure that no other processes are serving this data,`
+            + ` data, delete "${storedPortPath}" and try again.`
             );
 
         process.exit();
@@ -92,5 +70,24 @@ server.on(`error`, (error) => {
     }
 
     throw error;
+
+});
+
+server.once(`listening`, () => {
+
+    fs.mkdirSync(folder, {recursive: true});
+
+    storedPort.write(port);
+
+    process.nextTick(() => events.emit(`folderCreated`));
+
+});
+
+events.once(`setupComplete`, () => {
+
+    log(
+        `QueueShare is now available at`
+        + ` http://localhost:${port}${apiPaths.client}`
+        );
 
 });

@@ -4,11 +4,11 @@ const EventEmitter = require(`events`);
 
 const events = new EventEmitter();
 
-events.on(`folderLockAcquisition`, () => process.nextTick(() => {
+events.once(`folderCreated`, () => process.nextTick(() => {
 
     events.emit(`maintenance`);
 
-    events.emit(`setupCompletion`);
+    events.emit(`setupComplete`);
 
 }));
 

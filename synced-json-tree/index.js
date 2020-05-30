@@ -2,30 +2,23 @@
 
 const assert = require(`assert`);
 const EventEmitter = require(`events`);
-const JsonCopy = require(`../json-copy`);
 const RedBlackTree = require(`bintrees`).RBTree;
 
 const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
 const Version = require(`./Version.js`);
 
-const IsPrimitive = (value) => {
-
-    return typeof value !== `object` || Array.isArray(value);
-
-};
-
 const SyncedJsonTree = class {
 
-    constructor () {
+    constructor (changes) {
+
+        this.currentLocalVersion = LocalVersion.oldest;
 
         this.events = new EventEmitter();
 
-        this._localVersion = LocalVersion.oldest;
-
         this._localVersionChanges = new Map();
 
-        this._orderedLocalVersions = new RedBlackTree(LocalVersion.Comparison);
+        this._orderedLocalVersions = new RedBlackTree((a, b) => a - b);
 
         this._tree = new Tree();
 
@@ -33,135 +26,65 @@ const SyncedJsonTree = class {
 
     Changes () {
 
-        return this.ChangesSince();
+        return this.ChangesSince(undefined);
 
     }
 
-    *ChangesSince (localVersion) {
+    ChangesSince (localVersion = LocalVersion.oldest) {
 
-        if (localVersion === undefined) {
-
-            localVersion = LocalVersion.oldest;
-
-        }
-        else {
-
-            LocalVersion.validate(localVersion);
-
-        }
+        localVersion = LocalVersion.Valid(localVersion);
 
         const iterator = this._orderedLocalVersions.upperBound(localVersion);
 
+        const changes = [];
+
         while (iterator.data() !== null) {
 
-            yield this._localVersionChanges.get(iterator.data());
+            changes.push(this._localVersionChanges.get(iterator.data()));
 
             iterator.next();
 
         }
 
-    }
-
-    LocalVersion () {
-
-        return this._localVersion;
+        return changes;
 
     }
 
     receive (foreignChange) {
 
-        foreignChange = this._NormalizedForeignChange(foreignChange);
-
-        this._receive(foreignChange);
+        this._receive(this._ValidForeignChange(foreignChange));
 
     }
 
     restore (change) {
 
-        change = this._NormalizedChange(change);
-
-        this._receive(change);
-
-    }
-
-    Value () {
-
-        let rootValue = {};
-
-        for (let {path, value} of this.Changes()) {
-
-            value = JsonCopy(value);
-
-            if (path.length === 0) {
-
-                rootValue = value;
-
-            } else {
-
-                if (IsPrimitive(rootValue)) {
-
-                    rootValue = {};
-
-                }
-
-                let currentValue = rootValue;
-
-                for (const [i, child] of path.entries()) {
-
-                    if (i === path.length-1) {
-
-                        currentValue[child] = value;
-
-                    }
-                    else {
-
-                        if (IsPrimitive(currentValue[child])) {
-
-                            currentValue[child] = {};
-
-                        }
-
-                        currentValue = currentValue[child];
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        return rootValue;
+        this._receive(this._ValidChange(change));
 
     }
 
     write (localChange) {
 
-        localChange = this._NormalizedLocalChange(localChange);
-
-        this._foreignify(localChange);
-
-        this._write(localChange);
+        this._receive(this._ForeignChange(this._ValidLocalChange(localChange)));
 
     }
 
-    _changify (foreignChange, localVersion) {
+    _Change (foreignChange, localVersion = undefined) {
 
         if (localVersion === undefined) {
 
-            localVersion = LocalVersion.Newer(this._localVersion);
+            localVersion = LocalVersion.Newer(this.currentLocalVersion);
 
         }
 
-        foreignChange.localVersion = localVersion;
+        return {...foreignChange, localVersion};
 
     }
 
-    _foreignify (localChange, versions) {
+    _ForeignChange (localChange, versions = undefined) {
 
         if (versions === undefined) {
 
-            versions = this._tree.Versions(localChange.path);
+            versions = [...this._Versions(localChange.path)];
 
             const targetVersion = versions[versions.length-1];
 
@@ -169,49 +92,73 @@ const SyncedJsonTree = class {
 
         }
 
-        localChange.versions = versions;
+        return {...localChange, versions};
 
     }
 
-    _IsForeignChange (foreignChangeOrChange) {
+    _IsChange (foreignChange) {
 
-        return (foreignChangeOrChange.localVersion === undefined);
-
-    }
-
-    _NormalizedChange (change) {
-
-        const foreignChange = this._NormalizedForeignChange(change);
-
-        const {localVersion} = change;
-
-        LocalVersion.validate(localVersion);
-
-        this._changify(foreignChange, localVersion);
-
-        return foreignChange;
+        return (foreignChange.localVersion !== undefined);
 
     }
 
-    _NormalizedForeignChange (foreignChange) {
+    *_iterativelyBuild (path) {
 
-        const localChange = this._NormalizedLocalChange(foreignChange);
+        let tree = this._tree;
+
+        yield tree;
+
+        for (const child of path) {
+
+            let childTree = tree.childTrees.get(child);
+
+            if (childTree === undefined) {
+
+                childTree = new Tree();
+
+                tree.childTrees.set(child, childTree);
+
+            }
+
+            tree = childTree;
+
+            yield tree;
+
+        }
+
+    }
+
+    _ValidChange (change) {
+
+        return this._Change(
+
+            this._ValidForeignChange(change), 
+
+            LocalVersion.Valid(change.localVersion),
+
+            );
+
+    }
+
+    _ValidForeignChange (foreignChange) {
 
         const {versions} = foreignChange;
 
         assert(Array.isArray(versions));
 
-        assert(versions.length === 1 + localChange.path.length);
+        assert(versions.length === 1 + foreignChange.path.length);
 
-        versions.forEach(Version.validate);
+        return this._ForeignChange(
 
-        this._foreignify(localChange, versions);
+            this._ValidLocalChange(foreignChange),
 
-        return localChange;
+            versions.map(Version.Valid),
+
+            );
 
     }
 
-    _NormalizedLocalChange (localChange) {
+    _ValidLocalChange (localChange) {
 
         const {path, value} = localChange;
 
@@ -231,16 +178,19 @@ const SyncedJsonTree = class {
 
     }
 
-    _receive (foreignChangeOrChange) {
+    _receive (foreignChange) {
 
-        const {path, versions} = foreignChangeOrChange;
+        const {versions} = foreignChange;
 
         let i = 0;
 
-        for (const tree of this._tree.iterativelyBuild(path)) {
+        for (const tree of this._iterativelyBuild(foreignChange.path)) {
 
-            const versionComparison = 
-                Version.Comparison(versions[i], tree.version);
+            const versionComparison = (
+
+                Version.Comparison(versions[i], tree.Version())
+
+                );
 
             if (versionComparison !== 0) {
 
@@ -248,16 +198,12 @@ const SyncedJsonTree = class {
 
                     if (i === versions.length-1) {
 
-                        this._write(foreignChangeOrChange);
+                        this._write(foreignChange, tree);
 
                     }
                     else {
 
-                        tree.pendingFunctions.push(() => {
-
-                            this._receive(foreignChangeOrChange);
-
-                        });
+                        tree.pendingForeignChanges.push(foreignChange);
 
                     }
 
@@ -273,49 +219,74 @@ const SyncedJsonTree = class {
 
     }
 
-    _write (foreignChangeOrChange) {
 
-        if (this._IsForeignChange(foreignChangeOrChange)) {
+    *_Versions (path) {
 
-            this._changify(foreignChangeOrChange);
+        let tree = this._tree;
+
+        yield tree.Version();
+
+        for (const child of path) {
+
+            if (tree !== undefined) {
+
+                tree = tree.childTrees.get(child);
+
+            }
+
+            yield (tree === undefined? Version.oldest : tree.Version());
 
         }
 
-        const change = foreignChangeOrChange;
+    }
 
-        const {path, versions, localVersion} = change;
+    _write (foreignChange, tree) {
 
-        assert(LocalVersion.Comparison(localVersion, this._localVersion) > 0);
+        const change = (
 
-        this._localVersion = localVersion;
+            this._IsChange(foreignChange)?
+
+            foreignChange : this._Change(foreignChange)
+
+            );
+
+        const {localVersion} = change;
+
+        assert(localVersion >= this.currentLocalVersion);
+
+        this.currentLocalVersion = localVersion;
 
         this._localVersionChanges.set(localVersion, change);
 
         this._orderedLocalVersions.insert(localVersion);
 
-        const tree = this._tree.build(path);
+        for (const subtree of tree.Traversal()) {
 
-        for (const {localVersion} of tree.Traversal()) {
+            if (subtree.change !== undefined) {
 
-            this._localVersionChanges.delete(localVersion);
+                this._localVersionChanges.delete(subtree.change.localVersion);
 
-            this._orderedLocalVersions.remove(localVersion);
+                this._orderedLocalVersions.remove(subtree.change.localVersion);
+
+            }
 
         }
 
+        tree.change = change;
+
         tree.childTrees = new Map();
-
-        tree.localVersion = localVersion;
-
-        tree.version = versions[versions.length-1];
 
         this.events.emit(`change`, change);
 
-        const {pendingFunctions} = tree;
+        const {pendingForeignChanges} = tree;
 
-        tree.pendingFunctions = [];
+        tree.pendingForeignChanges = [];
 
-        pendingFunctions.forEach((f) => f());
+        for (const foreignChange of pendingForeignChanges) {
+
+            this._receive(foreignChange);
+
+        }
 
     }
 

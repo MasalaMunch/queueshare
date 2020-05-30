@@ -2,13 +2,13 @@
 
 const fs = require(`fs`);
 
-const FileContents = (path, options) => {
+const FileContents = (file, options) => {
 
-    let contents;
+    let fileContents;
 
     try {
 
-        contents = fs.readFileSync(path, options);
+        fileContents = fs.readFileSync(file, options);
 
     } catch (error) {
 
@@ -20,7 +20,7 @@ const FileContents = (path, options) => {
 
     }
 
-    return contents;
+    return fileContents;
 
 };
 

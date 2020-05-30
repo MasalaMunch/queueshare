@@ -2,45 +2,33 @@
 
 const assert = require(`assert`);
 const UrlEncodedUuid = require(`../url-encoded-uuid`);
-const uuProcessId = require(`../uu-process-id`);
+const uuid = require(`uuid`);
 
-const Comparison = (a, b) => {
-
-    const numberComparison = a._number - b._number;
-
-    if (numberComparison === 0) {
-
-        return a._tiebreaker.localeCompare(b._tiebreaker);
-
-    }
-
-    return numberComparison;
-
-};
-
-const oldest = {_number: 0, _tiebreaker: ``};
-
-const myTiebreaker = UrlEncodedUuid(uuProcessId);
+const pid = UrlEncodedUuid(uuid.v4());
 
 const Version = {
 
-    Comparison,
+    Comparison: (a, b) => {
 
-    oldest,
+        const intComp = a._int - b._int;
 
-    validate: (version) => {
-
-        assert(Number.isInteger(version._number));
-
-        assert(typeof version._tiebreaker === `string`);
-
-        assert(Comparison(version, oldest) >= 0);
+        return intComp === 0? a._pid.localeCompare(b._pid) : intComp;
 
     },
 
-    Newer: (version) => {
+    oldest: {_int: 0, _pid: ``},
 
-        return {_number: version._number + 1, _tiebreaker: myTiebreaker};
+    Newer: (version) => ({_int: version._int + 1, _pid: pid}),
+
+    Valid: (version) => {
+
+        assert(Number.isInteger(version._int));
+
+        assert(typeof version._pid === `string`);
+
+        assert(Version.Comparison(version, Version.oldest) >= 0);
+
+        return version;
 
     },
 

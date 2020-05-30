@@ -1,57 +1,119 @@
 "use strict";
 
 const assert = require(`assert`);
+const JsonCopy = require(`../json-copy`);
+const path = require(`path`);
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
 const events = require(`../qss-events`);
+const folderPaths = require(`../qss-folder-paths`);
+
+const IsPrimitive = (value) => {
+
+    return typeof value !== `object` || Array.isArray(value);
+
+};
 
 const SyncedState = class extends SyncedJsonTree {
 
-    constructor (dataPaths) {
+    constructor (folder) {
 
         super();
 
-        this._storage = new StoredJsonLog(dataPaths.syncedState);
+        events.on(`maintenance`, () => {
 
-        // in the future, on change, when a media key is referenced, 
-        // check if it exists and if it doesn't, try downloading it
+            this.write({path: [], value: this._CompressedValue()});
 
-        events.on(`folderLockAcquisition`, () => {
+        });
 
-            for (const changes of this._storage.Entries()) {
+        const storage = (
 
-                for (const c of changes) {
+            new StoredJsonLog(path.join(folder, folderPaths.syncedState))
 
-                    this.restore(c);
+            );
 
-                }
+        process.nextTick(() => {
+
+            for (const change of storage.Entries()) {
+
+                this.restore(change);
 
             }
 
-            const eventuallyStore = (change) => {
+        });
 
-                this._storage.eventuallyAppend([change]);
-
-            };
-
-            this.events.on(`change`, eventuallyStore);
+        events.on(`folderCreated`, () => {
 
             events.on(`maintenance`, () => {
 
-                this.events.off(`change`, eventuallyStore);
-
-                this.write({path: [], value: this.Value()});
-
-                this._storage.write([...this.Changes()]);
-
-                this.events.on(`change`, eventuallyStore);
+                storage.write(this.Changes());
 
                 //TODO delete dereferenced media
 
             });
 
+            this.events.on(`change`, (change) => {
+
+                storage.eventuallyAppend(change);
+
+            });
+
+            // in the future, on change, when media is referenced, 
+            // check if it exists and if it doesn't, try downloading it
+
         });
+
+    }
+
+    _CompressedValue () {
+
+        let compressedValue = {};
+
+        for (let {path, value} of this.Changes()) {
+
+            value = JsonCopy(value);
+
+            if (path.length === 0) {
+
+                compressedValue = value;
+
+            } else {
+
+                if (IsPrimitive(compressedValue)) {
+
+                    compressedValue = {};
+
+                }
+
+                let parentValue = compressedValue;
+
+                for (const [i, child] of path.entries()) {
+
+                    if (i === path.length-1) {
+
+                        parentValue[child] = value;
+
+                    }
+                    else {
+
+                        if (IsPrimitive(parentValue[child])) {
+
+                            parentValue[child] = {};
+
+                        }
+
+                        parentValue = parentValue[child];
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return compressedValue;
 
     }
 

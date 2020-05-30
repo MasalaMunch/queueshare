@@ -1,57 +1,16 @@
 "use strict";
 
-const LocalVersion = require(`./LocalVersion.js`);
 const Version = require(`./Version.js`);
 
 const Tree = class {
 
     constructor () {
 
+        this.change = undefined;
+
         this.childTrees = new Map();
 
-        this.localVersion = LocalVersion.oldest;
-
-        this.pendingFunctions = [];
-
-        this.version = Version.oldest;
-
-    }
-
-    build (path) {
-
-        let tree;
-
-        for (tree of this.iterativelyBuild(path)) {
-
-        }
-
-        return tree;
-
-    }
-
-    *iterativelyBuild (path) {
-
-        let tree = this;
-
-        yield tree;
-
-        for (const child of path) {
-
-            let childTree = tree.childTrees.get(child);
-
-            if (childTree === undefined) {
-
-                childTree = new Tree();
-
-                tree.childTrees.set(child, childTree);
-
-            }
-
-            tree = childTree;
-
-            yield tree;
-
-        }
+        this.pendingForeignChanges = [];
 
     }
 
@@ -67,39 +26,15 @@ const Tree = class {
 
     }
 
-    Versions (path) {
+    Version () {
 
-        const versions = new Array(1 + path.length);
+        return (
 
-        let i = 0;
+            this.change === undefined? 
 
-        let tree = this;
+            Version.oldest : this.change.versions[this.change.versions.length-1]
 
-        while (true) {
-
-            versions[i] = tree.version;
-
-            if (i === path.length) {
-
-                break;
-
-            }
-
-            tree = tree.childTrees.get(path[i]);
-
-            i++;   
-
-            if (tree === undefined) {
-
-                versions.fill(Version.oldest, i);
-
-                break;
-
-            }
-
-        }
-
-        return versions;
+            );
 
     }
 

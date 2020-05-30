@@ -2,6 +2,8 @@
 
 const path = require(`path`);
 
-const file = path.join(__dirname, `index.html`);
+const File = (isDev) => path.join(__dirname, `client.html`);
 
-module.exports = file;
+//TODO if isDev, compile the file from source modules
+
+module.exports = File;

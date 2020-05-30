@@ -2,25 +2,21 @@
 
 const assert = require(`assert`);
 
-const Comparison = (a, b) => a - b;
-
-const oldest = 0;
-
 const LocalVersion = {
 
-    Comparison,
+    oldest: 0,
 
-    oldest,
+    Newer: (localVersion) => localVersion + 1,
 
-    validate: (localVersion) => {
+    Valid: (localVersion) => {
 
         assert(Number.isInteger(localVersion));
 
-        assert(Comparison(localVersion, oldest) >= 0);
+        assert(localVersion >= LocalVersion.oldest);
+
+        return localVersion;
 
     },
-
-    Newer: (localVersion) => localVersion + 1,
 
     };
 

@@ -2,6 +2,8 @@
 
 const path = require(`path`);
 
-const assetFolder = path.join(__dirname, `folder`);
+const AssetFolder = (isDev) => path.join(__dirname, `clientAssets`);
 
-module.exports = assetFolder;
+//TODO if isDev, compile the folder from source modules
+
+module.exports = AssetFolder;

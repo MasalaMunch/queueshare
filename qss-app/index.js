@@ -6,16 +6,22 @@ const express = require(`express`);
 const ip = require(`ip`);
 const multer = require(`multer`);
 const path = require(`path`);
+const UrlEncodedUuid = require(`../url-encoded-uuid`);
+const uuid = require(`uuid`);
 
-const clientAssetFolder = require(`../qsc-asset-folder`);
-const clientFile = require(`../qsc-file`);
+const apiPaths = require(`../qss-api-paths`);
+const ClientFile = require(`../qsc-file`);
+const ClientAssetFolder = require(`../qsc-asset-folder`);
 const events = require(`../qss-events`);
-const MediaFilename = require(`./MediaFilename.js`);
-const processId = require(`./processId.js`);
-const routes = require(`../qss-routes`);
+const folderPaths = require(`../qss-folder-paths`);
+const MediaKey = require(`../qsh-media-key`);
 const SyncedState = require(`./SyncedState.js`);
 
-const App = (dataPaths) => {
+const MediaFilename = (mediaKey) => mediaKey;
+
+const pid = UrlEncodedUuid(uuid.v4());
+
+const App = (folder, isDev) => {
 
     const app = express();
 
@@ -27,19 +33,23 @@ const App = (dataPaths) => {
 
     });
 
-    app.get(routes.client, (req, res) => res.sendFile(clientFile));
+    const clientFile = ClientFile(isDev);
 
-    app.use(routes.clientAssets, express.static(clientAssetFolder));
+    app.get(apiPaths.client, (req, res) => res.sendFile(clientFile));
 
-    app.get(routes.ipAddress, (req, res) => res.json(ip.address()));
+    const clientAssetFolder = ClientAssetFolder(isDev);
 
-    const MediaDestination = (key) => dataPaths.media;
+    app.use(apiPaths.clientAssets, express.static(clientAssetFolder));
 
-    app.get(`${routes.media}/:key`, (req, res) => {
+    app.get(apiPaths.ipAddress, (req, res) => res.json(ip.address()));
 
-        const {key} = req.params;
+    const mediaDestination = path.join(folder, folderPaths.media);
+    
+    app.get(`${apiPaths.media}/:key`, (req, res) => {
 
-        res.sendFile(path.join(MediaDestination(key), MediaFilename(key)));
+        const key = MediaKey.Valid(req.params.key);
+
+        res.sendFile(path.join(mediaDestination, MediaFilename(key)));
 
         // in the future, if the file doesn't exist but the key is 
         // for a youtube video or something else on the interweb, get the  
@@ -52,74 +62,39 @@ const App = (dataPaths) => {
 
     const upload = multer({storage: multer.diskStorage({
 
-        destination: (req, file, callback) => {
+        destination: mediaDestination,
 
-            callback(...CallbackArgs(() => MediaDestination(req.params.key)));
+        filename: (req, file, callback) => callback(...CallbackArgs(() => {
 
-        },
+            return MediaFilename(MediaKey.Valid(req.params.key));
 
-        filename: (req, file, callback) => {
-
-            callback(...CallbackArgs(() => MediaFilename(req.params.key)))
-
-        },
+        })),
 
         })}); 
 
-    app.put(`${routes.media}/:key`, upload.single(`file`), (req, res) => {
+    app.put(`${apiPaths.media}/:key`, upload.single(`file`), (req, res) => {
 
         res.end();
 
     });
 
-    app.get(routes.processId, (req, res) => res.json(processId));
+    app.get(apiPaths.pid, (req, res) => res.json(pid));
 
-    const syncedState = new SyncedState(dataPaths);
+    const syncedState = new SyncedState(folder);
 
-    app.get(routes.syncedStateChanges, (req, res) => {
+    app.get(apiPaths.syncedStateChanges, (req, res) => {
 
-        let {localVersion, limit} = req.query;
+        res.json(syncedState.ChangesSince(
 
-        if (localVersion !== undefined) {
+            req.query.localVersion === undefined?
 
-            localVersion = JSON.parse(localVersion);
+            undefined : JSON.parse(req.query.localVersion)
 
-        }
-
-        if (limit === undefined) {
-
-            limit = Infinity;
-
-        }
-        else {
-
-            limit = Number(limit);
-
-            assert(!isNaN(limit));
-
-        }
-
-        limit = Math.min(limit, 100);
-
-        const changes = [];
-
-        for (const c of syncedState.ChangesSince(localVersion)) {
-
-            if (changes.length >= limit) {
-
-                break;
-
-            }
-
-            changes.push(c);
-
-        }
-
-        res.json(changes);
+            ));
 
     });
 
-    app.post(routes.syncedStateChanges, express.json(), (req, res) => {
+    app.post(apiPaths.syncedStateChanges, express.json(), (req, res) => {
 
         syncedState.receive(req.body);
 
