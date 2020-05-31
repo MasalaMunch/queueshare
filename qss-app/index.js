@@ -86,7 +86,7 @@ const App = async (folder, port, isDev) => {
 
             req.query.localVersion === undefined?
 
-            undefined : JSON.parse(req.query.localVersion)
+            undefined : Number(req.query.localVersion)
 
             ));
 
