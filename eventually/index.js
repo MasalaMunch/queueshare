@@ -1,17 +1,17 @@
 "use strict";
 
 const assert = require(`assert`);
-const {List} = require(`immutable`);
+const Queue = require(`../queue`);
 
-let queue = List();
+const queue = new Queue();
 
 const start = () => setTimeout(() => {
 
-    const {f, resolve, reject} = queue.first();
+    const {f, resolve, reject} = queue.OldestItem();
 
-    queue = queue.shift();
+    queue.deleteOldestItem();
 
-    if (!queue.isEmpty()) {
+    if (!queue.IsEmpty()) {
 
         start();
 
@@ -39,9 +39,9 @@ const eventually = (f) => new Promise((resolve, reject) => {
 
     assert(typeof f === `function`);
 
-    const isFirstInQueue = queue.isEmpty();
+    const isFirstInQueue = queue.IsEmpty();
 
-    queue = queue.push({f, resolve, reject});
+    queue.add({f, resolve, reject});
 
     if (isFirstInQueue) {
 
