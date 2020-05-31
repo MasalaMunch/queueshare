@@ -10,6 +10,14 @@ const Dom = (tagName, props) => {
 
     props = Mapped(props, (p) => typeof p === `function`? p.bind(dom) : p);
 
+    if (props.innerText !== undefined) {
+
+        dom.innerText = props.innerText;
+
+    }
+
+    delete props.innerText;
+
     if (props.childNodes !== undefined) {
 
         for (const n of props.childNodes) {
@@ -33,14 +41,6 @@ const Dom = (tagName, props) => {
     }
 
     delete props.classList;
-
-    if (props.innerText !== undefined) {
-
-        dom.innerText = props.innerText;
-
-    }
-
-    delete props.innerText;
 
     extend(dom, props);
 
