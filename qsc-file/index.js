@@ -1,7 +1,6 @@
 "use strict";
 
 const fs = require(`fs`);
-const mustache = require(`mustache`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
@@ -12,6 +11,8 @@ const file = path.join(__dirname, `file.html`);
 const File = (isDev) => {
 
     if (isDev) {
+
+        const mustache = require(`mustache`);
 
         const templateContents = fs.readFileSync(
 
