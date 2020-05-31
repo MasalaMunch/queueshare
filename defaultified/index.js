@@ -1,16 +1,16 @@
 "use strict";
 
-const Defaultified = (something, defaultThing) => {
+const Defaultified = (target, source) => {
 
-    const defaultified = {...something};
+    const defaultified = {...target};
 
-    for (const prop in defaultThing) {
+    for (const prop in source) {
 
-        if (defaultThing.hasOwnProperty(prop)) {
+        if (source.hasOwnProperty(prop)) {
 
             if (defaultified[prop] === undefined) {
 
-                defaultified[prop] = defaultThing[prop];
+                defaultified[prop] = source[prop];
 
             }
 

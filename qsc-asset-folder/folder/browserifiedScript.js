@@ -1,4 +1,102 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+"use strict";
+
+const extend = require(`../extend`);
+const Mapped = require(`../mapped`);
+
+const Dom = (tagName, props) => {
+
+    const dom = document.createElement(tagName);
+
+    props = Mapped(props, (p) => typeof p === `function`? p.bind(dom) : p);
+
+    if (props.childNodes !== undefined) {
+
+        for (const n of props.childNodes) {
+
+            dom.appendChild(n);
+
+        }
+
+    }
+
+    delete props.childNodes;
+
+    if (props.classList !== undefined) {
+
+        for (const c of props.classList) {
+
+            dom.classList.add(c);
+
+        }
+
+    }
+
+    delete props.classList;
+
+    if (props.innerText !== undefined) {
+
+        dom.innerText = props.innerText;
+
+    }
+
+    delete props.innerText;
+
+    extend(dom, props);
+
+    return dom;
+
+};
+
+module.exports = Dom;
+
+},{"../extend":2,"../mapped":3}],2:[function(require,module,exports){
+"use strict";
+
+const assert = require(`assert`);
+
+const extend = (target, source) => {
+
+    for (const prop in source) {
+
+        if (source.hasOwnProperty(prop)) {
+
+            assert(!(prop in target));
+
+            target[prop] = source[prop];
+
+        }
+
+    }
+
+};
+
+module.exports = extend;
+
+},{"assert":4}],3:[function(require,module,exports){
+"use strict";
+
+const Mapped = (something, callback) => {
+
+    const mapped = {};
+
+    for (const prop in something) {
+
+        if (something.hasOwnProperty(prop)) {
+
+            mapped[prop] = callback(something[prop], prop, something);
+
+        }
+
+    }
+
+    return mapped;
+
+};
+
+module.exports = Mapped;
+
+},{}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -508,7 +606,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":5,"util/":4}],2:[function(require,module,exports){
+},{"object-assign":8,"util/":7}],5:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -533,14 +631,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1130,7 +1228,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":3,"_process":6,"inherits":2}],5:[function(require,module,exports){
+},{"./support/isBuffer":6,"_process":9,"inherits":5}],8:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1222,7 +1320,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1408,195 +1506,11 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],7:[function(require,module,exports){
-/*jshint node:true*/
-'use strict';
-
-/**
- * Replaces characters in strings that are illegal/unsafe for filenames.
- * Unsafe characters are either removed or replaced by a substitute set
- * in the optional `options` object.
- *
- * Illegal Characters on Various Operating Systems
- * / ? < > \ : * | "
- * https://kb.acronis.com/content/39790
- *
- * Unicode Control codes
- * C0 0x00-0x1f & C1 (0x80-0x9f)
- * http://en.wikipedia.org/wiki/C0_and_C1_control_codes
- *
- * Reserved filenames on Unix-based systems (".", "..")
- * Reserved filenames in Windows ("CON", "PRN", "AUX", "NUL", "COM1",
- * "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
- * "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", and
- * "LPT9") case-insesitively and with or without filename extensions.
- *
- * Capped at 255 characters in length.
- * http://unix.stackexchange.com/questions/32795/what-is-the-maximum-allowed-filename-and-folder-size-with-ecryptfs
- *
- * @param  {String} input   Original filename
- * @param  {Object} options {replacement: String | Function }
- * @return {String}         Sanitized filename
- */
-
-var truncate = require("truncate-utf8-bytes");
-
-var illegalRe = /[\/\?<>\\:\*\|"]/g;
-var controlRe = /[\x00-\x1f\x80-\x9f]/g;
-var reservedRe = /^\.+$/;
-var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
-var windowsTrailingRe = /[\. ]+$/;
-
-function sanitize(input, replacement) {
-  if (typeof input !== 'string') {
-    throw new Error('Input must be string');
-  }
-  var sanitized = input
-    .replace(illegalRe, replacement)
-    .replace(controlRe, replacement)
-    .replace(reservedRe, replacement)
-    .replace(windowsReservedRe, replacement)
-    .replace(windowsTrailingRe, replacement);
-  return truncate(sanitized, 255);
-}
-
-module.exports = function (input, options) {
-  var replacement = (options && options.replacement) || '';
-  var output = sanitize(input, replacement);
-  if (replacement === '') {
-    return output;
-  }
-  return sanitize(output, '');
-};
-
-},{"truncate-utf8-bytes":8}],8:[function(require,module,exports){
-'use strict';
-
-var truncate = require("./lib/truncate");
-var getLength = require("utf8-byte-length/browser");
-module.exports = truncate.bind(null, getLength);
-
-},{"./lib/truncate":9,"utf8-byte-length/browser":10}],9:[function(require,module,exports){
-'use strict';
-
-function isHighSurrogate(codePoint) {
-  return codePoint >= 0xd800 && codePoint <= 0xdbff;
-}
-
-function isLowSurrogate(codePoint) {
-  return codePoint >= 0xdc00 && codePoint <= 0xdfff;
-}
-
-// Truncate string by size in bytes
-module.exports = function truncate(getLength, string, byteLength) {
-  if (typeof string !== "string") {
-    throw new Error("Input must be string");
-  }
-
-  var charLength = string.length;
-  var curByteLength = 0;
-  var codePoint;
-  var segment;
-
-  for (var i = 0; i < charLength; i += 1) {
-    codePoint = string.charCodeAt(i);
-    segment = string[i];
-
-    if (isHighSurrogate(codePoint) && isLowSurrogate(string.charCodeAt(i + 1))) {
-      i += 1;
-      segment += string[i];
-    }
-
-    curByteLength += getLength(segment);
-
-    if (curByteLength === byteLength) {
-      return string.slice(0, i + 1);
-    }
-    else if (curByteLength > byteLength) {
-      return string.slice(0, i - segment.length + 1);
-    }
-  }
-
-  return string;
-};
-
-
 },{}],10:[function(require,module,exports){
-'use strict';
-
-function isHighSurrogate(codePoint) {
-  return codePoint >= 0xd800 && codePoint <= 0xdbff;
-}
-
-function isLowSurrogate(codePoint) {
-  return codePoint >= 0xdc00 && codePoint <= 0xdfff;
-}
-
-// Truncate string by size in bytes
-module.exports = function getByteLength(string) {
-  if (typeof string !== "string") {
-    throw new Error("Input must be string");
-  }
-
-  var charLength = string.length;
-  var byteLength = 0;
-  var codePoint = null;
-  var prevCodePoint = null;
-  for (var i = 0; i < charLength; i++) {
-    codePoint = string.charCodeAt(i);
-    // handle 4-byte non-BMP chars
-    // low surrogate
-    if (isLowSurrogate(codePoint)) {
-      // when parsing previous hi-surrogate, 3 is added to byteLength
-      if (prevCodePoint != null && isHighSurrogate(prevCodePoint)) {
-        byteLength += 1;
-      }
-      else {
-        byteLength += 3;
-      }
-    }
-    else if (codePoint <= 0x7f ) {
-      byteLength += 1;
-    }
-    else if (codePoint >= 0x80 && codePoint <= 0x7ff) {
-      byteLength += 2;
-    }
-    else if (codePoint >= 0x800 && codePoint <= 0xffff) {
-      byteLength += 3;
-    }
-    prevCodePoint = codePoint;
-  }
-
-  return byteLength;
-};
-
-},{}],11:[function(require,module,exports){
 "use strict";
 
-const MediaKey = require(`../qsh-media-key`);
+const Dom = require(`../dom`);
 
-console.log(MediaKey);
+document.body.appendChild(Dom(`p`, {innerText: `hey ;)`}));
 
-},{"../qsh-media-key":12}],12:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-const SanitizedFilename = require(`sanitize-filename`);
-
-const MediaKey = () => {
-
-    throw new Error(`not implemented`);
-
-};
-
-MediaKey.Valid = (mediaKey) => {
-
-    assert(mediaKey === SanitizedFilename(mediaKey));
-
-    return mediaKey;
-
-};
-
-module.exports = MediaKey;
-
-},{"assert":1,"sanitize-filename":7}]},{},[11]);
+},{"../dom":1}]},{},[10]);

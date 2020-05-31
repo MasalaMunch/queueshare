@@ -1,5 +1,5 @@
 "use strict";
 
-const MediaKey = require(`../qsh-media-key`);
+const Dom = require(`../dom`);
 
-console.log(MediaKey);
+document.body.appendChild(Dom(`p`, {innerText: `hey ;)`}));
