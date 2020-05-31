@@ -24,6 +24,7 @@
     "random-int": "^2.0.1",
     "rfdc": "^1.1.4",
     "sanitize-filename": "^1.6.3",
+    "selfsigned": "^1.10.7",
     "short-uuid": "^3.1.1",
     "uuid": "^8.1.0"
   },

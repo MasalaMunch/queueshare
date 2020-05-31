@@ -3,8 +3,10 @@
 const clArgs = require(`./cl-args`);
 const Defaultified = require(`./defaultified`);
 const fs = require(`fs`);
+const https = require(`https`);
 const path = require(`path`);
 const RandomPort = require(`./random-port`);
+const selfsigned = require(`selfsigned`);
 const StoredJson = require(`./stored-json`);
 
 const apiPaths = require(`./qss-api-paths`);
@@ -51,7 +53,17 @@ const storedPortValue = storedPort.Value();
 
 const port = storedPortValue === undefined? RandomPort() : storedPortValue;
 
-const server = App(folder, port, isDev).listen(port);
+const pems = selfsigned.generate({}, {days: 365});
+
+const server = https.createServer(
+
+    {cert: pems.cert, key: pems.private}, 
+
+    App(folder, port, isDev),
+
+    );
+
+server.listen(port);
 
 server.on(`error`, (error) => {
 
@@ -87,7 +99,7 @@ events.once(`setupIsComplete`, () => {
 
     log(
         `QueueShare is now available at`
-        + ` http://localhost:${port}${apiPaths.client}`
+        + ` https://localhost:${port}${apiPaths.client}`
         );
 
 });

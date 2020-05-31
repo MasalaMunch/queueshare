@@ -102,7 +102,7 @@ const App = (folder, port, isDev) => {
 
     app.get(apiPaths.url, (req, res) => {
 
-        res.json(`http://${ip.address()}:${port}`);
+        res.json(`https://${ip.address()}:${port}`);
 
     });
 
