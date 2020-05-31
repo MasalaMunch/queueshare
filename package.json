@@ -28,6 +28,7 @@
     "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "chokidar": "^3.4.0"
+    "chokidar": "^3.4.0",
+    "mustache": "^4.0.1"
   }
 }
