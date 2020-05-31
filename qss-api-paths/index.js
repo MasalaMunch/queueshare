@@ -6,13 +6,13 @@ const apiPaths = {
 
     clientAssets: `/clientAssets`,
 
-    ipAddress: `/ipAddress`,
-
     media: `/media`,
 
     pid: `/pid`,
 
     syncedStateChanges: `/syncedState/changes`,
+
+    url: `/url`,
 
     };
 

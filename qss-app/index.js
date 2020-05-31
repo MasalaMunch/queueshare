@@ -21,7 +21,7 @@ const MediaFilename = (mediaKey) => mediaKey;
 
 const pid = UrlEncodedUuid(uuid.v4());
 
-const App = (folder, isDev) => {
+const App = (folder, port, isDev) => {
 
     const app = express();
 
@@ -40,8 +40,6 @@ const App = (folder, isDev) => {
     const clientAssetFolder = ClientAssetFolder(isDev);
 
     app.use(apiPaths.clientAssets, express.static(clientAssetFolder));
-
-    app.get(apiPaths.ipAddress, (req, res) => res.json(ip.address()));
 
     const mediaDestination = path.join(folder, folderPaths.media);
     
@@ -99,6 +97,12 @@ const App = (folder, isDev) => {
         syncedState.receive(req.body);
 
         res.end();
+
+    });
+
+    app.get(apiPaths.url, (req, res) => {
+
+        res.json(`http://${ip.address()}:${port}`);
 
     });
 

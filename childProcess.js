@@ -51,7 +51,7 @@ const storedPortValue = storedPort.Value();
 
 const port = storedPortValue === undefined? RandomPort() : storedPortValue;
 
-const server = App(folder, isDev).listen(port);
+const server = App(folder, port, isDev).listen(port);
 
 server.on(`error`, (error) => {
 
