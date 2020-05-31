@@ -21,7 +21,7 @@ const MediaFilename = (mediaKey) => mediaKey;
 
 const pid = UrlEncodedUuid(uuid.v4());
 
-const App = (folder, port, isDev) => {
+const App = async (folder, port, isDev) => {
 
     const app = express();
 
@@ -37,7 +37,7 @@ const App = (folder, port, isDev) => {
 
     app.get(apiPaths.client, (req, res) => res.sendFile(clientFile));
 
-    const clientAssetFolder = ClientAssetFolder(isDev);
+    const clientAssetFolder = await ClientAssetFolder(isDev);
 
     app.use(apiPaths.clientAssets, express.static(clientAssetFolder));
 
