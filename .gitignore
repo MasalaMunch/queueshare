@@ -1,3 +1,5 @@
 .*
 !.gitignore
 node_modules/
+qsc-asset-folder/folder/browserifiedScript.js
+qsc-file/file.html
