@@ -2,4 +2,8 @@
 
 const Dom = require(`../dom`);
 
-document.body.appendChild(Dom(`p`, {innerText: `hey ;)`}));
+const p = Dom(`p`, {innerText: `hey ;)`, thisAintProper: true});
+
+document.body.appendChild(p);
+
+console.log(p.thisAintProper);
