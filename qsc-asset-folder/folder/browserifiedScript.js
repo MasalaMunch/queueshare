@@ -76,15 +76,15 @@ module.exports = extend;
 },{"assert":4}],3:[function(require,module,exports){
 "use strict";
 
-const Mapped = (something, callback) => {
+const Mapped = (target, callback) => {
 
     const mapped = {};
 
-    for (const prop in something) {
+    for (const prop in target) {
 
-        if (something.hasOwnProperty(prop)) {
+        if (target.hasOwnProperty(prop)) {
 
-            mapped[prop] = callback(something[prop], prop, something);
+            mapped[prop] = callback(target[prop], prop, target);
 
         }
 
