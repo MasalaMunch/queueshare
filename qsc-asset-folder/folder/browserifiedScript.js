@@ -8,7 +8,7 @@ const Dom = (tagName, props) => {
 
     const dom = document.createElement(tagName);
 
-    props = Mapped(props, (p) => typeof p === `function`? p.bind(dom) : p);
+    props = {...props};
 
     if (props.innerText !== undefined) {
 
@@ -42,7 +42,7 @@ const Dom = (tagName, props) => {
 
     delete props.classList;
 
-    extend(dom, props);
+    extend(dom, Mapped(props, (p) => typeof p === `function`? p.bind(dom) : p));
 
     return dom;
 
