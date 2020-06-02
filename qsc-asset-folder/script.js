@@ -1,8 +1,8 @@
 "use strict";
 
-const Dom = require(`../dom`);
+const Elm = require(`../elm`);
 
-const p = Dom(`p`, {innerText: `hey ;)`, thisAintProper: true});
+const p = Elm(`p`, {innerText: `hey ;)`, thisAintProper: `truuuuu`});
 
 document.body.appendChild(p);
 

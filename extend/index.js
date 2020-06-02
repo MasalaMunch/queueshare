@@ -1,18 +1,15 @@
 "use strict";
 
 const assert = require(`assert`);
+const OwnProps = require(`../own-props`);
 
 const extend = (target, source) => {
 
-    for (const prop in source) {
+    for (const prop of OwnProps(source)) {
 
-        if (source.hasOwnProperty(prop)) {
+        assert(!(prop in target));
 
-            assert(!(prop in target));
-
-            target[prop] = source[prop];
-
-        }
+        target[prop] = source[prop];
 
     }
 

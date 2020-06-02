@@ -2,70 +2,73 @@
 "use strict";
 
 const extend = require(`../extend`);
-const Mapped = require(`../mapped`);
+const OwnProps = require(`../own-props`);
 
-const Dom = (tagName, props) => {
+const Elm = (tagName, props) => {
 
-    const dom = document.createElement(tagName);
+    const elm = document.createElement(tagName);
 
-    props = {...props};
+    const newProps = {};
 
-    if (props.innerText !== undefined) {
+    for (const p of OwnProps(props)) {
 
-        dom.innerText = props.innerText;
+        if (p === `childNodes`) {
 
-    }
+            for (const n of props.childNodes) {
 
-    delete props.innerText;
+                elm.appendChild(n);
 
-    if (props.childNodes !== undefined) {
+            }
 
-        for (const n of props.childNodes) {
+        }
+        else if (p === `classList`) {
 
-            dom.appendChild(n);
+            for (const c of props.classList) {
+
+                elm.classList.add(c);
+
+            }
+
+        }
+        else if (p === `innerText`) {
+
+            elm.innerText = props.innerText;
+
+        }
+        else if (typeof props[p] === `function`) {
+
+            newProps[p] = props[p].bind(elm);
+
+        }
+        else {
+
+            newProps[p] = props[p];
 
         }
 
     }
 
-    delete props.childNodes;
+    extend(elm, newProps);
 
-    if (props.classList !== undefined) {
-
-        for (const c of props.classList) {
-
-            dom.classList.add(c);
-
-        }
-
-    }
-
-    delete props.classList;
-
-    extend(dom, Mapped(props, (p) => typeof p === `function`? p.bind(dom) : p));
-
-    return dom;
+    return elm;
 
 };
 
-module.exports = Dom;
+module.exports = Elm;
 
-},{"../extend":2,"../mapped":3}],2:[function(require,module,exports){
+},{"../extend":2,"../own-props":9}],2:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
+const OwnProps = require(`../own-props`);
 
 const extend = (target, source) => {
 
-    for (const prop in source) {
+    for (const prop of OwnProps(source)) {
 
-        if (source.hasOwnProperty(prop)) {
+        assert(!(prop in target));
 
-            assert(!(prop in target));
-
-            target[prop] = source[prop];
-
-        }
+        target[prop] = source[prop];
 
     }
 
@@ -73,30 +76,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"assert":4}],3:[function(require,module,exports){
-"use strict";
-
-const Mapped = (target, callback) => {
-
-    const mapped = {};
-
-    for (const prop in target) {
-
-        if (target.hasOwnProperty(prop)) {
-
-            mapped[prop] = callback(target[prop], prop, target);
-
-        }
-
-    }
-
-    return mapped;
-
-};
-
-module.exports = Mapped;
-
-},{}],4:[function(require,module,exports){
+},{"../own-props":9,"assert":3}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -606,7 +586,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":8,"util/":7}],5:[function(require,module,exports){
+},{"object-assign":7,"util/":6}],4:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -631,14 +611,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1228,7 +1208,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":6,"_process":9,"inherits":5}],8:[function(require,module,exports){
+},{"./support/isBuffer":5,"_process":8,"inherits":4}],7:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1320,7 +1300,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1506,15 +1486,34 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
+},{}],9:[function(require,module,exports){
+"use strict";
+
+const OwnProps = function* (something) {
+
+    for (const prop in something) {
+
+        if (something.hasOwnProperty(prop)) {
+
+            yield prop;
+
+        }
+
+    }
+
+};
+
+module.exports = OwnProps;
+
 },{}],10:[function(require,module,exports){
 "use strict";
 
-const Dom = require(`../dom`);
+const Elm = require(`../elm`);
 
-const p = Dom(`p`, {innerText: `hey ;)`, thisAintProper: true});
+const p = Elm(`p`, {innerText: `hey ;)`, thisAintProper: `truuuuu`});
 
 document.body.appendChild(p);
 
 console.log(p.thisAintProper);
 
-},{"../dom":1}]},{},[10]);
+},{"../elm":1}]},{},[10]);

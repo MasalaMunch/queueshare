@@ -1,16 +1,14 @@
 "use strict";
 
+const OwnProps = require(`../own-props`);
+
 const Mapped = (target, callback) => {
 
     const mapped = {};
 
-    for (const prop in target) {
+    for (const prop of OwnProps(target)) {
 
-        if (target.hasOwnProperty(prop)) {
-
-            mapped[prop] = callback(target[prop], prop, target);
-
-        }
+        mapped[prop] = callback(target[prop], prop, target);
 
     }
 
