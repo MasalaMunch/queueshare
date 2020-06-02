@@ -21,23 +21,15 @@ const SyncedState = class extends SyncedJsonTree {
 
         super();
 
-        events.on(`maintenance`, () => {
+        const storagePath = path.join(folder, folderPaths.syncedState);
 
-            this.write({path: [], value: this._CompressedValue()});
-
-        });
-
-        const storage = (
-
-            new StoredJsonLog(path.join(folder, folderPaths.syncedState))
-
-            );
+        this._storage = new StoredJsonLog(storagePath);
 
         process.nextTick(() => {
 
-            for (const change of storage.Entries()) {
+            for (const foreignChange of this._storage.Entries()) {
 
-                this.receive(change);
+                this.receive(foreignChange, true);
 
             }
 
@@ -47,15 +39,11 @@ const SyncedState = class extends SyncedJsonTree {
 
             events.on(`maintenance`, () => {
 
-                storage.write(this.Changes());
+                this.write({path: [], value: this._CompressedValue()}, true);
+
+                this._storage.write(this.Changes());
 
                 //TODO delete dereferenced media
-
-            });
-
-            this.events.on(`change`, (change) => {
-
-                storage.eventuallyAppend(change);
 
             });
 
@@ -63,6 +51,34 @@ const SyncedState = class extends SyncedJsonTree {
             // check if it exists and if it doesn't, try downloading it
 
         });
+
+    }
+
+    receive (foreignChange, dontStore = false) {
+
+        const info = super.receive(foreignChange);
+
+        if (!dontStore && !info.wasRejected) {
+
+            this._eventuallyStore(foreignChange);
+
+        }
+
+        return info;
+
+    }
+
+    write (localChange, dontStore = false) {
+
+        const info = super.write(localChange);
+
+        if (!dontStore) {
+
+            this._eventuallyStore(info.foreignChange);            
+
+        }
+
+        return info;
 
     }
 
@@ -114,6 +130,12 @@ const SyncedState = class extends SyncedJsonTree {
         }
 
         return compressedValue;
+
+    }
+
+    _eventuallyStore (foreignChange) {
+
+        this._storage.eventuallyAppend(foreignChange);
 
     }
 
