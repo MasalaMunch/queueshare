@@ -1,53 +1,45 @@
 "use strict";
 
+const Defaultified = require(`../defaultified`);
 const extend = require(`../extend`);
-const OwnProps = require(`../own-props`);
+const Filtered = require(`../filtered`);
+const Mapped = require(`../mapped`)
+
+const defaultProps = {
+
+    innerText: ``,
+
+    childNodes: [],
+
+    classList: [],
+
+    };
 
 const Elm = (tagName, props) => {
 
     const elm = document.createElement(tagName);
 
-    const newProps = {};
+    props = Defaultified(props, defaultProps);
 
-    for (const p of OwnProps(props)) {
+    elm.innerText = props.innerText;
 
-        if (p === `childNodes`) {
+    for (const n of props.childNodes) {
 
-            for (const n of props.childNodes) {
-
-                elm.appendChild(n);
-
-            }
-
-        }
-        else if (p === `classList`) {
-
-            for (const c of props.classList) {
-
-                elm.classList.add(c);
-
-            }
-
-        }
-        else if (p === `innerText`) {
-
-            elm.innerText = props.innerText;
-
-        }
-        else if (typeof props[p] === `function`) {
-
-            newProps[p] = props[p].bind(elm);
-
-        }
-        else {
-
-            newProps[p] = props[p];
-
-        }
+        elm.appendChild(n);
 
     }
 
-    extend(elm, newProps);
+    for (const c of props.classList) {
+
+        elm.classList.add(c);
+
+    }
+
+    const newProps = Filtered(props, (v, p) => !defaultProps.hasOwnProperty(p));
+
+    const BoundToElm = (v) => typeof v === `function`? v.bind(elm) : v;
+
+    extend(elm, Mapped(newProps, BoundToElm));
 
     return elm;
 
