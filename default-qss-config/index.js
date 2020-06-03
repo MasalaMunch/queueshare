@@ -7,6 +7,8 @@ const defaultConfig = {
 
     folder: path.join(os.homedir(), `QueueShare`),
 
+    isDev: false,
+
     };
 
 module.exports = defaultConfig;

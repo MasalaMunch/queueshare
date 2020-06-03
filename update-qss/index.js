@@ -4,7 +4,6 @@ const execa = require(`execa`);
 const fs = require(`fs`);
 const path = require(`path`);
 
-const events = require(`../qss-events`);
 const packageFolder = require(`../qss-package-folder`);
 const restart = require(`../restart-qss`);
 
@@ -34,10 +33,4 @@ const update = async () => {
 
 };
 
-const keepUpdated = () => {
-
-    events.on(`maintenance`, update);
-
-};
-
-module.exports = keepUpdated;
+module.exports = update;

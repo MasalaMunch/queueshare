@@ -6,7 +6,7 @@ const {program} = require(`commander`);
 
 const defaultConfig = require(`./default-qss-config`);
 const log = require(`./log-to-qss`);
-const queueshare = require(`.`);
+const start = require(`.`);
 const {version} = require(`./package.json`);
 
 program.option(
@@ -15,20 +15,20 @@ program.option(
     defaultConfig.folder,
     );
 
-program.option(
-    `-d, --dev`, 
-    `run in developer mode`, 
-    );
+if (defaultConfig.isDev) {
 
-program.option(
-    `-v, --version`,
-    `output the current version`,
-    );
+    program.option(`-nd, --no-dev`, `don't run in developer mode`);
 
-program.option( 
-    `-h, --help`,
-    `output help for command`,
-    );
+}
+else {
+
+    program.option(`-d, --dev`, `run in developer mode`);
+
+}
+
+program.option(`-v, --version`, `output the current version`);
+
+program.option(`-h, --help`, `output help for command`);
 
 program.on(`option:version`, () => {
 
@@ -52,7 +52,7 @@ program.on(`option:help`, () => {
 
 program.parse(process.argv);
 
-queueshare({
+start({
 
     folder: program.folder,
 

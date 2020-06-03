@@ -6,7 +6,6 @@ const path = require(`path`);
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
-const events = require(`../qss-events`);
 const folderPaths = require(`../qss-folder-paths`);
 
 const IsPrimitive = (value) => {
@@ -35,54 +34,12 @@ const SyncedState = class extends SyncedJsonTree {
 
         });
 
-        events.once(`folderIsReady`, () => {
-
-            events.on(`maintenance`, () => {
-
-                this.write({path: [], value: this._CompressedValue()}, true);
-
-                this._storage.write(this.Changes());
-
-                //TODO delete dereferenced media
-
-            });
-
-            // in the future, on change, when media is referenced, 
-            // check if it exists and if it doesn't, try downloading it
-
-        });
+        // in the future, on change, when media is referenced, 
+        // check if it exists and if it doesn't, try downloading it
 
     }
 
-    receive (foreignChange, dontStore = false) {
-
-        const info = super.receive(foreignChange);
-
-        if (!dontStore && !info.wasRejected) {
-
-            this._eventuallyStore(foreignChange);
-
-        }
-
-        return info;
-
-    }
-
-    write (localChange, dontStore = false) {
-
-        const info = super.write(localChange);
-
-        if (!dontStore) {
-
-            this._eventuallyStore(info.foreignChange);            
-
-        }
-
-        return info;
-
-    }
-
-    _CompressedValue () {
+    compress () {
 
         let compressedValue = {};
 
@@ -129,7 +86,37 @@ const SyncedState = class extends SyncedJsonTree {
 
         }
 
-        return compressedValue;
+        this.write({path: [], value: compressedValue}, true);
+
+        this._storage.write(this.Changes());
+
+    }
+
+    receive (foreignChange, _dontStore = false) {
+
+        const info = super.receive(foreignChange);
+
+        if (!_dontStore && !info.wasRejected) {
+
+            this._eventuallyStore(foreignChange);
+
+        }
+
+        return info;
+
+    }
+
+    write (localChange, _dontStore = false) {
+
+        const info = super.write(localChange);
+
+        if (!_dontStore) {
+
+            this._eventuallyStore(info.foreignChange);            
+
+        }
+
+        return info;
 
     }
 

@@ -26,11 +26,11 @@ const SyncedJsonTree = class {
 
     Changes () {
 
-        return this.ChangesSince(undefined);
+        return this.ChangesSince(LocalVersion.oldest);
 
     }
 
-    ChangesSince (localVersion = LocalVersion.oldest) {
+    ChangesSince (localVersion) {
 
         localVersion = LocalVersion.Valid(localVersion);
 

@@ -5,9 +5,9 @@ const processMessages = require(`../qss-process-messages`);
 
 const restart = (...thingsToLog) => {
 
-    process.send(processMessages.restartCommand);
-
     log(...thingsToLog, `Restarting...`);
+
+    process.send(processMessages.restartCommand);
 
 };
 

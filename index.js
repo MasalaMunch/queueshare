@@ -6,7 +6,7 @@ const path = require(`path`);
 const log = require(`./log-to-qss`);
 const processMessages = require(`./qss-process-messages`);
 
-const start = (config) => {
+const startChildProcess = (config) => {
 
     const childProcess = execa.node(
 
@@ -38,7 +38,7 @@ const start = (config) => {
 
         if (shouldRestart) {
 
-            start(config);
+            startChildProcess(config);
 
         }
 
@@ -46,12 +46,12 @@ const start = (config) => {
 
 };
 
-const queueshare = (config) => {
+const start = (config) => {
 
     log.start();
 
-    start(config);
+    startChildProcess(config);
 
 };
 
-module.exports = queueshare;
+module.exports = start;
