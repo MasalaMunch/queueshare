@@ -5,7 +5,17 @@ const processMessages = require(`../qss-process-messages`);
 
 const restart = (...thingsToLog) => {
 
-    log(...thingsToLog, `Restarting...`);
+    process.on(`message`, (message) => {
+
+        if (message === processMessages.restartConfirmation) {
+
+            log(...thingsToLog, `Restarting...`);
+
+            process.exit();
+
+        }
+
+    });
 
     process.send(processMessages.restartCommand);
 
