@@ -1,54 +1,71 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-const extend = require(`../extend`);
 const OwnProps = require(`../own-props`);
 
-const Elm = (tagName, props) => {
+const Defaultified = (target, source) => {
 
-    const elm = document.createElement(tagName);
+    const defaultified = {...target};
 
-    const newProps = {};
+    for (const prop of OwnProps(source)) {
 
-    for (const p of OwnProps(props)) {
+        if (defaultified[prop] === undefined) {
 
-        if (p === `childNodes`) {
-
-            for (const n of props.childNodes) {
-
-                elm.appendChild(n);
-
-            }
-
-        }
-        else if (p === `classList`) {
-
-            for (const c of props.classList) {
-
-                elm.classList.add(c);
-
-            }
-
-        }
-        else if (p === `innerText`) {
-
-            elm.innerText = props.innerText;
-
-        }
-        else if (typeof props[p] === `function`) {
-
-            newProps[p] = props[p].bind(elm);
-
-        }
-        else {
-
-            newProps[p] = props[p];
+            defaultified[prop] = source[prop];            
 
         }
 
     }
 
-    extend(elm, newProps);
+    return defaultified;
+
+};
+
+module.exports = Defaultified;
+
+},{"../own-props":12}],2:[function(require,module,exports){
+"use strict";
+
+const Defaultified = require(`../defaultified`);
+const extend = require(`../extend`);
+const Filtered = require(`../filtered`);
+const Mapped = require(`../mapped`)
+
+const defaultProps = {
+
+    innerText: ``,
+
+    childNodes: [],
+
+    classList: [],
+
+    };
+
+const Elm = (tagName, props) => {
+
+    const elm = document.createElement(tagName);
+
+    props = Defaultified(props, defaultProps);
+
+    elm.innerText = props.innerText;
+
+    for (const n of props.childNodes) {
+
+        elm.appendChild(n);
+
+    }
+
+    for (const c of props.classList) {
+
+        elm.classList.add(c);
+
+    }
+
+    const newProps = Filtered(props, (v, p) => !defaultProps.hasOwnProperty(p));
+
+    const BoundToElm = (v) => typeof v === `function`? v.bind(elm) : v;
+
+    extend(elm, Mapped(newProps, BoundToElm));
 
     return elm;
 
@@ -56,7 +73,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../extend":2,"../own-props":9}],2:[function(require,module,exports){
+},{"../defaultified":1,"../extend":3,"../filtered":4,"../mapped":5}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -76,7 +93,53 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":9,"assert":3}],3:[function(require,module,exports){
+},{"../own-props":12,"assert":6}],4:[function(require,module,exports){
+"use strict";
+
+const OwnProps = require(`../own-props`);
+
+const Filtered = (target, callback) => {
+
+    const filtered = {};
+
+    for (const prop of OwnProps(target)) {
+
+        if (callback(target[prop], prop, target)) {
+
+            filtered[prop] = target[prop];
+
+        }
+
+    }
+
+    return filtered;
+
+};
+
+module.exports = Filtered;
+
+},{"../own-props":12}],5:[function(require,module,exports){
+"use strict";
+
+const OwnProps = require(`../own-props`);
+
+const Mapped = (target, callback) => {
+
+    const mapped = {};
+
+    for (const prop of OwnProps(target)) {
+
+        mapped[prop] = callback(target[prop], prop, target);
+
+    }
+
+    return mapped;
+
+};
+
+module.exports = Mapped;
+
+},{"../own-props":12}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -586,7 +649,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":7,"util/":6}],4:[function(require,module,exports){
+},{"object-assign":10,"util/":9}],7:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -611,14 +674,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1208,7 +1271,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":5,"_process":8,"inherits":4}],7:[function(require,module,exports){
+},{"./support/isBuffer":8,"_process":11,"inherits":7}],10:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1300,7 +1363,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1486,7 +1549,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -1505,7 +1568,7 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
@@ -1516,4 +1579,4 @@ document.body.appendChild(p);
 
 console.log(p.thisAintProper);
 
-},{"../elm":1}]},{},[10]);
+},{"../elm":2}]},{},[13]);

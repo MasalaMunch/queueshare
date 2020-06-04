@@ -6,7 +6,7 @@ const stringFileEncoding = require(`../string-file-encoding`);
 
 const assetFolder = path.join(__dirname, `folder`);
 
-const AssetFolder = (isDev) => new Promise((resolve, reject) => {
+const AssetFolderPromise = (isDev) => new Promise((resolve, reject) => {
 
     if (isDev) {
 
@@ -35,4 +35,4 @@ const AssetFolder = (isDev) => new Promise((resolve, reject) => {
 
 });
 
-module.exports = AssetFolder;
+module.exports = AssetFolderPromise;

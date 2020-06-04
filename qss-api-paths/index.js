@@ -2,17 +2,17 @@
 
 const apiPaths = {
 
-    client: ``,
-
     clientAssets: `/clientAssets`,
+
+    clientFile: ``,
+
+    clientUrl: `/clientUrl`,
 
     media: `/media`,
 
     pid: `/pid`,
 
     syncedStateChanges: `/syncedState/changes`,
-
-    url: `/url`,
 
     };
 

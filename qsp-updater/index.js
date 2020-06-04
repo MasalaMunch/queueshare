@@ -1,11 +1,23 @@
 "use strict";
 
 const execa = require(`execa`);
+const fs = require(`fs`);
 const path = require(`path`);
+const stringFileEncoding = require(`../string-file-encoding`);
 
 const folder = require(`../qsp-folder`);
-const JsonPromise = require(`../qsp-json-promise`);
-const VersionPromise = require(`../qsp-version-promise`);
+
+const file = path.join(folder, `package.json`);
+
+const JsonPromise = async () => {
+
+    return JSON.parse(
+
+        await fs.promises.readFile(file, {encoding: stringFileEncoding})
+
+        );
+
+};
 
 const parentPackageFolder = path.resolve(folder, `..`, `..`);
 
@@ -13,23 +25,17 @@ const updater = {
     
     hasUpdated: false,
 
-    try: async () => {
+    tryUpdating: async () => {
 
-        const version = await VersionPromise();
+        const {name, version} = await JsonPromise();
 
-        await execa(
+        await execa(`npm`, [`update`, name], {cwd: parentPackageFolder});
 
-            `npm`, 
+        if (!updater.hasUpdated) {
 
-            [`update`, (await JsonPromise()).name], 
+            updater.hasUpdated = version !== (await JsonPromise()).version;
 
-            {cwd: parentPackageFolder},
-
-            );
-
-        const newVersion = await VersionPromise();
-
-        updater.hasUpdated = updater.hasUpdated || (version !== newVersion);
+        }
 
     },
 
