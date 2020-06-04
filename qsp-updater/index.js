@@ -9,15 +9,11 @@ const VersionPromise = require(`../qsp-version-promise`);
 
 const parentPackageFolder = path.resolve(folder, `..`, `..`);
 
-const Updater = class {
+const updater = {
+    
+    hasUpdated: false,
 
-    constructor () {
-
-        this.hasUpdated = false;
-
-    }
-
-    async try () {
+    try: async () => {
 
         const version = await VersionPromise();
 
@@ -33,10 +29,10 @@ const Updater = class {
 
         const newVersion = await VersionPromise();
 
-        this.hasUpdated = this.hasUpdated || (version !== newVersion);
+        updater.hasUpdated = updater.hasUpdated || (version !== newVersion);
 
-    }
+    },
 
     };
 
-module.exports = Updater;
+module.exports = updater;
