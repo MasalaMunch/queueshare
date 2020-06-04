@@ -5,9 +5,8 @@ const fs = require(`fs`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
+const file = require(`../qsp-file`);
 const folder = require(`../qsp-folder`);
-
-const file = path.join(folder, `package.json`);
 
 const JsonPromise = async () => {
 
