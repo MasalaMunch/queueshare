@@ -1,7 +1,7 @@
 "use strict";
 
-const packageUpdater = require(`./qsp-updater`);
-const restart = require(`./restart-qss`);
+const packageUpdater = require(`../qsp-updater`);
+const restart = require(`../restart-qss`);
 
 const update = () => {
 
