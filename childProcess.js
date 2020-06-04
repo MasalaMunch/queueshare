@@ -1,5 +1,6 @@
 "use strict";
 
+const anHourInMs = require(`./an-hour-in-ms`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
 const Defaultified = require(`./defaultified`);
@@ -11,8 +12,6 @@ const multer = require(`multer`);
 const path = require(`path`);
 const RandomPort = require(`./random-port`);
 const StoredJson = require(`./stored-json`);
-const UrlEncodedUuid = require(`./url-encoded-uuid`);
-const uuid = require(`uuid`);
 
 const apiPaths = require(`./qss-api-paths`);
 const ClientAssetFolderPromise = require(`./qsc-asset-folder-promise`);
@@ -20,28 +19,19 @@ const ClientFile = require(`./qsc-file`);
 const defaultConfig = require(`./default-qss-config`);
 const folderPaths = require(`./qss-folder-paths`);
 const log = require(`./log-to-qss`);
+const MediaFilename = require(`./qss-media-filename`);
 const MediaKey = require(`./qsh-media-key`);
 const packageUpdater = require(`./qsp-updater`);
+const pid = require(`./qss-pid`);
 const restart = require(`./restart-qss`);
 const SyncedState = require(`./synced-qss-state`);
+const update = require(`./update-qss`);
 
 (async () => {
 
     log(`Setting up...`);
 
     const {folder, isDev} = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
-
-    const update = () => {
-
-        if (packageUpdater.hasUpdated) {
-
-            restart(`QueueShare was updated.`);
-
-        }
-
-    };
-
-    const anHourInMs = 1000 * 60 * 60;
 
     if (!isDev) {
 
@@ -107,8 +97,6 @@ const SyncedState = require(`./synced-qss-state`);
     app.get(apiPaths.clientUrl, (req, res) => res.json(ClientUrl()));
 
     const mediaDestination = path.join(folder, folderPaths.media);
-
-    const MediaFilename = (mediaKey) => mediaKey;
     
     app.get(`${apiPaths.media}/:key`, (req, res) => {
 
@@ -142,8 +130,6 @@ const SyncedState = require(`./synced-qss-state`);
         res.end();
 
     });
-
-    const pid = UrlEncodedUuid(uuid.v4());
 
     app.get(apiPaths.pid, (req, res) => res.json(pid));
 
