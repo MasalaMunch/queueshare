@@ -6,7 +6,7 @@ const {program} = require(`commander`);
 
 const defaultConfig = require(`./default-qss-config`);
 const log = require(`./log-to-qss`);
-const PackageJsonPromise = require(`./qsp-json-promise`);
+const PackageVersionPromise = require(`./qsp-version-promise`);
 const start = require(`.`);
 
 program.option(
@@ -34,7 +34,7 @@ program.on(`option:version`, async () => {
 
     log.start();
 
-    log((await PackageJsonPromise()).version);
+    log(await PackageVersionPromise());
 
     process.exit();
 
