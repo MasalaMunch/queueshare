@@ -1,6 +1,5 @@
 "use strict";
 
-const EscapedForRegex = require(`../escaped-for-regex`);
 const JsonString = require(`../json-string`);
 const path = require(`path`);
 
