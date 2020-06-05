@@ -33,18 +33,6 @@ const update = require(`./update-qss`);
 
     const {folder, isDev} = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
 
-    if (!isDev) {
-
-        packageUpdater.tryUpdating().then(() => {
-
-            update();
-
-            Interval.set(() => packageUpdater.tryUpdating(), anHourInMs);
-
-        });
-
-    }
-
     const syncedState = new SyncedState(folder);
 
     // in the future, on synced state change, when media is referenced, 
@@ -199,6 +187,15 @@ const update = require(`./update-qss`);
         const PackageWatcher = require(`./qsp-watcher`);
 
         PackageWatcher().on(`all`, () => restart(`A change was detected.`));
+
+    }
+    else {
+
+        await packageUpdater.tryUpdating();
+
+        update();
+
+        Interval.set(() => packageUpdater.tryUpdating(), anHourInMs);
 
     }
 
