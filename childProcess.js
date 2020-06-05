@@ -145,6 +145,8 @@ const update = require(`./update-qss`);
 
     });
 
+    app.get(`/day`, (req, res) => res.sendFile(path.join(__dirname, `day.html`)));
+
     const server = app.listen(port);
 
     server.on(`error`, (error) => {
