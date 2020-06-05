@@ -122,44 +122,6 @@ const SyncedJsonTree = class {
 
     }
 
-    _ValidForeignChange (foreignChange) {
-
-        const {versions} = foreignChange;
-
-        assert(Array.isArray(versions));
-
-        assert(versions.length === 1 + foreignChange.path.length);
-
-        return this._ForeignChange(
-
-            this._ValidLocalChange(foreignChange),
-
-            versions.map(Version.Valid),
-
-            );
-
-    }
-
-    _ValidLocalChange (localChange) {
-
-        const {path, value} = localChange;
-
-        assert(Array.isArray(path));
-
-        path.forEach((child) => assert(typeof child === `string`));
-
-        return {
-
-            path,
-
-            value: (
-                value === undefined? value : JSON.parse(JSON.stringify(value))
-                ),
-
-            };
-
-    }
-
     _receive (foreignChange) {
 
         const {versions} = foreignChange;
@@ -211,6 +173,43 @@ const SyncedJsonTree = class {
 
     }
 
+    _ValidForeignChange (foreignChange) {
+
+        const {versions} = foreignChange;
+
+        assert(Array.isArray(versions));
+
+        assert(versions.length === 1 + foreignChange.path.length);
+
+        return this._ForeignChange(
+
+            this._ValidLocalChange(foreignChange),
+
+            versions.map(Version.Valid),
+
+            );
+
+    }
+
+    _ValidLocalChange (localChange) {
+
+        const {path, value} = localChange;
+
+        assert(Array.isArray(path));
+
+        path.forEach((child) => assert(typeof child === `string`));
+
+        return {
+
+            path,
+
+            value: (
+                value === undefined? value : JSON.parse(JSON.stringify(value))
+                ),
+
+            };
+
+    }
 
     *_Versions (path) {
 
