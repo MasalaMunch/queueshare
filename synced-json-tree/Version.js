@@ -8,13 +8,7 @@ const pid = UrlEncodedUuid(uuid.v4());
 
 const Version = {
 
-    Comparison: (a, b) => {
-
-        const intComp = a._int - b._int;
-
-        return intComp === 0? a._pid.localeCompare(b._pid) : intComp;
-
-    },
+    Comparison: (a, b) => (a._int - b._int) || a._pid.localeCompare(b._pid),
 
     oldest: {_int: 0, _pid: ``},
 

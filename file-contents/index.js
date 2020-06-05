@@ -1,5 +1,6 @@
 "use strict";
 
+const assert = require(`assert`);
 const fs = require(`fs`);
 
 const FileContents = (file, options) => {
@@ -23,5 +24,7 @@ const FileContents = (file, options) => {
     return fileContents;
 
 };
+
+FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
 
 module.exports = FileContents;
