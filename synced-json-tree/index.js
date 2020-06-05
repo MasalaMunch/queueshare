@@ -12,9 +12,9 @@ const SyncedJsonTree = class {
 
     constructor (changes) {
 
-        this.currentLocalVersion = LocalVersion.oldest;
-
         this.events = new EventEmitter();
+
+        this._currentLocalVersion = LocalVersion.oldest;
 
         this._localVersionChanges = new Map();
 
@@ -74,7 +74,7 @@ const SyncedJsonTree = class {
 
             ...foreignChange,
 
-            localVersion: LocalVersion.Newer(this.currentLocalVersion),
+            localVersion: LocalVersion.Newer(this._currentLocalVersion),
 
             };
 
@@ -254,7 +254,7 @@ const SyncedJsonTree = class {
 
         const {localVersion} = change;
 
-        this.currentLocalVersion = localVersion;
+        this._currentLocalVersion = localVersion;
 
         this._localVersionChanges.set(localVersion, change);
 
