@@ -1672,9 +1672,9 @@ const jsonStringSeparator = `\n`;
 
 const ViaFs = class {
 
-    constructor (key) {
+    constructor (prefix) {
 
-        this._file = key;
+        this._file = prefix;
 
         this._fileAppendStream = undefined;
 
