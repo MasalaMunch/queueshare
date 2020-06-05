@@ -234,16 +234,6 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
-        const change = this._Change(foreignChange);
-
-        const {localVersion} = change;
-
-        this.currentLocalVersion = localVersion;
-
-        this._localVersionChanges.set(localVersion, change);
-
-        this._orderedLocalVersions.insert(localVersion);
-
         for (const subtree of tree.Traversal()) {
 
             if (subtree.change !== undefined) {
@@ -258,7 +248,17 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
+        const change = this._Change(foreignChange);
+
         tree.change = change;
+
+        const {localVersion} = change;
+
+        this.currentLocalVersion = localVersion;
+
+        this._localVersionChanges.set(localVersion, change);
+
+        this._orderedLocalVersions.insert(localVersion);
 
         this.events.emit(`change`, change);
 
