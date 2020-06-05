@@ -60,13 +60,13 @@ const update = require(`./update-qss`);
 
     });
 
+    const clientFile = ClientFile(isDev);
+
+    app.get(apiPaths.client, (req, res) => res.sendFile(clientFile));
+
     const clientAssetFolder = await ClientAssetFolderPromise(isDev);
 
     app.use(apiPaths.clientAssets, express.static(clientAssetFolder));
-
-    const clientFile = ClientFile(isDev);
-
-    app.get(apiPaths.clientFile, (req, res) => res.sendFile(clientFile));
 
     const storedPortPath = path.join(folder, folderPaths.port);
 
@@ -78,7 +78,7 @@ const update = require(`./update-qss`);
 
     const ClientUrl = (ipAddress = ip.address()) => {
 
-        return `http://${ipAddress}:${port}${apiPaths.clientFile}`;
+        return `http://${ipAddress}:${port}${apiPaths.client}`;
 
     };
 

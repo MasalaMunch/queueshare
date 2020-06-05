@@ -2,9 +2,9 @@
 
 const apiPaths = {
 
-    clientAssets: `/clientAssets`,
+    client: ``,
 
-    clientFile: ``,
+    clientAssets: `/clientAssets`,
 
     clientUrl: `/clientUrl`,
 
