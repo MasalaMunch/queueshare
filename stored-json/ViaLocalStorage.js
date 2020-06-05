@@ -6,9 +6,9 @@ const KeyAndIntComparison = (a, b) => a[1] - b[1];
 
 const ViaLocalStorage = class {
 
-    constructor (key) {
+    constructor (storagePath) {
 
-        this._key = key;
+        this._key = path.resolve(storagePath);
 
     }
 

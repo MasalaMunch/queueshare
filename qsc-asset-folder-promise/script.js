@@ -9,6 +9,8 @@ document.body.appendChild(p);
 
 console.log(p.thisAintProper);
 
+console.log(localStorage);
+
 const testLog = new StoredJsonLog(`testLog/`);
 
 console.log(testLog.Entries());

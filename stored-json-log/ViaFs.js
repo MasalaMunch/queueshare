@@ -9,9 +9,9 @@ const jsonStringSeparator = `\n`;
 
 const ViaFs = class {
 
-    constructor (prefix) {
+    constructor (storagePath) {
 
-        this._file = prefix;
+        this._file = storagePath;
 
         this._fileAppendStream = undefined;
 
