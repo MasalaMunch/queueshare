@@ -4,6 +4,8 @@ const fs = require(`fs`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
+const scriptFilename = require(`../qsc-script-filename`);
+
 const assetFolder = path.join(__dirname, `folder`);
 
 const AssetFolderPromise = (isDev) => new Promise((resolve, reject) => {
@@ -16,7 +18,7 @@ const AssetFolderPromise = (isDev) => new Promise((resolve, reject) => {
 
         const writeStream = fs.createWriteStream(
 
-            path.join(assetFolder, `browserifiedScript.js`),
+            path.join(assetFolder, scriptFilename),
 
             {encoding: stringFileEncoding},
 
