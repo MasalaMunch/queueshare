@@ -40,13 +40,11 @@ const SyncedState = class extends SyncedJsonTree {
 
         let compressedValue = {};
 
-        for (let {path, value} of this.Changes()) {
-
-            value = JsonCopy(value);
+        for (const {path, value} of this.Changes()) {
 
             if (path.length === 0) {
 
-                compressedValue = value;
+                compressedValue = JsonCopy(value);
 
             } else {
 
@@ -62,7 +60,7 @@ const SyncedState = class extends SyncedJsonTree {
 
                     if (i === path.length-1) {
 
-                        parentValue[child] = value;
+                        parentValue[child] = JsonCopy(value);
 
                     }
                     else {
