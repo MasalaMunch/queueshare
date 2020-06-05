@@ -7,9 +7,9 @@ const stringFileEncoding = require(`../string-file-encoding`);
 
 const ViaFs = class {
 
-    constructor (path) {
+    constructor (prefix) {
 
-        this._file = path;
+        this._file = prefix;
 
     }
 
