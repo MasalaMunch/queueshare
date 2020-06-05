@@ -23,7 +23,7 @@ const Defaultified = (target, source) => {
 
 module.exports = Defaultified;
 
-},{"../own-props":12}],2:[function(require,module,exports){
+},{"../own-props":16}],2:[function(require,module,exports){
 "use strict";
 
 const Defaultified = require(`../defaultified`);
@@ -73,7 +73,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defaultified":1,"../extend":3,"../filtered":4,"../mapped":5}],3:[function(require,module,exports){
+},{"../defaultified":1,"../extend":3,"../filtered":5,"../mapped":7}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -93,7 +93,39 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":12,"assert":6}],4:[function(require,module,exports){
+},{"../own-props":16,"assert":8}],4:[function(require,module,exports){
+"use strict";
+
+const assert = require(`assert`);
+const fs = require(`fs`);
+
+const FileContents = (file, options) => {
+
+    let fileContents;
+
+    try {
+
+        fileContents = fs.readFileSync(file, options);
+
+    } catch (error) {
+
+        if (error.code !== `ENOENT`) {
+
+            throw error;
+
+        }
+
+    }
+
+    return fileContents;
+
+};
+
+FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
+
+module.exports = FileContents;
+
+},{"assert":8,"fs":12}],5:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -118,7 +150,24 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":12}],5:[function(require,module,exports){
+},{"../own-props":16}],6:[function(require,module,exports){
+"use strict";
+
+const assert = require(`assert`);
+
+const JsonString = (json) => {
+
+    const jsonString = JSON.stringify(json);
+
+    assert(typeof jsonString === `string`);
+
+    return jsonString;
+
+};
+
+module.exports = JsonString;
+
+},{"assert":8}],7:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -139,7 +188,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":12}],6:[function(require,module,exports){
+},{"../own-props":16}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -649,7 +698,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":10,"util/":9}],7:[function(require,module,exports){
+},{"object-assign":14,"util/":11}],9:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -674,14 +723,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1271,7 +1320,24 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":8,"_process":11,"inherits":7}],10:[function(require,module,exports){
+},{"./support/isBuffer":10,"_process":15,"inherits":9}],12:[function(require,module,exports){
+
+},{}],13:[function(require,module,exports){
+'use strict';
+
+module.exports = string => {
+	if (typeof string !== 'string') {
+		throw new TypeError('Expected a string');
+	}
+
+	// Escape characters with special meaning either inside or outside character sets.
+	// Use a simple backslash escape when it’s always valid, and a \unnnn escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.
+	return string
+		.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+		.replace(/-/g, '\\x2d');
+};
+
+},{}],14:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1363,7 +1429,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1549,7 +1615,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],12:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -1568,10 +1634,11 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],13:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
+const StoredJsonLog = require(`../stored-json-log`);
 
 const p = Elm(`p`, {innerText: `hey ;)`, thisAintProper: `truuuuu`});
 
@@ -1579,4 +1646,281 @@ document.body.appendChild(p);
 
 console.log(p.thisAintProper);
 
-},{"../elm":2}]},{},[13]);
+const testLog = new StoredJsonLog(`testLog/`);
+
+console.log(testLog.Entries());
+
+testLog.write([]);
+
+console.log(testLog.Entries());
+
+testLog.write([5,6,7]);
+
+console.log(testLog.Entries());
+
+testLog.eventuallyAppend(8);
+
+},{"../elm":2,"../stored-json-log":20}],18:[function(require,module,exports){
+"use strict";
+
+const FileContents = require(`../file-contents`);
+const fs = require(`fs`);
+const JsonString = require(`../json-string`);
+const stringFileEncoding = require(`../string-file-encoding`);
+
+const jsonStringSeparator = `\n`;
+
+const ViaFs = class {
+
+    constructor (path) {
+
+        this._file = path;
+
+        this._fileAppendStream = undefined;
+
+    }
+
+    Entries () {
+
+        const fileContents = FileContents(
+
+            this._file, 
+
+            {encoding: stringFileEncoding},
+
+            );
+
+        const fileAsString = fileContents === undefined? `` : fileContents;
+
+        return (
+
+            fileAsString.split(jsonStringSeparator).slice(0, -1).map(JSON.parse)
+
+            );
+
+    }
+
+    eventuallyAppend (entry) {
+
+        if (this._fileAppendStream === undefined) {
+
+            this._fileAppendStream = fs.createWriteStream(
+
+                this._file, 
+
+                {encoding: stringFileEncoding, flags: `a`},
+
+                );
+
+        }
+
+        this._fileAppendStream.write(JsonString(entry) + jsonStringSeparator);
+
+    }
+
+    write (entries) {
+
+        const jsonStrings = entries.map(JsonString);
+
+        fs.writeFileSync(
+
+            this._file, 
+
+            jsonStrings.join(jsonStringSeparator) + jsonStringSeparator,
+
+            {encoding: stringFileEncoding},
+
+            );
+
+    }
+
+    };
+
+ViaFs.IsSupported = () => {
+
+    return (
+
+        FileContents.IsSupported() 
+
+        && typeof fs.createWriteStream === `function`
+
+        && typeof fs.writeFileSync === `function`
+
+        );
+
+};
+
+module.exports = ViaFs;
+
+},{"../file-contents":4,"../json-string":6,"../string-file-encoding":21,"fs":12}],19:[function(require,module,exports){
+"use strict";
+
+const EscapedForRegex = require(`escape-string-regexp`);
+const JsonString = require(`../json-string`);
+
+const firstInt = 0;
+
+const KeyAndIntComparison = (a, b) => a[1] - b[1];
+
+const ViaLocalStorage = class {
+
+    constructor (prefix) {
+
+        this._prefix = prefix;
+
+        const sortedKeysAndInts = this._SortedKeysAndInts();
+
+        this._nextInt = (
+
+            sortedKeysAndInts.length === 0?
+
+            firstInt : 1 + sortedKeysAndInts[sortedKeysAndInts.length-1][1]
+
+            );
+
+    }
+
+    Entries () {
+
+        let i;
+
+        const sortedKeysAndInts = this._SortedKeysAndInts();
+
+        const entryCount = sortedKeysAndInts.length;
+
+        const entries = new Array(entryCount);
+
+        for (i=0; i<entryCount; i++) {
+
+            entries[i] = JSON.parse(
+
+                localStorage.getItem(sortedKeysAndInts[i][0])
+
+                );
+
+        }
+
+        return entries;
+
+    }
+
+    eventuallyAppend (entry) {
+
+        this._append([entry]);
+
+    }
+
+    write (entries) {
+
+        let i;
+
+        const keysAndInts = this._SortedKeysAndInts();
+
+        for (i=keysAndInts.length-1; i>=0; i--) {
+
+            localStorage.removeItem(keysAndInts[i][0]);
+
+        }
+
+        this._nextInt = firstInt;
+
+        this._append(entries);
+
+    }
+
+    _append (entries) {
+
+        let i;
+
+        const entryCount = entries.length;
+
+        const prefix = this._prefix;
+
+        let nextInt = this._nextInt;
+
+        for (i=0; i<entryCount; i++) {
+
+            localStorage.setItem(
+
+                prefix + String(nextInt), 
+
+                JsonString(entries[i]),
+
+                );
+
+            nextInt++;
+
+        }
+
+        this._nextInt = nextInt;
+
+        this._sortedKeysAndInts = undefined;
+
+    }
+
+    _SortedKeysAndInts () {
+
+        if (this._sortedKeysAndInts === undefined) {
+
+            let i;
+
+            const localStorageLength = localStorage.length;
+
+            let key;
+
+            const prefixRegExp = new RegExp(
+
+                `^` + EscapedForRegex(this._prefix)
+
+                );
+
+            const keysAndInts = [];
+
+            const prefixLength = this._prefix.length;
+
+            for (i=0; i<localStorageLength; i++) {
+
+                key = localStorage.key(i);
+
+                if (prefixRegExp.test(key)) {
+
+                    keysAndInts.push(
+
+                        [key, Number(key.substring(prefixLength, key.length))]
+
+                        );
+
+                }
+
+            }
+
+            keysAndInts.sort(KeyAndIntComparison);
+
+            this._sortedKeysAndInts = keysAndInts;
+
+        }
+
+        return this._sortedKeysAndInts;
+
+    }
+
+    };
+
+module.exports = ViaLocalStorage;
+
+},{"../json-string":6,"escape-string-regexp":13}],20:[function(require,module,exports){
+"use strict";
+
+const ViaFs = require(`./ViaFs.js`);
+const ViaLocalStorage = require(`./ViaLocalStorage.js`);
+
+const StoredJsonLog = ViaFs.IsSupported()? ViaFs : ViaLocalStorage;
+
+module.exports = StoredJsonLog;
+
+},{"./ViaFs.js":18,"./ViaLocalStorage.js":19}],21:[function(require,module,exports){
+"use strict";
+
+module.exports = `utf8`;
+
+},{}]},{},[17]);

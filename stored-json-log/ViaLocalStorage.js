@@ -2,7 +2,6 @@
 
 const EscapedForRegex = require(`escape-string-regexp`);
 const JsonString = require(`../json-string`);
-const path = require(`path`);
 
 const firstInt = 0;
 
@@ -10,9 +9,9 @@ const KeyAndIntComparison = (a, b) => a[1] - b[1];
 
 const ViaLocalStorage = class {
 
-    constructor (path) {
+    constructor (prefix) {
 
-        this._prefix = path.format(path.parse(path)) + path.sep;
+        this._prefix = prefix;
 
         const sortedKeysAndInts = this._SortedKeysAndInts();
 

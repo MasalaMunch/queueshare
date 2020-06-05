@@ -1,15 +1,14 @@
 "use strict";
 
 const JsonString = require(`../json-string`);
-const path = require(`path`);
 
 const KeyAndIntComparison = (a, b) => a[1] - b[1];
 
 const ViaLocalStorage = class {
 
-    constructor (path) {
+    constructor (key) {
 
-        this._key = path.format(path.parse(path));
+        this._key = key;
 
     }
 
