@@ -3,8 +3,6 @@
 const JsonString = require(`../json-string`);
 const path = require(`path`);
 
-const KeyAndIntComparison = (a, b) => a[1] - b[1];
-
 const ViaLocalStorage = class {
 
     constructor (storagePath) {
