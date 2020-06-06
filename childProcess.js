@@ -4,6 +4,7 @@ const anHourInMs = require(`./an-hour-in-ms`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
 const Defaultified = require(`./defaultified`);
+const EscapedForRegex = require(`escape-string-regexp`);
 const express = require(`express`);
 const fs = require(`fs`);
 const Interval = require(`./interval`);
@@ -186,7 +187,21 @@ const update = require(`./update-qss`);
 
         const PackageWatcher = require(`./qsp-watcher`);
 
-        PackageWatcher().on(`all`, () => restart(`A change was detected.`));
+        const clientAssetFolderRegex = new RegExp(
+
+            `^` + EscapedForRegex(path.resolve(clientAssetFolder))
+
+            );
+
+        PackageWatcher().on(`all`, (type, path) => {
+
+            if (!clientAssetFolderRegex.test(path)) {
+
+                restart(`A change was detected.`);
+
+            }
+
+        });
 
     }
     else {
