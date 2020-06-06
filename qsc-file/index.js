@@ -15,15 +15,15 @@ const File = (isDev) => {
 
         const mustache = require(`mustache`);
 
-        const templateContents = fs.readFileSync(
+        const fileTemplateContents = fs.readFileSync(
 
-            path.join(__dirname, `template.html`),
+            path.join(__dirname, `fileTemplate.html`),
 
             {encoding: stringFileEncoding},
 
             );
 
-        const newFileContents = mustache.render(templateContents, {
+        const newFileContents = mustache.render(fileTemplateContents, {
 
             assetsUrl: serverApiPaths.clientAssets,
 
