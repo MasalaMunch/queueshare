@@ -2,8 +2,6 @@
 
 const RandomInt = require(`random-int`);
 
-const portRange = [1024, 49151] // see https://stackoverflow.com/a/113229
-
-const RandomPort = () => RandomInt(...portRange);
+const RandomPort = () => RandomInt(1024, 49151); // https://stackoverflow.com/a/113229
 
 module.exports = RandomPort;
