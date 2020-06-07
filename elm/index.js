@@ -11,6 +11,8 @@ const defaultProps = {
 
     childNodes: [],
 
+    className: ``,
+
     classList: [],
 
     };
@@ -28,6 +30,8 @@ const Elm = (tagName, props) => {
         elm.appendChild(n);
 
     }
+
+    elm.className = props.className;
 
     for (const c of props.classList) {
 

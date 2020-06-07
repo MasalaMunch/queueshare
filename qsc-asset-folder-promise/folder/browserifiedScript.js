@@ -23,7 +23,7 @@ const Defaultified = (target, source) => {
 
 module.exports = Defaultified;
 
-},{"../own-props":17}],2:[function(require,module,exports){
+},{"../own-props":12}],2:[function(require,module,exports){
 "use strict";
 
 const Defaultified = require(`../defaultified`);
@@ -36,6 +36,8 @@ const defaultProps = {
     innerText: ``,
 
     childNodes: [],
+
+    className: ``,
 
     classList: [],
 
@@ -55,6 +57,8 @@ const Elm = (tagName, props) => {
 
     }
 
+    elm.className = props.className;
+
     for (const c of props.classList) {
 
         elm.classList.add(c);
@@ -73,7 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defaultified":1,"../extend":3,"../filtered":5,"../mapped":7}],3:[function(require,module,exports){
+},{"../defaultified":1,"../extend":3,"../filtered":4,"../mapped":5}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -93,39 +97,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":17,"assert":8}],4:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-const fs = require(`fs`);
-
-const FileContents = (file, options) => {
-
-    let fileContents;
-
-    try {
-
-        fileContents = fs.readFileSync(file, options);
-
-    } catch (error) {
-
-        if (error.code !== `ENOENT`) {
-
-            throw error;
-
-        }
-
-    }
-
-    return fileContents;
-
-};
-
-FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
-
-module.exports = FileContents;
-
-},{"assert":8,"fs":12}],5:[function(require,module,exports){
+},{"../own-props":12,"assert":6}],4:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -150,24 +122,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":17}],6:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-
-const JsonString = (json) => {
-
-    const jsonString = JSON.stringify(json);
-
-    assert(typeof jsonString === `string`);
-
-    return jsonString;
-
-};
-
-module.exports = JsonString;
-
-},{"assert":8}],7:[function(require,module,exports){
+},{"../own-props":12}],5:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -188,7 +143,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":17}],8:[function(require,module,exports){
+},{"../own-props":12}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -698,7 +653,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":14,"util/":11}],9:[function(require,module,exports){
+},{"object-assign":10,"util/":9}],7:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -723,14 +678,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],11:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1320,24 +1275,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":10,"_process":16,"inherits":9}],12:[function(require,module,exports){
-
-},{}],13:[function(require,module,exports){
-'use strict';
-
-module.exports = string => {
-	if (typeof string !== 'string') {
-		throw new TypeError('Expected a string');
-	}
-
-	// Escape characters with special meaning either inside or outside character sets.
-	// Use a simple backslash escape when it’s always valid, and a \unnnn escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.
-	return string
-		.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-		.replace(/-/g, '\\x2d');
-};
-
-},{}],14:[function(require,module,exports){
+},{"./support/isBuffer":8,"_process":11,"inherits":7}],10:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1429,313 +1367,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],15:[function(require,module,exports){
-(function (process){
-// .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
-// backported and transplited with Babel, with backwards-compat fixes
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  if (path.length === 0) return '.';
-  var code = path.charCodeAt(0);
-  var hasRoot = code === 47 /*/*/;
-  var end = -1;
-  var matchedSlash = true;
-  for (var i = path.length - 1; i >= 1; --i) {
-    code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        if (!matchedSlash) {
-          end = i;
-          break;
-        }
-      } else {
-      // We saw the first non-path separator
-      matchedSlash = false;
-    }
-  }
-
-  if (end === -1) return hasRoot ? '/' : '.';
-  if (hasRoot && end === 1) {
-    // return '//';
-    // Backwards-compat fix:
-    return '/';
-  }
-  return path.slice(0, end);
-};
-
-function basename(path) {
-  if (typeof path !== 'string') path = path + '';
-
-  var start = 0;
-  var end = -1;
-  var matchedSlash = true;
-  var i;
-
-  for (i = path.length - 1; i >= 0; --i) {
-    if (path.charCodeAt(i) === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          start = i + 1;
-          break;
-        }
-      } else if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // path component
-      matchedSlash = false;
-      end = i + 1;
-    }
-  }
-
-  if (end === -1) return '';
-  return path.slice(start, end);
-}
-
-// Uses a mixed approach for backwards-compatibility, as ext behavior changed
-// in new Node.js versions, so only basename() above is backported here
-exports.basename = function (path, ext) {
-  var f = basename(path);
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-exports.extname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  var startDot = -1;
-  var startPart = 0;
-  var end = -1;
-  var matchedSlash = true;
-  // Track the state of characters (if any) we see before our first dot and
-  // after any path separator we find
-  var preDotState = 0;
-  for (var i = path.length - 1; i >= 0; --i) {
-    var code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          startPart = i + 1;
-          break;
-        }
-        continue;
-      }
-    if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // extension
-      matchedSlash = false;
-      end = i + 1;
-    }
-    if (code === 46 /*.*/) {
-        // If this is our first dot, mark it as the start of our extension
-        if (startDot === -1)
-          startDot = i;
-        else if (preDotState !== 1)
-          preDotState = 1;
-    } else if (startDot !== -1) {
-      // We saw a non-dot and non-path separator before our dot, so we should
-      // have a good chance at having a non-empty extension
-      preDotState = -1;
-    }
-  }
-
-  if (startDot === -1 || end === -1 ||
-      // We saw a non-dot character immediately before the dot
-      preDotState === 0 ||
-      // The (right-most) trimmed path component is exactly '..'
-      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
-    return '';
-  }
-  return path.slice(startDot, end);
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-}).call(this,require('_process'))
-},{"_process":16}],16:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1921,7 +1553,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],17:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -1940,296 +1572,31 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],18:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
-const StoredJsonLog = require(`../stored-json-log`);
 
-const uiElm = Elm(`div`, {
+const contentElm = Elm(`div`, {className: `content`, innerText: `
 
-    innerText: `
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis venenatis nibh sollicitudin interdum. Vivamus finibus ex leo, eu vehicula arcu pulvinar quis. Morbi ut iaculis arcu. Fusce blandit elit id odio accumsan, consectetur semper justo elementum. Morbi viverra eros in justo suscipit tristique. Morbi in augue vel leo malesuada rhoncus. Donec lorem massa, maximus sed sollicitudin sit amet, volutpat eget massa. Donec tincidunt auctor lacus, in fermentum ante consequat eu. Ut blandit massa et urna finibus, ac molestie magna lacinia. Integer pulvinar, mi lobortis eleifend volutpat, turpis lacus accumsan elit, nec ornare ante turpis eu libero. Duis pharetra magna dolor, ac ultrices justo vestibulum id. Nam mattis eget dolor sed tempus. Phasellus fringilla massa magna, a tincidunt orci congue sed.
 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vehicula, sapien non convallis porta, lacus leo efficitur ipsum, quis scelerisque nibh massa in tellus. Phasellus posuere congue porta. Proin gravida luctus blandit. Quisque et nunc pellentesque, pulvinar tellus in, vestibulum libero. Vivamus nisl ipsum, vestibulum vitae molestie quis, lacinia vitae nisi. Sed nec maximus eros. Morbi urna orci, porttitor eu ornare sit amet, convallis a nisi. Nunc semper consectetur justo non ullamcorper. Aenean sed metus accumsan, cursus leo id, bibendum turpis. Vivamus id risus a risus facilisis vestibulum. Etiam vitae egestas sem. Nulla facilisi. Fusce tempus quam lacus, et cursus mauris tempus a. Sed vehicula ipsum risus, sit amet lobortis ipsum aliquam et.
+    In eros urna, feugiat in lacus ut, vulputate mollis quam. Nullam pellentesque sagittis luctus. Duis placerat turpis sit amet arcu faucibus, quis tempor metus auctor. Vivamus ac urna convallis, pulvinar dui a, feugiat est. Nam vehicula egestas iaculis. Nulla arcu nunc, ornare id tristique vel, ornare et tellus. Ut at tincidunt libero. Morbi eget mauris id dolor volutpat semper quis ac nisi. Vivamus interdum fringilla quam ut placerat.
 
-        Duis pulvinar ornare tortor eu dignissim. Nullam quis nisl bibendum, consequat dolor quis, fringilla urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed egestas quam ipsum, ac lacinia risus egestas in. Fusce hendrerit quam eget euismod volutpat. Cras et metus iaculis, semper enim eu, malesuada erat. Aliquam gravida tempus tincidunt. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam sed elit sed libero feugiat vulputate quis tempor ante. Integer sit amet purus dignissim, tristique ex at, ullamcorper mauris.
+    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse id volutpat nunc. Integer tristique lorem eu libero suscipit sagittis. Donec vel libero et nisi ultrices porttitor ut eget leo. Nam sit amet erat lectus. Proin pulvinar ex sit amet orci convallis dictum. Fusce lobortis urna est, ac varius urna consectetur sit amet. Donec vulputate non enim consectetur pulvinar. Sed porttitor quam ut quam accumsan, vitae cursus mi feugiat. Mauris sed erat non purus hendrerit convallis. Pellentesque tincidunt lacinia felis id ornare. Proin vitae mauris velit. Sed posuere, nunc nec interdum dictum, lectus neque luctus nisi, molestie semper urna risus et neque. Ut est ipsum, tincidunt vitae interdum congue, viverra eget felis.
 
-        Donec tempus sapien lectus, eu elementum urna aliquam ut. Integer eget auctor nulla, ut tincidunt turpis. Phasellus luctus lobortis ligula a imperdiet. Fusce iaculis eu ipsum nec consequat. Suspendisse vitae dui tincidunt, feugiat lacus at, aliquam mi. In sapien sapien, sagittis ut risus sed, rhoncus vehicula nibh. Nulla facilisi.
+    Duis posuere lobortis tortor, non egestas purus posuere eget. Donec sollicitudin luctus tortor at ultricies. Aliquam quis nunc ut nulla semper ullamcorper vel eget orci. Sed consequat molestie nibh sed fringilla. Quisque pharetra suscipit ipsum, quis rhoncus tellus fringilla at. Sed sed eleifend eros. Cras vitae aliquet est, in egestas leo. Aliquam tincidunt sit amet arcu dignissim dapibus.
 
-        Proin tempor non purus volutpat pretium. Suspendisse fermentum viverra felis, sagittis porttitor ex ultricies non. Pellentesque lobortis tristique neque, at fringilla lectus condimentum sed. Cras quis nisi quis massa facilisis pulvinar. In eleifend dui ipsum, eget ultrices sem tincidunt nec. Donec venenatis, neque vel consectetur euismod, massa orci euismod ligula, nec porta augue ex vitae risus. In eu luctus neque.
+    Suspendisse nec est id dolor accumsan sagittis condimentum at nisi. Nam dapibus metus eget massa rhoncus commodo interdum ac elit. Phasellus tempor lectus at vestibulum imperdiet. Maecenas ut libero tincidunt, porta mauris a, aliquam tortor. Praesent nec sem elementum, fermentum justo id, commodo metus. Praesent sagittis sagittis nunc, sed suscipit magna tristique vel. Nullam eleifend, turpis at volutpat sollicitudin, tortor lectus semper purus, in tincidunt nunc nulla in turpis. Praesent efficitur tempus ante, eu porttitor erat aliquam consequat. Nullam justo nulla, tempor et commodo a, lacinia sed neque. Ut tempor orci pretium, ornare eros molestie, semper ex. Donec semper eget tellus sit amet ultrices. Donec ut dolor vel est consequat efficitur.
 
-        Nam massa odio, elementum eu nibh non, tristique volutpat tellus. Maecenas blandit est eget lectus pellentesque mollis. Mauris turpis lorem, mollis aliquam nulla vehicula, aliquet faucibus risus. Aenean id justo enim. Duis pharetra faucibus varius. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam placerat, sapien eu sollicitudin malesuada, turpis odio sollicitudin diam, sed luctus enim diam ut odio. Curabitur magna lectus, pellentesque eu molestie et, molestie sit amet justo. Mauris tempus massa et pellentesque luctus. Pellentesque faucibus nisi aliquam pellentesque imperdiet. Vestibulum luctus, neque quis suscipit dignissim, elit est mattis magna, a fringilla lacus libero id nisl.
+    `});
 
-        `,
+document.body.appendChild(contentElm);
 
-    classList: [`ui`],
+const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
-    });
+fabElm.querySelector(`button`).addEventListener(`touchstart`, console.log);
 
-document.body.appendChild(uiElm);
+document.body.appendChild(fabElm);
 
-},{"../elm":2,"../stored-json-log":21}],19:[function(require,module,exports){
-"use strict";
-
-const FileContents = require(`../file-contents`);
-const fs = require(`fs`);
-const JsonString = require(`../json-string`);
-const stringFileEncoding = require(`../string-file-encoding`);
-
-const jsonStringSeparator = `\n`;
-
-const ViaFs = class {
-
-    constructor (storagePath) {
-
-        this._file = storagePath;
-
-        this._fileAppendStream = undefined;
-
-    }
-
-    Entries () {
-
-        const fileContents = FileContents(
-
-            this._file, 
-
-            {encoding: stringFileEncoding},
-
-            );
-
-        const fileAsString = fileContents === undefined? `` : fileContents;
-
-        return (
-
-            fileAsString.split(jsonStringSeparator).slice(0, -1).map(JSON.parse)
-
-            );
-
-    }
-
-    eventuallyAppend (entry) {
-
-        if (this._fileAppendStream === undefined) {
-
-            this._fileAppendStream = fs.createWriteStream(
-
-                this._file, 
-
-                {encoding: stringFileEncoding, flags: `a`},
-
-                );
-
-        }
-
-        this._fileAppendStream.write(JsonString(entry) + jsonStringSeparator);
-
-    }
-
-    write (entries) {
-
-        const jsonStrings = entries.map(JsonString);
-
-        fs.writeFileSync(
-
-            this._file, 
-
-            jsonStrings.join(jsonStringSeparator) + jsonStringSeparator,
-
-            {encoding: stringFileEncoding},
-
-            );
-
-    }
-
-    };
-
-ViaFs.IsSupported = () => {
-
-    return (
-
-        FileContents.IsSupported() 
-
-        && typeof fs.createWriteStream === `function`
-
-        && typeof fs.writeFileSync === `function`
-
-        );
-
-};
-
-module.exports = ViaFs;
-
-},{"../file-contents":4,"../json-string":6,"../string-file-encoding":22,"fs":12}],20:[function(require,module,exports){
-"use strict";
-
-const EscapedForRegex = require(`escape-string-regexp`);
-const JsonString = require(`../json-string`);
-const path = require(`path`);
-
-const firstInt = 0;
-
-const KeyAndIntComparison = (a, b) => a[1] - b[1];
-
-const ViaLocalStorage = class {
-
-    constructor (storagePath) {
-
-        this._prefix = path.resolve(storagePath) + path.sep;
-
-        const sortedKeysAndInts = this._SortedKeysAndInts();
-
-        this._nextInt = (
-
-            sortedKeysAndInts.length === 0?
-
-            firstInt : 1 + sortedKeysAndInts[sortedKeysAndInts.length-1][1]
-
-            );
-
-    }
-
-    Entries () {
-
-        let i;
-
-        const sortedKeysAndInts = this._SortedKeysAndInts();
-
-        const entryCount = sortedKeysAndInts.length;
-
-        const entries = new Array(entryCount);
-
-        for (i=0; i<entryCount; i++) {
-
-            entries[i] = JSON.parse(
-
-                localStorage.getItem(sortedKeysAndInts[i][0])
-
-                );
-
-        }
-
-        return entries;
-
-    }
-
-    eventuallyAppend (entry) {
-
-        this._append([entry]);
-
-    }
-
-    write (entries) {
-
-        let i;
-
-        const keysAndInts = this._SortedKeysAndInts();
-
-        for (i=keysAndInts.length-1; i>=0; i--) {
-
-            localStorage.removeItem(keysAndInts[i][0]);
-
-        }
-
-        this._nextInt = firstInt;
-
-        this._append(entries);
-
-    }
-
-    _append (entries) {
-
-        let i;
-
-        const entryCount = entries.length;
-
-        const prefix = this._prefix;
-
-        let nextInt = this._nextInt;
-
-        for (i=0; i<entryCount; i++) {
-
-            localStorage.setItem(
-
-                prefix + String(nextInt), 
-
-                JsonString(entries[i]),
-
-                );
-
-            nextInt++;
-
-        }
-
-        this._nextInt = nextInt;
-
-        this._sortedKeysAndInts = undefined;
-
-    }
-
-    _SortedKeysAndInts () {
-
-        if (this._sortedKeysAndInts === undefined) {
-
-            let i;
-
-            const localStorageLength = localStorage.length;
-
-            let key;
-
-            const prefixRegExp = new RegExp(
-
-                `^` + EscapedForRegex(this._prefix)
-
-                );
-
-            const keysAndInts = [];
-
-            const prefixLength = this._prefix.length;
-
-            for (i=0; i<localStorageLength; i++) {
-
-                key = localStorage.key(i);
-
-                if (prefixRegExp.test(key)) {
-
-                    keysAndInts.push(
-
-                        [key, Number(key.substring(prefixLength, key.length))]
-
-                        );
-
-                }
-
-            }
-
-            keysAndInts.sort(KeyAndIntComparison);
-
-            this._sortedKeysAndInts = keysAndInts;
-
-        }
-
-        return this._sortedKeysAndInts;
-
-    }
-
-    };
-
-module.exports = ViaLocalStorage;
-
-},{"../json-string":6,"escape-string-regexp":13,"path":15}],21:[function(require,module,exports){
-"use strict";
-
-const ViaFs = require(`./ViaFs.js`);
-const ViaLocalStorage = require(`./ViaLocalStorage.js`);
-
-const StoredJsonLog = ViaFs.IsSupported()? ViaFs : ViaLocalStorage;
-
-module.exports = StoredJsonLog;
-
-},{"./ViaFs.js":19,"./ViaLocalStorage.js":20}],22:[function(require,module,exports){
-"use strict";
-
-module.exports = `utf8`;
-
-},{}]},{},[18]);
+},{"../elm":2}]},{},[13]);

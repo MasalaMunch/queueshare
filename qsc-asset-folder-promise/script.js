@@ -1,26 +1,25 @@
 "use strict";
 
 const Elm = require(`../elm`);
-const StoredJsonLog = require(`../stored-json-log`);
 
-const uiElm = Elm(`div`, {
+const contentElm = Elm(`div`, {className: `content`, innerText: `
 
-    innerText: `
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis venenatis nibh sollicitudin interdum. Vivamus finibus ex leo, eu vehicula arcu pulvinar quis. Morbi ut iaculis arcu. Fusce blandit elit id odio accumsan, consectetur semper justo elementum. Morbi viverra eros in justo suscipit tristique. Morbi in augue vel leo malesuada rhoncus. Donec lorem massa, maximus sed sollicitudin sit amet, volutpat eget massa. Donec tincidunt auctor lacus, in fermentum ante consequat eu. Ut blandit massa et urna finibus, ac molestie magna lacinia. Integer pulvinar, mi lobortis eleifend volutpat, turpis lacus accumsan elit, nec ornare ante turpis eu libero. Duis pharetra magna dolor, ac ultrices justo vestibulum id. Nam mattis eget dolor sed tempus. Phasellus fringilla massa magna, a tincidunt orci congue sed.
 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vehicula, sapien non convallis porta, lacus leo efficitur ipsum, quis scelerisque nibh massa in tellus. Phasellus posuere congue porta. Proin gravida luctus blandit. Quisque et nunc pellentesque, pulvinar tellus in, vestibulum libero. Vivamus nisl ipsum, vestibulum vitae molestie quis, lacinia vitae nisi. Sed nec maximus eros. Morbi urna orci, porttitor eu ornare sit amet, convallis a nisi. Nunc semper consectetur justo non ullamcorper. Aenean sed metus accumsan, cursus leo id, bibendum turpis. Vivamus id risus a risus facilisis vestibulum. Etiam vitae egestas sem. Nulla facilisi. Fusce tempus quam lacus, et cursus mauris tempus a. Sed vehicula ipsum risus, sit amet lobortis ipsum aliquam et.
+    In eros urna, feugiat in lacus ut, vulputate mollis quam. Nullam pellentesque sagittis luctus. Duis placerat turpis sit amet arcu faucibus, quis tempor metus auctor. Vivamus ac urna convallis, pulvinar dui a, feugiat est. Nam vehicula egestas iaculis. Nulla arcu nunc, ornare id tristique vel, ornare et tellus. Ut at tincidunt libero. Morbi eget mauris id dolor volutpat semper quis ac nisi. Vivamus interdum fringilla quam ut placerat.
 
-        Duis pulvinar ornare tortor eu dignissim. Nullam quis nisl bibendum, consequat dolor quis, fringilla urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed egestas quam ipsum, ac lacinia risus egestas in. Fusce hendrerit quam eget euismod volutpat. Cras et metus iaculis, semper enim eu, malesuada erat. Aliquam gravida tempus tincidunt. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam sed elit sed libero feugiat vulputate quis tempor ante. Integer sit amet purus dignissim, tristique ex at, ullamcorper mauris.
+    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse id volutpat nunc. Integer tristique lorem eu libero suscipit sagittis. Donec vel libero et nisi ultrices porttitor ut eget leo. Nam sit amet erat lectus. Proin pulvinar ex sit amet orci convallis dictum. Fusce lobortis urna est, ac varius urna consectetur sit amet. Donec vulputate non enim consectetur pulvinar. Sed porttitor quam ut quam accumsan, vitae cursus mi feugiat. Mauris sed erat non purus hendrerit convallis. Pellentesque tincidunt lacinia felis id ornare. Proin vitae mauris velit. Sed posuere, nunc nec interdum dictum, lectus neque luctus nisi, molestie semper urna risus et neque. Ut est ipsum, tincidunt vitae interdum congue, viverra eget felis.
 
-        Donec tempus sapien lectus, eu elementum urna aliquam ut. Integer eget auctor nulla, ut tincidunt turpis. Phasellus luctus lobortis ligula a imperdiet. Fusce iaculis eu ipsum nec consequat. Suspendisse vitae dui tincidunt, feugiat lacus at, aliquam mi. In sapien sapien, sagittis ut risus sed, rhoncus vehicula nibh. Nulla facilisi.
+    Duis posuere lobortis tortor, non egestas purus posuere eget. Donec sollicitudin luctus tortor at ultricies. Aliquam quis nunc ut nulla semper ullamcorper vel eget orci. Sed consequat molestie nibh sed fringilla. Quisque pharetra suscipit ipsum, quis rhoncus tellus fringilla at. Sed sed eleifend eros. Cras vitae aliquet est, in egestas leo. Aliquam tincidunt sit amet arcu dignissim dapibus.
 
-        Proin tempor non purus volutpat pretium. Suspendisse fermentum viverra felis, sagittis porttitor ex ultricies non. Pellentesque lobortis tristique neque, at fringilla lectus condimentum sed. Cras quis nisi quis massa facilisis pulvinar. In eleifend dui ipsum, eget ultrices sem tincidunt nec. Donec venenatis, neque vel consectetur euismod, massa orci euismod ligula, nec porta augue ex vitae risus. In eu luctus neque.
+    Suspendisse nec est id dolor accumsan sagittis condimentum at nisi. Nam dapibus metus eget massa rhoncus commodo interdum ac elit. Phasellus tempor lectus at vestibulum imperdiet. Maecenas ut libero tincidunt, porta mauris a, aliquam tortor. Praesent nec sem elementum, fermentum justo id, commodo metus. Praesent sagittis sagittis nunc, sed suscipit magna tristique vel. Nullam eleifend, turpis at volutpat sollicitudin, tortor lectus semper purus, in tincidunt nunc nulla in turpis. Praesent efficitur tempus ante, eu porttitor erat aliquam consequat. Nullam justo nulla, tempor et commodo a, lacinia sed neque. Ut tempor orci pretium, ornare eros molestie, semper ex. Donec semper eget tellus sit amet ultrices. Donec ut dolor vel est consequat efficitur.
 
-        Nam massa odio, elementum eu nibh non, tristique volutpat tellus. Maecenas blandit est eget lectus pellentesque mollis. Mauris turpis lorem, mollis aliquam nulla vehicula, aliquet faucibus risus. Aenean id justo enim. Duis pharetra faucibus varius. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam placerat, sapien eu sollicitudin malesuada, turpis odio sollicitudin diam, sed luctus enim diam ut odio. Curabitur magna lectus, pellentesque eu molestie et, molestie sit amet justo. Mauris tempus massa et pellentesque luctus. Pellentesque faucibus nisi aliquam pellentesque imperdiet. Vestibulum luctus, neque quis suscipit dignissim, elit est mattis magna, a fringilla lacus libero id nisl.
+    `});
 
-        `,
+document.body.appendChild(contentElm);
 
-    classList: [`ui`],
+const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
-    });
+fabElm.querySelector(`button`).addEventListener(`touchstart`, console.log);
 
-document.body.appendChild(uiElm);
+document.body.appendChild(fabElm);

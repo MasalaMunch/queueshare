@@ -7,7 +7,7 @@ button,
 input,
 select,
 textarea {
-  background-color: transparent; /* 1 */
+  background-color: #131313; /* 1 */
   border: 1px solid WindowFrame; /* 1 */
   color: inherit; /* 1 */
   font: inherit; /* 2 */
