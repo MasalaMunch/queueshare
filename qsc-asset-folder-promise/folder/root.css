@@ -1,5 +1,9 @@
 :root {
 
+    --accent-color: mediumpurple;
+
+    --darker-accent-color: #785bb3;
+
     --max-width: 42em;
 
     --padding: 1em;
