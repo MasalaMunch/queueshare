@@ -9,6 +9,8 @@ const defaultConfig = {
 
     isDev: false,
 
+    shouldUpdate: true,
+
     };
 
 module.exports = defaultConfig;

@@ -15,14 +15,26 @@ program.option(
     defaultConfig.folder,
     );
 
-if (defaultConfig.isDev) {
+if (defaultConfig.shouldUpdate) {
 
-    program.option(`-nd, --no-dev`, `don't run in developer mode`);
+    program.option(`-nu, --no-update`, `disable auto-update`);
 
 }
 else {
 
-    program.option(`-d, --dev`, `run in developer mode`);
+    program.option(`-u, --update`, `enable auto-update`);
+
+}
+
+
+if (defaultConfig.isDev) {
+
+    program.option(`-nd, --no-dev`, `disable developer mode`);
+
+}
+else {
+
+    program.option(`-d, --dev`, `enable developer mode`);
 
 }
 
@@ -57,5 +69,7 @@ start({
     folder: program.folder,
 
     isDev: program.dev,
+
+    shouldUpdate: program.update,
 
     });

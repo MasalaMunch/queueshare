@@ -32,7 +32,9 @@ const update = require(`./update-qss`);
 
     log(`Setting up...`);
 
-    const {folder, isDev} = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
+    const config = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
+
+    const {folder, isDev, shouldUpdate} = config;
 
     const syncedState = new SyncedState(folder);
 
@@ -204,7 +206,7 @@ const update = require(`./update-qss`);
         });
 
     }
-    else {
+    else if (shouldUpdate) {
 
         await packageUpdater.tryUpdating();
 
