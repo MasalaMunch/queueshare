@@ -2,13 +2,15 @@
 
 const assert = require(`assert`);
 const doNothing = require(`../do-nothing`);
-const Obj = require(`../obj`);
+const define = require(`../define`);
+const extend = require(`../extend`);
+const transform = require(`../transform`);
 
 const State = class {
 
     constructor (props) {
 
-        Obj.add(this, props);
+        extend(this, props);
 
         this._initialize();
 
@@ -26,9 +28,9 @@ const State = class {
 
     _initialize () {
 
-        Obj.add(this, {outputs: new Set()});
+        extend(this, {outputs: new Set()});
 
-        Obj.define(this, {inputs: [], update: doNothing});
+        define(this, {inputs: [], update: doNothing});
 
         for (const state of this.inputs) {
 
@@ -40,7 +42,7 @@ const State = class {
 
         assert(typeof this.update === `function`);
 
-        Obj.transform(this, (v) => typeof v === `function`? v.bind(this) : v);
+        transform(this, (v) => typeof v === `function`? v.bind(this) : v);
 
     }
 

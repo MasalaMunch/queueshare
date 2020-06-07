@@ -1,9 +1,9 @@
 "use strict";
 
-const Defaultified = require(`../defaultified`);
+const Defined = require(`../defined`);
 const extend = require(`../extend`);
 const Filtered = require(`../filtered`);
-const Mapped = require(`../mapped`)
+const Transformed = require(`../transformed`)
 
 const defaultProps = {
 
@@ -21,7 +21,7 @@ const Elm = (tagName, props) => {
 
     const elm = document.createElement(tagName);
 
-    props = Defaultified(props, defaultProps);
+    props = Defined(props, defaultProps);
 
     elm.innerText = props.innerText;
 
@@ -43,7 +43,7 @@ const Elm = (tagName, props) => {
 
     const BoundToElm = (v) => typeof v === `function`? v.bind(elm) : v;
 
-    extend(elm, Mapped(newProps, BoundToElm));
+    extend(elm, Transformed(newProps, BoundToElm));
 
     return elm;
 

@@ -3,7 +3,7 @@
 const anHourInMs = require(`./an-hour-in-ms`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
-const Defaultified = require(`./defaultified`);
+const Defined = require(`./defined`);
 const EscapedForRegex = require(`escape-string-regexp`);
 const express = require(`express`);
 const fs = require(`fs`);
@@ -32,7 +32,7 @@ const update = require(`./update-qss`);
 
     log(`Setting up...`);
 
-    const config = Defaultified(JSON.parse(clArgs[0]), defaultConfig);
+    const config = Defined(JSON.parse(clArgs[0]), defaultConfig);
 
     const {folder, isDev, shouldUpdate} = config;
 

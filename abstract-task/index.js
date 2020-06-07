@@ -2,7 +2,8 @@
 
 const assert = require(`assert`);
 const doNothing = require(`../do-nothing`);
-const Obj = require(`../obj`);
+const define = require(`../define`);
+const extend = require(`../extend`);
 const State = require(`../state`);
 
 const AbstractTask = class extends State {
@@ -11,7 +12,7 @@ const AbstractTask = class extends State {
 
         props = Obj(props);
 
-        Obj.add(props, {inputs: props.prereqs});
+        extend(props, {inputs: props.prereqs});
 
         super(props);
 
@@ -67,9 +68,9 @@ const AbstractTask = class extends State {
 
     _initialize () {
 
-        Obj.add(this, {hasStarted: false, isDone: false, output: undefined});
+        extend(this, {hasStarted: false, isDone: false, output: undefined});
 
-        Obj.define(this, {prereqs: [], f: doNothing});
+        define(this, {prereqs: [], f: doNothing});
 
         for (const task of this.prereqs) {
 

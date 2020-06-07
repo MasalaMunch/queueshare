@@ -1,6 +1,53 @@
 "use strict";
 
 const Elm = require(`../elm`);
+const EventEmitter = require(`events`);
+const Interval = require(`../interval`);
+const JsonFetch = require(`../json-fetch`);
+const State = require(`../state`);
+const Task = require(`../task`);
+
+const serverApiPaths = require(`../qss-api-paths`);
+
+// const state = {};
+
+// state.finalizeState = new Task();
+
+// (async () => {
+
+//     const isDev = await JsonFetch(serverApiPaths.isDev);
+
+//     const changeDelay = 1000;
+
+//     const state = {};
+
+//     state.serverPid = new EventEmitter();
+
+//     Interval.set(async () => {
+
+//         const 
+
+//         const serverPidResponse = await fetch(serverApiPaths.isDev);
+
+//         const isDev = await 
+
+//         const isDev = await ((await fetch(serverApiPaths.isDev)).json());
+
+//     }, changeDelay);
+
+
+
+// })();
+
+// Interval.set(async () => {
+
+//     const isDevResponse = await fetch(serverApiPaths.isDev);
+
+//     const isDev = await 
+
+//     const isDev = await ((await fetch(serverApiPaths.isDev)).json());
+
+// }, changeDelay);
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
