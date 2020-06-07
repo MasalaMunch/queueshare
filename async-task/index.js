@@ -8,9 +8,7 @@ const AsyncTask = class extends AbstractTask {
 
         this._broadcastStart();
 
-        const output = await this.f();
-
-        this._broadcastFinish(output);
+        this._broadcastFinish(await this.f());
 
     }
 

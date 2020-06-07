@@ -8,9 +8,7 @@ const Task = class extends AbstractTask {
 
         this._broadcastStart();
 
-        const output = this.f();
-
-        this._broadcastFinish(output);
+        this._broadcastFinish(this.f());
 
     }
 

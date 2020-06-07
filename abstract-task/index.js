@@ -37,11 +37,13 @@ const AbstractTask = class extends State {
 
     }
 
-    _broadcastFinish () {
+    _broadcastFinish (output) {
 
         assert(!this.isDone);
 
         this.isDone = true;
+
+        this.output = output;
 
         this.broadcastChange();
 

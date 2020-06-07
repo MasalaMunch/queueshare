@@ -38,11 +38,13 @@ const AbstractTask = class extends State {
 
     }
 
-    _broadcastFinish () {
+    _broadcastFinish (output) {
 
         assert(!this.isDone);
 
         this.isDone = true;
+
+        this.output = output;
 
         this.broadcastChange();
 
@@ -2289,9 +2291,15 @@ const Task = require(`../task`);
 
 const serverApiPaths = require(`../qss-api-paths`);
 
-// const state = {};
+const state = {};
 
-// state.finalizeState = new Task();
+state.finalizeState = new Task();
+
+state.serverPid = new State({inputs: [state.finalizeState], update: () => {
+
+    
+
+}});
 
 // (async () => {
 
@@ -2434,9 +2442,7 @@ const Task = class extends AbstractTask {
 
         this._broadcastStart();
 
-        const output = this.f();
-
-        this._broadcastFinish(output);
+        this._broadcastFinish(this.f());
 
     }
 

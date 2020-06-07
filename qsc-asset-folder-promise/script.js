@@ -9,9 +9,15 @@ const Task = require(`../task`);
 
 const serverApiPaths = require(`../qss-api-paths`);
 
-// const state = {};
+const state = {};
 
-// state.finalizeState = new Task();
+state.finalizeState = new Task();
+
+state.serverPid = new State({inputs: [state.finalizeState], update: () => {
+
+    
+
+}});
 
 // (async () => {
 
