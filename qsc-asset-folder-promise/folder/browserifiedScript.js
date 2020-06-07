@@ -1595,8 +1595,6 @@ document.body.appendChild(contentElm);
 
 const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
-fabElm.querySelector(`button`).addEventListener(`touchstart`, console.log);
-
 document.body.appendChild(fabElm);
 
 },{"../elm":2}]},{},[13]);
