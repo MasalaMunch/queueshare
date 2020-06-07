@@ -16,12 +16,6 @@ const AbstractTask = class extends State {
 
     }
 
-    do () {
-
-        throw new Error(`method not implemented`);
-
-    }
-
     update () {
 
         if (this.hasStarted) {
