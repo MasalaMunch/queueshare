@@ -87,6 +87,8 @@ const update = require(`./update-qss`);
 
     app.get(apiPaths.clientUrl, (req, res) => res.json(ClientUrl()));
 
+    app.get(apiPaths.isDev, (req, res) => res.json(isDev));
+
     const mediaDestination = path.join(folder, folderPaths.media);
     
     app.get(`${apiPaths.media}/:key`, (req, res) => {
