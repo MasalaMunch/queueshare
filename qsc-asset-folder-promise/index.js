@@ -4,8 +4,8 @@ const fs = require(`fs`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
-const assetsUrl = require(`../qsc-assets-url`);
 const scriptFilename = require(`../qsc-script-filename`);
+const serverApiPaths = require(`../qss-api-paths`);
 
 const assetFolder = path.join(__dirname, `folder`);
 
@@ -26,7 +26,7 @@ const AssetFolderPromise = (isDev) => new Promise((resolve, reject) => {
 
         const newFabContents = mustache.render(fabTemplateContents, {
 
-            assetsUrl,
+            assetsPath: serverApiPaths.clientAssets,
 
             });
 
