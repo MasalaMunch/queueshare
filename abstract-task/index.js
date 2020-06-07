@@ -4,17 +4,14 @@ const assert = require(`assert`);
 const doNothing = require(`../do-nothing`);
 const define = require(`../define`);
 const extend = require(`../extend`);
+const Extended = require(`../extended`);
 const State = require(`../state`);
 
 const AbstractTask = class extends State {
 
     constructor (props) {
 
-        props = Obj(props);
-
-        extend(props, {inputs: props.prereqs});
-
-        super(props);
+        super(Extended(props, {inputs: props.prereqs}));
 
     }
 

@@ -5,17 +5,14 @@ const assert = require(`assert`);
 const doNothing = require(`../do-nothing`);
 const define = require(`../define`);
 const extend = require(`../extend`);
+const Extended = require(`../extended`);
 const State = require(`../state`);
 
 const AbstractTask = class extends State {
 
     constructor (props) {
 
-        props = Obj(props);
-
-        extend(props, {inputs: props.prereqs});
-
-        super(props);
+        super(Extended(props, {inputs: props.prereqs}));
 
     }
 
@@ -89,7 +86,7 @@ const AbstractTask = class extends State {
 
 module.exports = AbstractTask;
 
-},{"../define":2,"../do-nothing":4,"../extend":6,"../state":20,"assert":10}],2:[function(require,module,exports){
+},{"../define":2,"../do-nothing":4,"../extend":6,"../extended":7,"../state":21,"assert":11}],2:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -110,7 +107,7 @@ const define = (target, source) => {
 
 module.exports = define;
 
-},{"../own-props":17}],3:[function(require,module,exports){
+},{"../own-props":18}],3:[function(require,module,exports){
 "use strict";
 
 const define = require(`../define`);
@@ -188,7 +185,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":3,"../extend":6,"../filtered":7,"../transformed":23}],6:[function(require,module,exports){
+},{"../defined":3,"../extend":6,"../filtered":8,"../transformed":24}],6:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -208,7 +205,24 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":17,"assert":10}],7:[function(require,module,exports){
+},{"../own-props":18,"assert":11}],7:[function(require,module,exports){
+"use strict";
+
+const extend = require(`../extend`);
+
+const Extended = (target, source) => {
+
+    const extended = {...target};
+
+    extend(extended, source);
+
+    return extended;
+
+};
+
+module.exports = Extended;
+
+},{"../extend":6}],8:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -233,7 +247,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":17}],8:[function(require,module,exports){
+},{"../own-props":18}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -300,7 +314,7 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"assert":10}],9:[function(require,module,exports){
+},{"assert":11}],10:[function(require,module,exports){
 "use strict";
 
 const JsonFetch = async (resource) => {
@@ -315,7 +329,7 @@ const JsonFetch = async (resource) => {
 
 module.exports = JsonFetch;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -825,7 +839,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":15,"util/":13}],11:[function(require,module,exports){
+},{"object-assign":16,"util/":14}],12:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -850,14 +864,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1447,7 +1461,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":12,"_process":16,"inherits":11}],14:[function(require,module,exports){
+},{"./support/isBuffer":13,"_process":17,"inherits":12}],15:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1972,7 +1986,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -2064,7 +2078,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2250,7 +2264,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -2269,7 +2283,7 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
@@ -2341,7 +2355,7 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":5,"../interval":8,"../json-fetch":9,"../qss-api-paths":19,"../state":20,"../task":21,"events":14}],19:[function(require,module,exports){
+},{"../elm":5,"../interval":9,"../json-fetch":10,"../qss-api-paths":20,"../state":21,"../task":22,"events":15}],20:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -2362,7 +2376,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -2415,7 +2429,7 @@ const State = class {
 
 module.exports = State;
 
-},{"../define":2,"../do-nothing":4,"../extend":6,"../transform":22,"assert":10}],21:[function(require,module,exports){
+},{"../define":2,"../do-nothing":4,"../extend":6,"../transform":23,"assert":11}],22:[function(require,module,exports){
 "use strict";
 
 const AbstractTask = require(`../abstract-task`);
@@ -2436,7 +2450,7 @@ const Task = class extends AbstractTask {
 
 module.exports = Task;
 
-},{"../abstract-task":1}],22:[function(require,module,exports){
+},{"../abstract-task":1}],23:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -2453,7 +2467,7 @@ const transform = (target, callback) => {
 
 module.exports = transform;
 
-},{"../own-props":17}],23:[function(require,module,exports){
+},{"../own-props":18}],24:[function(require,module,exports){
 "use strict";
 
 const transform = require(`../transform`);
@@ -2470,4 +2484,4 @@ const Transformed = (target, callback) => {
 
 module.exports = Transformed;
 
-},{"../transform":22}]},{},[18]);
+},{"../transform":23}]},{},[19]);
