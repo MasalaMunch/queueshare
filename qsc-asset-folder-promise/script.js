@@ -1,59 +1,72 @@
 "use strict";
 
 const Elm = require(`../elm`);
-const EventEmitter = require(`events`);
 const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
+const StoredJson = require(`../stored-json`);
 const State = require(`../state`);
 const Task = require(`../task`);
 
 const serverApiPaths = require(`../qss-api-paths`);
+const storagePaths = require(`../qsc-storage-paths`);
+
+const changeDelay = 1000;
 
 const state = {};
 
 state.finalizeState = new Task();
 
-state.serverPid = new State({inputs: [state.finalizeState], update: () => {
+state.serverPid = new State({
 
+    value: undefined,
+
+    _storage: new StoredJson(storagePaths.serverPid),
+
+    _set: function (value) {
+
+        if (this.value !== value) {
+
+            this.value = value;
+
+            this._storage.write(value);                
+
+            this.broadcastChange();
+
+        }
+
+    },
+
+    _fetch: async function () {
+
+        this._set(await JsonFetch(serverApiPaths.pid));
+
+    },
+
+    inputs: [state.finalizeState],
+
+    update: async function () {
+
+        if (state.finalizeState.isDone) {
+
+            this._set(this._storage.Value());
+
+            await this._fetch();
+
+            Interval.set(() => this._fetch(), changeDelay);
+
+        }
+
+    },
     
+    });
+
+state.test = new State({inputs: [state.serverPid], update: () => {
+
+    console.log(state.serverPid.value);
 
 }});
 
-// (async () => {
-
-//     const isDev = await JsonFetch(serverApiPaths.isDev);
-
-//     const changeDelay = 1000;
-
-//     const state = {};
-
-//     state.serverPid = new EventEmitter();
-
-//     Interval.set(async () => {
-
-//         const 
-
-//         const serverPidResponse = await fetch(serverApiPaths.isDev);
-
-//         const isDev = await 
-
-//         const isDev = await ((await fetch(serverApiPaths.isDev)).json());
-
-//     }, changeDelay);
-
-
-
-// })();
-
-// Interval.set(async () => {
-
-//     const isDevResponse = await fetch(serverApiPaths.isDev);
-
-//     const isDev = await 
-
-//     const isDev = await ((await fetch(serverApiPaths.isDev)).json());
-
-// }, changeDelay);
+state.finalizeState.do();
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
