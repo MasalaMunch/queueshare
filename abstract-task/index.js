@@ -11,7 +11,7 @@ const AbstractTask = class extends State {
 
     constructor (props) {
 
-        super(Extended(props, {inputs: props.prereqs}));
+        super(Extended(props, {inputs: props? props.prereqs : undefined}));
 
     }
 
