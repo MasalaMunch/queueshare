@@ -56,27 +56,41 @@ const SyncedJsonTree = class {
 
     }
 
+    restore (foreignChange) {
+
+        return this._receive(
+
+            this._IsChange(foreignChange)?
+
+            this._ValidChange(foreignChange) 
+
+            : this._ValidForeignChange(foreignChange)
+
+            );
+
+    }
+
     write (localChange) {
 
         localChange = this._ValidLocalChange(localChange);
 
-        const foreignChange = this._ForeignChange(localChange);
+        const receipt = this._receive(this._ForeignChange(localChange));
 
-        assert(this._receive(foreignChange).wasWritten);
+        assert(receipt.wasWritten);
 
-        return {foreignChange};
+        return receipt;
 
     }
 
-    _Change (foreignChange) {
+    _Change (foreignChange, localVersion = undefined) {
 
-        return {
+        if (localVersion === undefined) {
 
-            ...foreignChange,
+            localVersion = LocalVersion.Newer(this._currentLocalVersion);
 
-            localVersion: LocalVersion.Newer(this._currentLocalVersion),
+        }
 
-            };
+        return {...foreignChange, localVersion};
 
     }
 
@@ -93,6 +107,12 @@ const SyncedJsonTree = class {
         }
 
         return {...localChange, versions};
+
+    }
+
+    _IsChange (foreignChange) {
+
+        return foreignChange.localVersion !== undefined;
 
     }
 
@@ -128,9 +148,11 @@ const SyncedJsonTree = class {
 
         let i = 0;
 
-        let wasRejected = true;
+        let change;
 
         let wasWritten = false;
+
+        let wasQueued = false;
 
         for (const tree of this._iterativelyBuild(foreignChange.path)) {
 
@@ -144,18 +166,18 @@ const SyncedJsonTree = class {
 
                 if (versionComparison > 0) {
 
-                    wasRejected = false;
-
                     if (i === versions.length-1) {
 
-                        this._write(foreignChange, tree);
+                        change = this._write(foreignChange, tree);
 
                         wasWritten = true;
 
                     }
                     else {
 
-                        tree.pendingForeignChanges.push(foreignChange);
+                        tree.queuedForeignChanges.push(foreignChange);
+
+                        wasQueued = true;
 
                     }
 
@@ -169,7 +191,21 @@ const SyncedJsonTree = class {
 
         }
 
-        return {wasRejected, wasWritten};
+        return {wasQueued, wasWritten, change};
+
+    }
+
+    _ValidChange (change) {
+
+        const {localVersion} = change;
+
+        return this._Change(
+
+            this._ValidForeignChange(change),
+
+            LocalVersion.Valid(localVersion),
+
+            );
 
     }
 
@@ -247,11 +283,19 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
-        const change = this._Change(foreignChange);
+        const change = (
+
+            this._IsChange(foreignChange)?
+
+            foreignChange : this._Change(foreignChange)
+
+            );
 
         tree.change = change;
 
         const {localVersion} = change;
+
+        assert(localVersion > this._currentLocalVersion);
 
         this._currentLocalVersion = localVersion;
 
@@ -261,15 +305,17 @@ const SyncedJsonTree = class {
 
         this.events.emit(`change`, change);
 
-        const {pendingForeignChanges} = tree;
+        const {queuedForeignChanges} = tree;
 
-        tree.pendingForeignChanges = [];
+        tree.queuedForeignChanges = [];
 
-        for (const foreignChange of pendingForeignChanges) {
+        for (const c of queuedForeignChanges) {
 
-            this._receive(foreignChange);
+            this._receive(c);
 
         }
+
+        return change;
 
     }
 

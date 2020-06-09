@@ -10,7 +10,7 @@ const Tree = class {
 
         this.childTrees = new Map();
 
-        this.pendingForeignChanges = [];
+        this.queuedForeignChanges = [];
 
     }
 
