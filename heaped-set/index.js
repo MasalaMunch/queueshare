@@ -1,8 +1,12 @@
 "use strict";
 
+const assert = require(`assert`);
+
 const HeapedSet = class {
 
     constructor (ValueComparison) {
+
+        assert(typeof ValueComparison === `function`);
 
         this._heap = [];
 
@@ -51,7 +55,15 @@ const HeapedSet = class {
 
         if (heapIndex !== undefined) {
 
-            this._fixChildren(this._heap.pop(), heapIndex);
+            const lastValue = this._heap.pop();
+
+            if (lastValue !== value) {
+
+                this._fixChildren(lastValue, heapIndex);
+
+            }
+
+            this._valueHeapIndices.delete(value);
 
         }
 
@@ -68,6 +80,8 @@ const HeapedSet = class {
     }
 
     get min () {
+
+        assert(this._heap.length > 0);
 
         return this._heap[0];
 
