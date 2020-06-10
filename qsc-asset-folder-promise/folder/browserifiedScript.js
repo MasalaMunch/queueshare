@@ -2043,10 +2043,9 @@ const Interval = require(`../interval`);
 const JsonPromise = require(`../json-promise`);
 const StoredJson = require(`../stored-json`);
 
+const changeDelay = require(`../qsc-change-delay`);
 const lsPaths = require(`../qsc-ls-paths`);
 const serverApiPaths = require(`../qss-api-paths`);
-
-const changeDelay = 1000;
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
@@ -2068,7 +2067,14 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":2,"../interval":7,"../json-promise":8,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],21:[function(require,module,exports){
+},{"../elm":2,"../interval":7,"../json-promise":8,"../qsc-change-delay":21,"../qsc-ls-paths":22,"../qss-api-paths":23,"../stored-json":26}],21:[function(require,module,exports){
+"use strict";
+
+const changeDelay = 1000;
+
+module.exports = changeDelay;
+
+},{}],22:[function(require,module,exports){
 "use strict";
 
 const Mapped = require(`../mapped`);
@@ -2086,7 +2092,7 @@ const lsPaths = Mapped(folderPaths, (p) => path.join(folder, p));
 
 module.exports = lsPaths;
 
-},{"../mapped":10,"path":17}],22:[function(require,module,exports){
+},{"../mapped":10,"path":17}],23:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -2107,7 +2113,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 const FileContents = require(`../file-contents`);
@@ -2161,7 +2167,7 @@ ViaFs.IsSupported = () => {
 
 module.exports = ViaFs;
 
-},{"../file-contents":5,"../json-string":9,"../string-file-encoding":26,"fs":15}],24:[function(require,module,exports){
+},{"../file-contents":5,"../json-string":9,"../string-file-encoding":27,"fs":15}],25:[function(require,module,exports){
 "use strict";
 
 const JsonString = require(`../json-string`);
@@ -2193,7 +2199,7 @@ const ViaLs = class {
 
 module.exports = ViaLs;
 
-},{"../json-string":9,"path":17}],25:[function(require,module,exports){
+},{"../json-string":9,"path":17}],26:[function(require,module,exports){
 "use strict";
 
 const ViaFs = require(`./ViaFs.js`);
@@ -2203,7 +2209,7 @@ const StoredJson = ViaFs.IsSupported()? ViaFs : ViaLs;
 
 module.exports = StoredJson;
 
-},{"./ViaFs.js":23,"./ViaLs.js":24}],26:[function(require,module,exports){
+},{"./ViaFs.js":24,"./ViaLs.js":25}],27:[function(require,module,exports){
 "use strict";
 
 module.exports = `utf8`;

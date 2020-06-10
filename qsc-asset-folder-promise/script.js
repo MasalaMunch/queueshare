@@ -5,10 +5,9 @@ const Interval = require(`../interval`);
 const JsonPromise = require(`../json-promise`);
 const StoredJson = require(`../stored-json`);
 
+const changeDelay = require(`../qsc-change-delay`);
 const lsPaths = require(`../qsc-ls-paths`);
 const serverApiPaths = require(`../qss-api-paths`);
-
-const changeDelay = 1000;
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
