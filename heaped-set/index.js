@@ -6,9 +6,9 @@ const HeapedSet = class {
 
     constructor (ValueComparison) {
 
-        assert(typeof ValueComparison === `function`);
-
         this._heap = [];
+
+        assert(typeof ValueComparison === `function`);
 
         this._ValueComparison = ValueComparison;
 
@@ -81,9 +81,13 @@ const HeapedSet = class {
 
     get min () {
 
-        assert(this._heap.length > 0);
-
         return this._heap[0];
+
+    }
+
+    get size () {
+
+        return this._heap.length;
 
     }
 
