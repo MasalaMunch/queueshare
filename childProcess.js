@@ -3,6 +3,7 @@
 const anHourInMs = require(`./an-hour-in-ms`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
+const compression = require(`compression`);
 const Defined = require(`./defined`);
 const EscapedForRegex = require(`escape-string-regexp`);
 const express = require(`express`);
@@ -62,6 +63,8 @@ const update = require(`./update-qss`);
         next();
 
     });
+
+    app.use(compression());
 
     const clientFile = ClientFile(isDev);
 
