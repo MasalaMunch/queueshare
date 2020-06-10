@@ -23,7 +23,7 @@ const Defined = (target, source) => {
 
 module.exports = Defined;
 
-},{"../own-props":18}],2:[function(require,module,exports){
+},{"../own-props":15}],2:[function(require,module,exports){
 "use strict";
 
 const Defined = require(`../defined`);
@@ -77,7 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":1,"../extend":3,"../filtered":5,"../mapped":9}],3:[function(require,module,exports){
+},{"../defined":1,"../extend":3,"../filtered":4,"../mapped":8}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -97,39 +97,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":18,"assert":10}],4:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-const fs = require(`fs`);
-
-const FileContents = (file, options) => {
-
-    let fileContents;
-
-    try {
-
-        fileContents = fs.readFileSync(file, options);
-
-    } catch (error) {
-
-        if (error.code !== `ENOENT`) {
-
-            throw error;
-
-        }
-
-    }
-
-    return fileContents;
-
-};
-
-FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
-
-module.exports = FileContents;
-
-},{"assert":10,"fs":14}],5:[function(require,module,exports){
+},{"../own-props":15,"assert":9}],4:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -154,7 +122,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":18}],6:[function(require,module,exports){
+},{"../own-props":15}],5:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -221,7 +189,7 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"assert":10}],7:[function(require,module,exports){
+},{"assert":9}],6:[function(require,module,exports){
 "use strict";
 
 const JsonFetch = async (resource) => {
@@ -236,24 +204,58 @@ const JsonFetch = async (resource) => {
 
 module.exports = JsonFetch;
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
-const assert = require(`assert`);
+const Interval = require(`../interval`);
+const JsonFetch = require(`../json-fetch`);
 
-const JsonString = (json) => {
+const changeDelay = require(`../qsc-change-delay`);
+const IsDev = require(`../qsc-is-dev`);
+const serverApiPaths = require(`../qss-api-paths`);
 
-    const jsonString = JSON.stringify(json);
+const keepUpdated = async () => {
 
-    assert(typeof jsonString === `string`);
+    let initialServerPid;
 
-    return jsonString;
+    Interval.set(async () => {
+
+        let serverPid;
+
+        try {
+
+            serverPid = await JsonFetch(serverApiPaths.pid);
+
+        } catch (error) {
+
+            if (IsDev()) {
+
+                console.error(error);
+
+            }
+
+            return;
+
+        }
+
+        if (initialServerPid === undefined) {
+
+            initialServerPid = serverPid;
+
+        }
+        else if (initialServerPid !== serverPid) {
+
+            window.location.reload();
+
+        }
+
+    }, changeDelay);
 
 };
 
-module.exports = JsonString;
+module.exports = keepUpdated;
 
-},{"assert":10}],9:[function(require,module,exports){
+},{"../interval":5,"../json-fetch":6,"../qsc-change-delay":17,"../qsc-is-dev":18,"../qss-api-paths":19}],8:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -274,7 +276,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":18}],10:[function(require,module,exports){
+},{"../own-props":15}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -784,7 +786,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":15,"util/":13}],11:[function(require,module,exports){
+},{"object-assign":13,"util/":12}],10:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -809,14 +811,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1406,9 +1408,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":12,"_process":17,"inherits":11}],14:[function(require,module,exports){
-
-},{}],15:[function(require,module,exports){
+},{"./support/isBuffer":11,"_process":14,"inherits":10}],13:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1500,313 +1500,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],16:[function(require,module,exports){
-(function (process){
-// .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
-// backported and transplited with Babel, with backwards-compat fixes
-
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  if (path.length === 0) return '.';
-  var code = path.charCodeAt(0);
-  var hasRoot = code === 47 /*/*/;
-  var end = -1;
-  var matchedSlash = true;
-  for (var i = path.length - 1; i >= 1; --i) {
-    code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        if (!matchedSlash) {
-          end = i;
-          break;
-        }
-      } else {
-      // We saw the first non-path separator
-      matchedSlash = false;
-    }
-  }
-
-  if (end === -1) return hasRoot ? '/' : '.';
-  if (hasRoot && end === 1) {
-    // return '//';
-    // Backwards-compat fix:
-    return '/';
-  }
-  return path.slice(0, end);
-};
-
-function basename(path) {
-  if (typeof path !== 'string') path = path + '';
-
-  var start = 0;
-  var end = -1;
-  var matchedSlash = true;
-  var i;
-
-  for (i = path.length - 1; i >= 0; --i) {
-    if (path.charCodeAt(i) === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          start = i + 1;
-          break;
-        }
-      } else if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // path component
-      matchedSlash = false;
-      end = i + 1;
-    }
-  }
-
-  if (end === -1) return '';
-  return path.slice(start, end);
-}
-
-// Uses a mixed approach for backwards-compatibility, as ext behavior changed
-// in new Node.js versions, so only basename() above is backported here
-exports.basename = function (path, ext) {
-  var f = basename(path);
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-exports.extname = function (path) {
-  if (typeof path !== 'string') path = path + '';
-  var startDot = -1;
-  var startPart = 0;
-  var end = -1;
-  var matchedSlash = true;
-  // Track the state of characters (if any) we see before our first dot and
-  // after any path separator we find
-  var preDotState = 0;
-  for (var i = path.length - 1; i >= 0; --i) {
-    var code = path.charCodeAt(i);
-    if (code === 47 /*/*/) {
-        // If we reached a path separator that was not part of a set of path
-        // separators at the end of the string, stop now
-        if (!matchedSlash) {
-          startPart = i + 1;
-          break;
-        }
-        continue;
-      }
-    if (end === -1) {
-      // We saw the first non-path separator, mark this as the end of our
-      // extension
-      matchedSlash = false;
-      end = i + 1;
-    }
-    if (code === 46 /*.*/) {
-        // If this is our first dot, mark it as the start of our extension
-        if (startDot === -1)
-          startDot = i;
-        else if (preDotState !== 1)
-          preDotState = 1;
-    } else if (startDot !== -1) {
-      // We saw a non-dot and non-path separator before our dot, so we should
-      // have a good chance at having a non-empty extension
-      preDotState = -1;
-    }
-  }
-
-  if (startDot === -1 || end === -1 ||
-      // We saw a non-dot character immediately before the dot
-      preDotState === 0 ||
-      // The (right-most) trimmed path component is exactly '..'
-      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
-    return '';
-  }
-  return path.slice(startDot, end);
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-}).call(this,require('_process'))
-},{"_process":17}],17:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1992,7 +1686,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],18:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -2011,17 +1705,14 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],19:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
-const Interval = require(`../interval`);
-const JsonFetch = require(`../json-fetch`);
-const StoredJson = require(`../stored-json`);
 
-const changeDelay = require(`../qsc-change-delay`);
-const lsPaths = require(`../qsc-ls-paths`);
-const serverApiPaths = require(`../qss-api-paths`);
+const keepUpdated = require(`../keep-qsc-updated`);
+
+keepUpdated();
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
@@ -2043,30 +1734,32 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":2,"../interval":6,"../json-fetch":7,"../qsc-change-delay":20,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],20:[function(require,module,exports){
+},{"../elm":2,"../keep-qsc-updated":7}],17:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
 
 module.exports = changeDelay;
 
-},{}],21:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
-const Mapped = require(`../mapped`);
-const path = require(`path`);
+const serverApiPaths = require(`../qss-api-paths`);
+const JsonFetch = require(`../json-fetch`);
 
-const folder = `qsc`;
+let isDev = false;
 
-const folderPaths = {
+(async () => {
 
-    };
+    isDev = await JsonFetch(serverApiPaths.isDev);
 
-const lsPaths = Mapped(folderPaths, (p) => path.join(folder, p));
+})();
 
-module.exports = lsPaths;
+const IsDev = () => isDev;
 
-},{"../mapped":9,"path":16}],22:[function(require,module,exports){
+module.exports = IsDev;
+
+},{"../json-fetch":6,"../qss-api-paths":19}],19:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -2076,6 +1769,8 @@ const apiPaths = {
     clientAssets: `/clientAssets`,
 
     clientUrl: `/clientUrl`,
+
+    isDev: `/isDev`,
 
     media: `/media`,
 
@@ -2087,105 +1782,4 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],23:[function(require,module,exports){
-"use strict";
-
-const FileContents = require(`../file-contents`);
-const fs = require(`fs`);
-const JsonString = require(`../json-string`);
-const stringFileEncoding = require(`../string-file-encoding`);
-
-const ViaFs = class {
-
-    constructor (storagePath) {
-
-        this._file = storagePath;
-
-    }
-
-    Value () {
-
-        const fileContents = FileContents(
-
-            this._file, 
-
-            {encoding: stringFileEncoding},
-
-            );
-
-        return fileContents === undefined? undefined : JSON.parse(fileContents);
-
-    }
-
-    write (value) {
-
-        fs.writeFileSync(
-
-            this._file, 
-
-            JsonString(value),
-
-            {encoding: stringFileEncoding},
-
-            );
-
-    }
-
-    };
-
-ViaFs.IsSupported = () => {
-
-    return FileContents.IsSupported() && typeof fs.writeFileSync === `function`;
-
-};
-
-module.exports = ViaFs;
-
-},{"../file-contents":4,"../json-string":8,"../string-file-encoding":26,"fs":14}],24:[function(require,module,exports){
-"use strict";
-
-const JsonString = require(`../json-string`);
-const path = require(`path`);
-
-const ViaLs = class {
-
-    constructor (storagePath) {
-
-        this._key = path.resolve(storagePath);
-
-    }
-
-    Value () {
-
-        const storedValue = localStorage.getItem(this._key);
-
-        return storedValue === null? undefined : JSON.parse(storedValue);
-
-    }
-
-    write (value) {
-
-        localStorage.setItem(this._key, JsonString(value));
-
-    }
-
-    };
-
-module.exports = ViaLs;
-
-},{"../json-string":8,"path":16}],25:[function(require,module,exports){
-"use strict";
-
-const ViaFs = require(`./ViaFs.js`);
-const ViaLs = require(`./ViaLs.js`);
-
-const StoredJson = ViaFs.IsSupported()? ViaFs : ViaLs;
-
-module.exports = StoredJson;
-
-},{"./ViaFs.js":23,"./ViaLs.js":24}],26:[function(require,module,exports){
-"use strict";
-
-module.exports = `utf8`;
-
-},{}]},{},[19]);
+},{}]},{},[16]);

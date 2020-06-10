@@ -1,13 +1,10 @@
 "use strict";
 
 const Elm = require(`../elm`);
-const Interval = require(`../interval`);
-const JsonFetch = require(`../json-fetch`);
-const StoredJson = require(`../stored-json`);
 
-const changeDelay = require(`../qsc-change-delay`);
-const lsPaths = require(`../qsc-ls-paths`);
-const serverApiPaths = require(`../qss-api-paths`);
+const keepUpdated = require(`../keep-qsc-updated`);
+
+keepUpdated();
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
