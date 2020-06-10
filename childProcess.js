@@ -69,7 +69,11 @@ const update = require(`./update-qss`);
 
     const clientAssetFolder = await ClientAssetFolderPromise(isDev);
 
-    app.use(apiPaths.clientAssets, express.static(clientAssetFolder));
+    app.use(apiPaths.clientAssets, express.static(clientAssetFolder, {
+
+        index: false,
+
+    }));
 
     const storedPortPath = path.join(folder, folderPaths.port);
 
