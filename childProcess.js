@@ -56,19 +56,17 @@ const update = require(`./update-qss`);
 
     const app = express();
 
-    app.use((req, res, next) => {
-
-        maintenanceInterval.reset();
-
-        next();
-
-    });
-
     app.use(compression());
 
     const clientFile = ClientFile(isDev);
 
-    app.get(apiPaths.client, (req, res) => res.sendFile(clientFile));
+    app.get(apiPaths.client, (req, res) => {
+
+        maintenanceInterval.reset();
+
+        res.sendFile(clientFile)
+
+    });
 
     const clientAssetFolder = await ClientAssetFolderPromise(isDev);
 
@@ -150,6 +148,8 @@ const update = require(`./update-qss`);
     });
 
     app.post(apiPaths.syncedStateChanges, express.json(), (req, res) => {
+
+        maintenanceInterval.reset();
 
         syncedState.receive(req.body);
 
