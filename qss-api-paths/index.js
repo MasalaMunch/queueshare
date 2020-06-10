@@ -8,6 +8,8 @@ const apiPaths = {
 
     clientUrl: `/clientUrl`,
 
+    isDev: `/isDev`,
+
     media: `/media`,
 
     pid: `/pid`,
