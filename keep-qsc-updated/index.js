@@ -11,7 +11,7 @@ const keepUpdated = async () => {
 
     let initialServerPid;
 
-    const fetchServerPid = async () => {
+    const update = async () => {
 
         let serverPid;
 
@@ -44,9 +44,9 @@ const keepUpdated = async () => {
 
     };
 
-    await fetchServerPid();
+    await update();
 
-    Interval.set(fetchServerPid, changeDelay);
+    Interval.set(update, changeDelay);
 
 };
 
