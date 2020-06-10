@@ -224,7 +224,7 @@ module.exports = Interval;
 },{"assert":10}],7:[function(require,module,exports){
 "use strict";
 
-const JsonPromise = async (resource) => {
+const JsonFetch = async (resource) => {
 
     const response = await fetch(resource);
 
@@ -234,7 +234,7 @@ const JsonPromise = async (resource) => {
 
 };
 
-module.exports = JsonPromise;
+module.exports = JsonFetch;
 
 },{}],8:[function(require,module,exports){
 "use strict";
@@ -2016,7 +2016,7 @@ module.exports = OwnProps;
 
 const Elm = require(`../elm`);
 const Interval = require(`../interval`);
-const JsonPromise = require(`../json-promise`);
+const JsonFetch = require(`../json-fetch`);
 const StoredJson = require(`../stored-json`);
 
 const changeDelay = require(`../qsc-change-delay`);
@@ -2043,7 +2043,7 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":2,"../interval":6,"../json-promise":7,"../qsc-change-delay":20,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],20:[function(require,module,exports){
+},{"../elm":2,"../interval":6,"../json-fetch":7,"../qsc-change-delay":20,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],20:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
@@ -2059,8 +2059,6 @@ const path = require(`path`);
 const folder = `qsc`;
 
 const folderPaths = {
-
-    serverPid: `serverPid`,
 
     };
 
