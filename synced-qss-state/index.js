@@ -1,6 +1,5 @@
 "use strict";
 
-const assert = require(`assert`);
 const JsonCopy = require(`../json-copy`);
 const path = require(`path`);
 const StoredJsonLog = require(`../stored-json-log`);
