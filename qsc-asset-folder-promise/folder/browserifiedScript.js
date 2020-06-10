@@ -23,7 +23,7 @@ const Defined = (target, source) => {
 
 module.exports = Defined;
 
-},{"../own-props":19}],2:[function(require,module,exports){
+},{"../own-props":18}],2:[function(require,module,exports){
 "use strict";
 
 const Defined = require(`../defined`);
@@ -77,22 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":1,"../extend":4,"../filtered":6,"../mapped":10}],3:[function(require,module,exports){
-"use strict";
-
-const eventuallyThrow = (something) => {
-
-    setTimeout(() => {
-
-        throw something;
-
-    }, 0);
-
-};
-
-module.exports = eventuallyThrow;
-
-},{}],4:[function(require,module,exports){
+},{"../defined":1,"../extend":3,"../filtered":5,"../mapped":9}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -112,7 +97,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":19,"assert":11}],5:[function(require,module,exports){
+},{"../own-props":18,"assert":10}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -144,7 +129,7 @@ FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
 
 module.exports = FileContents;
 
-},{"assert":11,"fs":15}],6:[function(require,module,exports){
+},{"assert":10,"fs":14}],5:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -169,11 +154,10 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":19}],7:[function(require,module,exports){
+},{"../own-props":18}],6:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
-const eventuallyThrow = require(`../eventually-throw`);
 
 const Interval = class {
 
@@ -213,15 +197,7 @@ const Interval = class {
 
         this._timeout = setTimeout(async () => {
 
-            try {
-
-                await this._f();
-
-            } catch (error) {
-
-                eventuallyThrow(error);
-
-            }
+            await this._f();
 
             this._timeout = undefined;
 
@@ -245,7 +221,7 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"../eventually-throw":3,"assert":11}],8:[function(require,module,exports){
+},{"assert":10}],7:[function(require,module,exports){
 "use strict";
 
 const JsonPromise = async (resource) => {
@@ -260,7 +236,7 @@ const JsonPromise = async (resource) => {
 
 module.exports = JsonPromise;
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -277,7 +253,7 @@ const JsonString = (json) => {
 
 module.exports = JsonString;
 
-},{"assert":11}],10:[function(require,module,exports){
+},{"assert":10}],9:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -298,7 +274,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":19}],11:[function(require,module,exports){
+},{"../own-props":18}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -808,7 +784,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":16,"util/":14}],12:[function(require,module,exports){
+},{"object-assign":15,"util/":13}],11:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -833,14 +809,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1430,9 +1406,9 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":13,"_process":18,"inherits":12}],15:[function(require,module,exports){
+},{"./support/isBuffer":12,"_process":17,"inherits":11}],14:[function(require,module,exports){
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1524,7 +1500,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1830,7 +1806,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":18}],18:[function(require,module,exports){
+},{"_process":17}],17:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2016,7 +1992,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -2035,7 +2011,7 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
@@ -2067,14 +2043,14 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":2,"../interval":7,"../json-promise":8,"../qsc-change-delay":21,"../qsc-ls-paths":22,"../qss-api-paths":23,"../stored-json":26}],21:[function(require,module,exports){
+},{"../elm":2,"../interval":6,"../json-promise":7,"../qsc-change-delay":20,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],20:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
 
 module.exports = changeDelay;
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 const Mapped = require(`../mapped`);
@@ -2092,7 +2068,7 @@ const lsPaths = Mapped(folderPaths, (p) => path.join(folder, p));
 
 module.exports = lsPaths;
 
-},{"../mapped":10,"path":17}],23:[function(require,module,exports){
+},{"../mapped":9,"path":16}],22:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -2113,7 +2089,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 const FileContents = require(`../file-contents`);
@@ -2167,7 +2143,7 @@ ViaFs.IsSupported = () => {
 
 module.exports = ViaFs;
 
-},{"../file-contents":5,"../json-string":9,"../string-file-encoding":27,"fs":15}],25:[function(require,module,exports){
+},{"../file-contents":4,"../json-string":8,"../string-file-encoding":26,"fs":14}],24:[function(require,module,exports){
 "use strict";
 
 const JsonString = require(`../json-string`);
@@ -2199,7 +2175,7 @@ const ViaLs = class {
 
 module.exports = ViaLs;
 
-},{"../json-string":9,"path":17}],26:[function(require,module,exports){
+},{"../json-string":8,"path":16}],25:[function(require,module,exports){
 "use strict";
 
 const ViaFs = require(`./ViaFs.js`);
@@ -2209,9 +2185,9 @@ const StoredJson = ViaFs.IsSupported()? ViaFs : ViaLs;
 
 module.exports = StoredJson;
 
-},{"./ViaFs.js":24,"./ViaLs.js":25}],27:[function(require,module,exports){
+},{"./ViaFs.js":23,"./ViaLs.js":24}],26:[function(require,module,exports){
 "use strict";
 
 module.exports = `utf8`;
 
-},{}]},{},[20]);
+},{}]},{},[19]);
