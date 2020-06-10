@@ -4,19 +4,39 @@ const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
 
 const changeDelay = require(`../qsc-change-delay`);
+const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
-
-const ServerPidPromise = () => JsonFetch(serverApiPaths.pid);
 
 const keepUpdated = async () => {
 
-    const initialServerPid = await ServerPidPromise();
+    let initialServerPid;
 
     Interval.set(async () => {
 
-        const currentServerPid = await ServerPidPromise();
+        let serverPid;
 
-        if (initialServerPid !== currentServerPid) {
+        try {
+
+            serverPid = await JsonFetch(serverApiPaths.pid);
+
+        } catch (error) {
+
+            if (IsDev()) {
+
+                console.error(error);
+
+            }
+
+            return;
+
+        }
+
+        if (initialServerPid === undefined) {
+
+            initialServerPid = serverPid;
+
+        }
+        else if (initialServerPid !== serverPid) {
 
             window.location.reload();
 
