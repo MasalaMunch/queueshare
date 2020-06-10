@@ -1,8 +1,12 @@
 "use strict";
 
+const assert = require(`assert`);
+
 const HeapedSet = class {
 
     constructor (ValueComparison) {
+
+        assert(typeof ValueComparison === `function`);
 
         this._heap = [];
 
