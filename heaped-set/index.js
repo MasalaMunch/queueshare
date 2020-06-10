@@ -85,12 +85,6 @@ const HeapedSet = class {
 
     }
 
-    get size () {
-
-        return this._heap.length;
-
-    }
-
     _fixChildren (value, heapIndex) {
 
         const ValueComparison = this._ValueComparison;
