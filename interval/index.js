@@ -1,7 +1,6 @@
 "use strict";
 
 const assert = require(`assert`);
-const eventuallyThrow = require(`../eventually-throw`);
 
 const Interval = class {
 
@@ -41,19 +40,31 @@ const Interval = class {
 
         this._timeout = setTimeout(async () => {
 
+            let anErrorWasThrown, error;
+
             try {
 
                 await this._f();
 
+                anErrorWasThrown = false;
+
             } catch (error) {
 
-                eventuallyThrow(error);
+                anErrorWasThrown = true;
+
+                error = error;
 
             }
 
             this._timeout = undefined;
 
             this.set();
+            
+            if (anErrorWasThrown) {
+
+                throw error;
+
+            }
 
         }, this._delay);
 
