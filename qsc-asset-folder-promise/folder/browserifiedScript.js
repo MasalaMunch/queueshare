@@ -175,7 +175,7 @@ const Interval = class {
 
     }
 
-};
+    };
 
 Interval.set = (...constructorArgs) => {
 
