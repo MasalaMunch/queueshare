@@ -7,8 +7,6 @@ const folder = `qsc`;
 
 const folderPaths = {
 
-    serverPid: `serverPid`,
-
     };
 
 const lsPaths = Mapped(folderPaths, (p) => path.join(folder, p));
