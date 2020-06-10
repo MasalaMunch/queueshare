@@ -3,7 +3,7 @@
 const Defined = require(`../defined`);
 const extend = require(`../extend`);
 const Filtered = require(`../filtered`);
-const Transformed = require(`../transformed`)
+const Mapped = require(`../mapped`)
 
 const defaultProps = {
 
@@ -43,7 +43,7 @@ const Elm = (tagName, props) => {
 
     const BoundToElm = (v) => typeof v === `function`? v.bind(elm) : v;
 
-    extend(elm, Transformed(newProps, BoundToElm));
+    extend(elm, Mapped(newProps, BoundToElm));
 
     return elm;
 

@@ -1,118 +1,21 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-const assert = require(`assert`);
-const doNothing = require(`../do-nothing`);
-const define = require(`../define`);
-const extend = require(`../extend`);
-const Extended = require(`../extended`);
-const State = require(`../state`);
-
-const AbstractTask = class extends State {
-
-    constructor (props) {
-
-        super(Extended(props, {inputs: props? props.prereqs : undefined}));
-
-    }
-
-    update () {
-
-        if (this.hasStarted) {
-
-            return;
-
-        }
-
-        for (const task of this.prereqs) {
-
-            if (!task.isDone) {
-
-                return;
-
-            }
-
-        }
-
-        this.do();
-
-    }
-
-    _broadcastFinish (output) {
-
-        assert(!this.isDone);
-
-        this.isDone = true;
-
-        this.output = output;
-
-        this.broadcastChange();
-
-    }
-
-    _broadcastStart () {
-
-        assert(!this.hasStarted);
-
-        this.hasStarted = true;
-
-        this.broadcastChange();
-
-    }
-
-    _initialize () {
-
-        extend(this, {hasStarted: false, isDone: false, output: undefined});
-
-        define(this, {prereqs: [], f: doNothing});
-
-        for (const task of this.prereqs) {
-
-            assert(task instanceof AbstractTask);
-
-        }
-
-        assert(typeof this.f === `function`);
-
-        super._initialize();
-
-    }
-
-    };
-
-module.exports = AbstractTask;
-
-},{"../define":2,"../do-nothing":4,"../extend":7,"../extended":8,"../state":26,"assert":14}],2:[function(require,module,exports){
-"use strict";
-
 const OwnProps = require(`../own-props`);
-
-const define = (target, source) => {
-
-    for (const prop of OwnProps(source)) {
-
-        if (target[prop] === undefined) {
-
-            target[prop] = source[prop];            
-
-        }
-
-    }
-
-};
-
-module.exports = define;
-
-},{"../own-props":22}],3:[function(require,module,exports){
-"use strict";
-
-const define = require(`../define`);
 
 const Defined = (target, source) => {
 
     const defined = {...target};
 
-    define(defined, source);
+    for (const prop of OwnProps(source)) {
+
+        if (defined[prop] === undefined) {
+
+            defined[prop] = source[prop];            
+
+        }
+
+    }
 
     return defined;
 
@@ -120,20 +23,13 @@ const Defined = (target, source) => {
 
 module.exports = Defined;
 
-},{"../define":2}],4:[function(require,module,exports){
-"use strict";
-
-const doNothing = () => {};
-
-module.exports = doNothing;
-
-},{}],5:[function(require,module,exports){
+},{"../own-props":19}],2:[function(require,module,exports){
 "use strict";
 
 const Defined = require(`../defined`);
 const extend = require(`../extend`);
 const Filtered = require(`../filtered`);
-const Transformed = require(`../transformed`)
+const Mapped = require(`../mapped`)
 
 const defaultProps = {
 
@@ -173,7 +69,7 @@ const Elm = (tagName, props) => {
 
     const BoundToElm = (v) => typeof v === `function`? v.bind(elm) : v;
 
-    extend(elm, Transformed(newProps, BoundToElm));
+    extend(elm, Mapped(newProps, BoundToElm));
 
     return elm;
 
@@ -181,7 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":3,"../extend":7,"../filtered":10,"../transformed":33}],6:[function(require,module,exports){
+},{"../defined":1,"../extend":4,"../filtered":6,"../mapped":10}],3:[function(require,module,exports){
 "use strict";
 
 const eventuallyThrow = (something) => {
@@ -196,7 +92,7 @@ const eventuallyThrow = (something) => {
 
 module.exports = eventuallyThrow;
 
-},{}],7:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -216,24 +112,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":22,"assert":14}],8:[function(require,module,exports){
-"use strict";
-
-const extend = require(`../extend`);
-
-const Extended = (target, source) => {
-
-    const extended = {...target};
-
-    extend(extended, source);
-
-    return extended;
-
-};
-
-module.exports = Extended;
-
-},{"../extend":7}],9:[function(require,module,exports){
+},{"../own-props":19,"assert":11}],5:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -265,7 +144,7 @@ FileContents.IsSupported = () => typeof fs.readFileSync === `function`;
 
 module.exports = FileContents;
 
-},{"assert":14,"fs":18}],10:[function(require,module,exports){
+},{"assert":11,"fs":15}],6:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -290,7 +169,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":22}],11:[function(require,module,exports){
+},{"../own-props":19}],7:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -366,10 +245,10 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"../eventually-throw":6,"assert":14}],12:[function(require,module,exports){
+},{"../eventually-throw":3,"assert":11}],8:[function(require,module,exports){
 "use strict";
 
-const JsonFetch = async (resource) => {
+const JsonPromise = async (resource) => {
 
     const response = await fetch(resource);
 
@@ -379,9 +258,9 @@ const JsonFetch = async (resource) => {
 
 };
 
-module.exports = JsonFetch;
+module.exports = JsonPromise;
 
-},{}],13:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -398,7 +277,28 @@ const JsonString = (json) => {
 
 module.exports = JsonString;
 
-},{"assert":14}],14:[function(require,module,exports){
+},{"assert":11}],10:[function(require,module,exports){
+"use strict";
+
+const OwnProps = require(`../own-props`);
+
+const Mapped = (target, callback) => {
+
+    const mapped = {...target};
+
+    for (const prop of OwnProps(target)) {
+
+        mapped[prop] = callback(target[prop], prop, target);
+
+    }
+
+    return mapped;
+
+};
+
+module.exports = Mapped;
+
+},{"../own-props":19}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -908,7 +808,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":19,"util/":17}],15:[function(require,module,exports){
+},{"object-assign":16,"util/":14}],12:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -933,14 +833,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],17:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1530,9 +1430,9 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":16,"_process":21,"inherits":15}],18:[function(require,module,exports){
+},{"./support/isBuffer":13,"_process":18,"inherits":12}],15:[function(require,module,exports){
 
-},{}],19:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -1624,7 +1524,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1930,7 +1830,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":21}],21:[function(require,module,exports){
+},{"_process":18}],18:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2116,7 +2016,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],22:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -2135,76 +2035,18 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],23:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
 const Interval = require(`../interval`);
-const JsonFetch = require(`../json-fetch`);
+const JsonPromise = require(`../json-promise`);
 const StoredJson = require(`../stored-json`);
-const State = require(`../state`);
-const Task = require(`../task`);
 
+const lsPaths = require(`../qsc-ls-paths`);
 const serverApiPaths = require(`../qss-api-paths`);
-const storagePaths = require(`../qsc-storage-paths`);
 
 const changeDelay = 1000;
-
-const state = {};
-
-state.finalizeState = new Task();
-
-state.serverPid = new State({
-
-    value: undefined,
-
-    _storage: new StoredJson(storagePaths.serverPid),
-
-    _set: function (value) {
-
-        if (this.value !== value) {
-
-            this.value = value;
-
-            this._storage.write(value);                
-
-            this.broadcastChange();
-
-        }
-
-    },
-
-    _fetch: async function () {
-
-        this._set(await JsonFetch(serverApiPaths.pid));
-
-    },
-
-    inputs: [state.finalizeState],
-
-    update: async function () {
-
-        if (state.finalizeState.isDone) {
-
-            this._set(this._storage.Value());
-
-            await this._fetch();
-
-            Interval.set(() => this._fetch(), changeDelay);
-
-        }
-
-    },
-    
-    });
-
-state.test = new State({inputs: [state.serverPid], update: () => {
-
-    console.log(state.serverPid.value);
-
-}});
-
-state.finalizeState.do();
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
@@ -2226,31 +2068,25 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":5,"../interval":11,"../json-fetch":12,"../qsc-storage-paths":24,"../qss-api-paths":25,"../state":26,"../stored-json":29,"../task":31}],24:[function(require,module,exports){
+},{"../elm":2,"../interval":7,"../json-promise":8,"../qsc-ls-paths":21,"../qss-api-paths":22,"../stored-json":25}],21:[function(require,module,exports){
 "use strict";
 
+const Mapped = require(`../mapped`);
 const path = require(`path`);
-const Transformed = require(`../transformed`);
 
-const storageFolder = `qsc`;
+const folder = `qsc`;
 
-const storageFolderPaths = {
+const folderPaths = {
 
     serverPid: `serverPid`,
 
     };
 
-const storagePaths = Transformed(
+const lsPaths = Mapped(folderPaths, (p) => path.join(folder, p));
 
-    storageFolderPaths, 
+module.exports = lsPaths;
 
-    (p) => path.join(storageFolder, p),
-
-    );
-
-module.exports = storagePaths;
-
-},{"../transformed":33,"path":20}],25:[function(require,module,exports){
+},{"../mapped":10,"path":17}],22:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -2271,60 +2107,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],26:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-const doNothing = require(`../do-nothing`);
-const define = require(`../define`);
-const extend = require(`../extend`);
-const transform = require(`../transform`);
-
-const State = class {
-
-    constructor (props) {
-
-        extend(this, props);
-
-        this._initialize();
-
-    }
-
-    broadcastChange () {
-
-        for (const state of this.outputs) {
-
-            state.update();
-
-        }
-
-    }
-
-    _initialize () {
-
-        extend(this, {outputs: new Set()});
-
-        define(this, {inputs: [], update: doNothing});
-
-        for (const state of this.inputs) {
-
-            assert(state instanceof State);
-
-            state.outputs.add(this);
-
-        }
-
-        assert(typeof this.update === `function`);
-
-        transform(this, (v) => typeof v === `function`? v.bind(this) : v);
-
-    }
-
-    };
-
-module.exports = State;
-
-},{"../define":2,"../do-nothing":4,"../extend":7,"../transform":32,"assert":14}],27:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 const FileContents = require(`../file-contents`);
@@ -2378,13 +2161,13 @@ ViaFs.IsSupported = () => {
 
 module.exports = ViaFs;
 
-},{"../file-contents":9,"../json-string":13,"../string-file-encoding":30,"fs":18}],28:[function(require,module,exports){
+},{"../file-contents":5,"../json-string":9,"../string-file-encoding":26,"fs":15}],24:[function(require,module,exports){
 "use strict";
 
 const JsonString = require(`../json-string`);
 const path = require(`path`);
 
-const ViaLocalStorage = class {
+const ViaLs = class {
 
     constructor (storagePath) {
 
@@ -2408,74 +2191,21 @@ const ViaLocalStorage = class {
 
     };
 
-module.exports = ViaLocalStorage;
+module.exports = ViaLs;
 
-},{"../json-string":13,"path":20}],29:[function(require,module,exports){
+},{"../json-string":9,"path":17}],25:[function(require,module,exports){
 "use strict";
 
 const ViaFs = require(`./ViaFs.js`);
-const ViaLocalStorage = require(`./ViaLocalStorage.js`);
+const ViaLs = require(`./ViaLs.js`);
 
-const StoredJson = ViaFs.IsSupported()? ViaFs : ViaLocalStorage;
+const StoredJson = ViaFs.IsSupported()? ViaFs : ViaLs;
 
 module.exports = StoredJson;
 
-},{"./ViaFs.js":27,"./ViaLocalStorage.js":28}],30:[function(require,module,exports){
+},{"./ViaFs.js":23,"./ViaLs.js":24}],26:[function(require,module,exports){
 "use strict";
 
 module.exports = `utf8`;
 
-},{}],31:[function(require,module,exports){
-"use strict";
-
-const AbstractTask = require(`../abstract-task`);
-
-const Task = class extends AbstractTask {
-
-    do () {
-
-        this._broadcastStart();
-
-        this._broadcastFinish(this.f());
-
-    }
-
-    };
-
-module.exports = Task;
-
-},{"../abstract-task":1}],32:[function(require,module,exports){
-"use strict";
-
-const OwnProps = require(`../own-props`);
-
-const transform = (target, callback) => {
-
-    for (const prop of OwnProps(target)) {
-
-        target[prop] = callback(target[prop], prop, target);
-
-    }
-
-};
-
-module.exports = transform;
-
-},{"../own-props":22}],33:[function(require,module,exports){
-"use strict";
-
-const transform = require(`../transform`);
-
-const Transformed = (target, callback) => {
-
-    const transformed = {...target};
-
-    transform(transformed, callback);
-
-    return transformed;
-
-};
-
-module.exports = Transformed;
-
-},{"../transform":32}]},{},[23]);
+},{}]},{},[20]);

@@ -1,12 +1,20 @@
 "use strict";
 
-const define = require(`../define`);
+const OwnProps = require(`../own-props`);
 
 const Defined = (target, source) => {
 
     const defined = {...target};
 
-    define(defined, source);
+    for (const prop of OwnProps(source)) {
+
+        if (defined[prop] === undefined) {
+
+            defined[prop] = source[prop];            
+
+        }
+
+    }
 
     return defined;
 

@@ -1,6 +1,6 @@
 "use strict";
 
-const JsonFetch = async (resource) => {
+const JsonPromise = async (resource) => {
 
     const response = await fetch(resource);
 
@@ -10,4 +10,4 @@ const JsonFetch = async (resource) => {
 
 };
 
-module.exports = JsonFetch;
+module.exports = JsonPromise;

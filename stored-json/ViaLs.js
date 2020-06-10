@@ -3,7 +3,7 @@
 const JsonString = require(`../json-string`);
 const path = require(`path`);
 
-const ViaLocalStorage = class {
+const ViaLs = class {
 
     constructor (storagePath) {
 
@@ -27,4 +27,4 @@ const ViaLocalStorage = class {
 
     };
 
-module.exports = ViaLocalStorage;
+module.exports = ViaLs;
