@@ -4,6 +4,7 @@ const fs = require(`fs`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
+const fabFilename = require(`../qsc-fab-filename`);
 const scriptFilename = require(`../qsc-script-filename`);
 const serverApiPaths = require(`../qss-api-paths`);
 
@@ -26,6 +27,8 @@ const File = (isDev) => {
         const newFileContents = mustache.render(fileTemplateContents, {
 
             assetsPath: serverApiPaths.clientAssets,
+
+            fabFilename,
 
             scriptFilename,
 

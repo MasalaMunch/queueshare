@@ -4,6 +4,7 @@ const fs = require(`fs`);
 const path = require(`path`);
 const stringFileEncoding = require(`../string-file-encoding`);
 
+const fabFilename = require(`../qsc-fab-filename`);
 const scriptFilename = require(`../qsc-script-filename`);
 const serverApiPaths = require(`../qss-api-paths`);
 
@@ -32,7 +33,7 @@ const AssetFolderPromise = (isDev) => new Promise((resolve, reject) => {
 
         fs.writeFileSync(
 
-            path.join(assetFolder, `fab.css`),
+            path.join(assetFolder, fabFilename),
 
             newFabContents, 
 
