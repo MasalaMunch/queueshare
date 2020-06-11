@@ -18,54 +18,48 @@ const HeapedSet = class {
 
     add (value) {
 
-        if (!this._valueHeapIndices.has(value)) {
+        assert(!this.Has(value));
 
-            let heapIndex = this._heap.length;
+        let heapIndex = this._heap.length;
 
-            while (heapIndex > 0) {
+        while (heapIndex > 0) {
 
-                const parentIndex = (heapIndex - 1) >> 1;
+            const parentIndex = (heapIndex - 1) >> 1;
 
-                const parentValue = this._heap[parentIndex];
+            const parentValue = this._heap[parentIndex];
 
-                if (this._ValueComparison(value, parentValue) < 0) {
+            if (this._ValueComparison(value, parentValue) < 0) {
 
-                    this._set(parentValue, heapIndex);
+                this._set(parentValue, heapIndex);
 
-                    heapIndex = parentIndex;
+                heapIndex = parentIndex;
 
-                }
-                else {
+            }
+            else {
 
-                    break;
-
-                }
+                break;
 
             }
 
-            this._set(value, heapIndex);
-
         }
+
+        this._set(value, heapIndex);
 
     }
 
     delete (value) {
 
-        const heapIndex = this._valueHeapIndices.get(value);
+        assert(this.Has(value));
 
-        if (heapIndex !== undefined) {
+        const lastValue = this._heap.pop();
 
-            const lastValue = this._heap.pop();
+        if (value !== lastValue) {
 
-            if (lastValue !== value) {
-
-                this._fixChildren(lastValue, heapIndex);
-
-            }
-
-            this._valueHeapIndices.delete(value);
+            this._fixChildren(lastValue, this._valueHeapIndices.get(value));
 
         }
+
+        this._valueHeapIndices.delete(value);
 
     }
 
@@ -79,9 +73,23 @@ const HeapedSet = class {
 
     }
 
+    Has (value) {
+
+        return this._valueHeapIndices.has(value);
+
+    }
+
     get min () {
 
+        assert(this.size > 0);
+
         return this._heap[0];
+
+    }
+
+    get size () {
+
+        return this._heap.length;
 
     }
 
