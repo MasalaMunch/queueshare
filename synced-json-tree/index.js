@@ -233,13 +233,13 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
-        for (const subtree of tree.Traversal()) {
+        for (const {change} of tree.Traversal()) {
 
-            if (subtree.change !== undefined) {
+            if (change !== undefined) {
 
-                this._localVersionChanges.delete(subtree.change.localVersion);
+                this._localVersionChanges.delete(change.localVersion);
 
-                this._orderedLocalVersions.remove(subtree.change.localVersion);
+                this._orderedLocalVersions.remove(change.localVersion);
 
             }
 
