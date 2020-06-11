@@ -243,6 +243,8 @@ const SyncedJsonTree = class {
 
                 this._orderedLocalVersions.remove(change.localVersion);
 
+                this.events.emit(`changeDeletion`, change);
+
             }
 
         }
