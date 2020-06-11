@@ -233,7 +233,9 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
-        for (const {change} of tree.Traversal()) {
+        for (const subtree of tree.Traversal()) {
+
+            const {change} = subtree;
 
             if (change !== undefined) {
 
