@@ -30,11 +30,19 @@ const SyncedState = class {
 
         this._syncedJsonTree = new SyncedJsonTree();
 
+        this._tombstoneLocalVersions = new Set();
+
         this._syncedJsonTree.events.on(`change`, (c) => {
 
             this._localVersionChanges.set(c.localVersion, c);
 
             this._orderedLocalVersions.insert(c.localVersion);
+
+            if (c.value === undefined) {
+
+                this._tombstoneLocalVersions.add(c.localVersion);
+
+            }
 
         });
 
@@ -43,6 +51,8 @@ const SyncedState = class {
             this._localVersionChanges.delete(v);
 
             this._orderedLocalVersions.remove(v);
+
+            this._tombstoneLocalVersions.delete(v);
 
         });
 
