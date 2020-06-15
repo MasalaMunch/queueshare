@@ -9,7 +9,12 @@ const SyncedJsonTree = require(`../synced-json-tree`);
 
 const folderPaths = require(`../qss-folder-paths`);
 const log = require(`../log-to-qss`);
-const Value = require(`../qsh-value`);
+
+const IsPrimitive = (value) => {
+
+    return typeof value !== `object` || Array.isArray(value);
+
+};
 
 const SyncedState = class {
 
@@ -17,7 +22,7 @@ const SyncedState = class {
 
         const storagePath = path.join(folder, folderPaths.syncedState);
 
-        this._storedChanges = new StoredJsonLog(storagePath);
+        this._storedForeignChanges = new StoredJsonLog(storagePath);
  
         this._localVersionChanges = new Map();
 
@@ -31,8 +36,6 @@ const SyncedState = class {
 
             this._orderedLocalVersions.insert(c.localVersion);
 
-            this._storedChanges.eventuallyAppend(c);
-
         });
 
         this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
@@ -45,22 +48,22 @@ const SyncedState = class {
 
         process.nextTick(() => {
 
-            for (const change of this._storedChanges.Entries()) {
+            for (const foreignChange of this._storedForeignChanges.Entries()) {
 
                 let somethingWasThrown, thrownThing;
 
-                if (change instanceof Error) {
+                if (foreignChange instanceof Error) {
 
                     somethingWasThrown = true;
 
-                    thrownThing = change;
+                    thrownThing = foreignChange;
 
                 }
                 else {
 
                     try {
 
-                        this.receive(change);
+                        this.receive(foreignChange, true);
 
                     } catch (error) {
 
@@ -123,7 +126,7 @@ const SyncedState = class {
 
             } else {
 
-                if (Value.IsPrimitive(compressedValue)) {
+                if (IsPrimitive(compressedValue)) {
 
                     compressedValue = {};
 
@@ -140,7 +143,7 @@ const SyncedState = class {
                     }
                     else {
 
-                        if (Value.IsPrimitive(parentValue[child])) {
+                        if (IsPrimitive(parentValue[child])) {
 
                             parentValue[child] = {};
 
@@ -158,13 +161,19 @@ const SyncedState = class {
 
         this._syncedJsonTree.write({path: [], value: compressedValue});
 
-        this._storedChanges.write(this.Changes());
+        this._storedForeignChanges.write(this.Changes());
 
     }
 
-    receive (foreignChange) {
+    receive (foreignChange, _dontStore = false) {
 
-        this._syncedJsonTree.receive(foreignChange);
+        const {wasRejected} = this._syncedJsonTree.receive(foreignChange);
+
+        if (!_dontStore && !wasRejected) {
+
+            this._storedForeignChanges.eventuallyAppend(foreignChange);
+
+        }
 
     }
 
