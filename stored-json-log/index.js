@@ -29,11 +29,19 @@ const StoredJsonLog = class {
 
         const fileAsString = fileContents === undefined? `` : fileContents;
 
-        return (
+        return fileAsString.split(jsonStringSeparator).slice(0, -1).map((s) => {
 
-            fileAsString.split(jsonStringSeparator).slice(0, -1).map(JSON.parse)
+            try {
 
-            );
+                return JSON.parse(s);
+
+            } catch (error) {
+
+                return error;
+
+            }
+
+        });
 
     }
 

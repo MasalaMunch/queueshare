@@ -3,8 +3,13 @@
 const Elm = require(`../elm`);
 
 const keepUpdated = require(`../keep-qsc-updated`);
+const SyncedState = require(`../synced-qsc-state`);
 
 keepUpdated();
+
+const syncedState = new SyncedState();
+
+Object.assign(window, {syncedState});
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 

@@ -18,48 +18,60 @@ const HeapedSet = class {
 
     add (value) {
 
-        assert(!this.Has(value));
+        const valueIsNew = !this.Has(value);
 
-        let heapIndex = this._heap.length;
+        if (valueIsNew) {
 
-        while (heapIndex > 0) {
+            let heapIndex = this._heap.length;
 
-            const parentIndex = (heapIndex - 1) >> 1;
+            while (heapIndex > 0) {
 
-            const parentValue = this._heap[parentIndex];
+                const parentIndex = (heapIndex - 1) >> 1;
 
-            if (this._ValueComparison(value, parentValue) < 0) {
+                const parentValue = this._heap[parentIndex];
 
-                this._set(parentValue, heapIndex);
+                if (this._ValueComparison(value, parentValue) < 0) {
 
-                heapIndex = parentIndex;
+                    this._set(parentValue, heapIndex);
+
+                    heapIndex = parentIndex;
+
+                }
+                else {
+
+                    break;
+
+                }
 
             }
-            else {
 
-                break;
-
-            }
+            this._set(value, heapIndex);
 
         }
 
-        this._set(value, heapIndex);
+        return valueIsNew;
 
     }
 
     delete (value) {
 
-        assert(this.Has(value));
+        const valueExists = this.Has(value);
 
-        const lastValue = this._heap.pop();
+        if (valueExists) {
 
-        if (value !== lastValue) {
+            const lastValue = this._heap.pop();
 
-            this._fixChildren(lastValue, this._valueHeapIndices.get(value));
+            if (value !== lastValue) {
+
+                this._fixChildren(lastValue, this._valueHeapIndices.get(value));
+
+            }
+
+            this._valueHeapIndices.delete(value);
 
         }
 
-        this._valueHeapIndices.delete(value);
+        return valueExists;
 
     }
 
@@ -80,8 +92,6 @@ const HeapedSet = class {
     }
 
     get min () {
-
-        assert(this.size > 0);
 
         return this._heap[0];
 

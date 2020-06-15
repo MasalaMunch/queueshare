@@ -2,51 +2,20 @@
 
 const assert = require(`assert`);
 const EventEmitter = require(`events`);
-const RedBlackTree = require(`bintrees`).RBTree;
+const LocalVersion = require(`../local-version`);
 
-const LocalVersion = require(`./LocalVersion.js`);
 const Tree = require(`./Tree.js`);
 const Version = require(`./Version.js`);
 
 const SyncedJsonTree = class {
 
-    constructor (changes) {
+    constructor () {
 
         this.events = new EventEmitter();
 
         this._currentLocalVersion = LocalVersion.oldest;
 
-        this._localVersionChanges = new Map();
-
-        this._orderedLocalVersions = new RedBlackTree((a, b) => a - b);
-
         this._tree = new Tree();
-
-    }
-
-    Changes () {
-
-        return this.ChangesSince(LocalVersion.oldest);
-
-    }
-
-    ChangesSince (localVersion) {
-
-        localVersion = LocalVersion.Valid(localVersion);
-
-        const iterator = this._orderedLocalVersions.upperBound(localVersion);
-
-        const changes = [];
-
-        while (iterator.data() !== null) {
-
-            changes.push(this._localVersionChanges.get(iterator.data()));
-
-            iterator.next();
-
-        }
-
-        return changes;
 
     }
 
@@ -60,11 +29,13 @@ const SyncedJsonTree = class {
 
         localChange = this._ValidLocalChange(localChange);
 
-        const info = this._receive(this._ForeignChange(localChange));
+        const foreignChange = this._ForeignChange(localChange);
 
-        assert(info.wasWritten);
+        const {wasWritten, change} = this._receive(foreignChange);
 
-        return info;
+        assert(wasWritten);
+
+        return {change};
 
     }
 
@@ -138,7 +109,7 @@ const SyncedJsonTree = class {
 
             const versionComparison = (
 
-                Version.Comparison(versions[i], tree.Version())
+                Version.Comparison(versions[i], tree.version)
 
                 );
 
@@ -217,7 +188,7 @@ const SyncedJsonTree = class {
 
         let tree = this._tree;
 
-        yield tree.Version();
+        yield tree.version;
 
         for (const child of path) {
 
@@ -227,7 +198,7 @@ const SyncedJsonTree = class {
 
             }
 
-            yield (tree === undefined? Version.oldest : tree.Version());
+            yield tree === undefined? Version.oldest : tree.version;
 
         }
 
@@ -235,17 +206,11 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
-        for (const subtree of tree.Traversal()) {
+        for (const {localVersion} of tree.Traversal()) {
 
-            const {change} = subtree;
+            if (localVersion !== undefined) {
 
-            if (change !== undefined) {
-
-                this._localVersionChanges.delete(change.localVersion);
-
-                this._orderedLocalVersions.remove(change.localVersion);
-
-                this.events.emit(`changeDeletion`, change);
+                this.events.emit(`localVersionDeletion`, localVersion);
 
             }
 
@@ -255,15 +220,13 @@ const SyncedJsonTree = class {
 
         const change = this._Change(foreignChange);
 
-        tree.change = change;
+        tree.version = change.versions[change.versions.length-1];
 
         const {localVersion} = change;
 
+        tree.localVersion = localVersion;
+
         this._currentLocalVersion = localVersion;
-
-        this._localVersionChanges.set(localVersion, change);
-
-        this._orderedLocalVersions.insert(localVersion);
 
         this.events.emit(`change`, change);
 

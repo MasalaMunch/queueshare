@@ -4,13 +4,19 @@ const assert = require(`assert`);
 
 const Interval = class {
 
-    constructor (f, delay) {
+    constructor (f, delay, dontDelayStart = false) {
 
         assert(typeof f === `function`);
+
+        assert(typeof delay === `number` && delay >= 0);
+
+        assert(typeof dontDelayStart === `boolean`);
 
         this._f = f;
 
         this._delay = delay;
+
+        this._dontDelayStart = dontDelayStart;
 
         this._timeout = undefined;
 
@@ -34,7 +40,7 @@ const Interval = class {
 
     }
 
-    set () {
+    set (_isStart = true) {
 
         assert(this._timeout === undefined);
 
@@ -44,9 +50,9 @@ const Interval = class {
 
             this._timeout = undefined;
 
-            this.set();
+            this.set(false);
 
-        }, this._delay);
+        }, _isStart && this._dontDelayStart? 0 : this._delay);
 
     }
 

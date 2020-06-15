@@ -1,11 +1,14 @@
 "use strict";
 
 const JsonCopy = require(`../json-copy`);
+const LocalVersion = require(`../local-version`);
 const path = require(`path`);
+const RedBlackTree = require(`bintrees`).RBTree;
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
 const folderPaths = require(`../qss-folder-paths`);
+const log = require(`../log-to-qss`);
 
 const IsPrimitive = (value) => {
 
@@ -13,25 +16,104 @@ const IsPrimitive = (value) => {
 
 };
 
-const SyncedState = class extends SyncedJsonTree {
+const SyncedState = class {
 
     constructor (folder) {
 
-        super();
-
         const storagePath = path.join(folder, folderPaths.syncedState);
 
-        this._storage = new StoredJsonLog(storagePath);
+        this._storedForeignChanges = new StoredJsonLog(storagePath);
+ 
+        this._localVersionChanges = new Map();
+
+        this._orderedLocalVersions = new RedBlackTree((a, b) => a - b);
+
+        this._syncedJsonTree = new SyncedJsonTree();
+
+        this._syncedJsonTree.events.on(`change`, (c) => {
+
+            this._localVersionChanges.set(c.localVersion, c);
+
+            this._orderedLocalVersions.insert(c.localVersion);
+
+        });
+
+        // in the future, on change, when media is referenced, check if it 
+        // exists and if it doesn't, try downloading it
+
+        this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
+
+            this._localVersionChanges.delete(v);
+
+            this._orderedLocalVersions.remove(v);
+
+        });
 
         process.nextTick(() => {
 
-            for (const foreignChange of this._storage.Entries()) {
+            for (const foreignChange of this._storedForeignChanges.Entries()) {
 
-                this.receive(foreignChange, true);
+                let somethingWasThrown, thrownThing;
+
+                if (foreignChange instanceof Error) {
+
+                    somethingWasThrown = true;
+
+                    thrownThing = foreignChange;
+
+                }
+                else {
+
+                    try {
+
+                        this.receive(foreignChange, true);
+
+                    } catch (error) {
+
+                        somethingWasThrown = true;
+
+                        thrownThing = error;
+
+                    }
+
+                }
+
+                if (somethingWasThrown) {
+
+                    log(thrownThing);
+
+                }
 
             }
 
         });
+
+    }
+
+    Changes () {
+
+        return this.ChangesSince(LocalVersion.oldest);
+
+    }
+
+
+    ChangesSince (localVersion) {
+
+        localVersion = LocalVersion.Valid(localVersion);
+
+        const iterator = this._orderedLocalVersions.upperBound(localVersion);
+
+        const changes = [];
+
+        while (iterator.data() !== null) {
+
+            changes.push(this._localVersionChanges.get(iterator.data()));
+
+            iterator.next();
+
+        }
+
+        return changes;
 
     }
 
@@ -80,43 +162,21 @@ const SyncedState = class extends SyncedJsonTree {
 
         }
 
-        this.write({path: [], value: compressedValue}, true);
+        this._syncedJsonTree.write({path: [], value: compressedValue});
 
-        this._storage.write(this.Changes());
+        this._storedForeignChanges.write(this.Changes());
 
     }
 
     receive (foreignChange, _dontStore = false) {
 
-        const info = super.receive(foreignChange);
+        const {wasRejected} = this._syncedJsonTree.receive(foreignChange);
 
-        if (!_dontStore && !info.wasRejected) {
+        if (!_dontStore && !wasRejected) {
 
-            this._eventuallyStore(foreignChange);
-
-        }
-
-        return info;
-
-    }
-
-    write (localChange, _dontStore = false) {
-
-        const info = super.write(localChange);
-
-        if (!_dontStore) {
-
-            this._eventuallyStore(info.foreignChange);            
+            this._storedForeignChanges.eventuallyAppend(foreignChange);
 
         }
-
-        return info;
-
-    }
-
-    _eventuallyStore (foreignChange) {
-
-        this._storage.eventuallyAppend(foreignChange);
 
     }
 

@@ -6,11 +6,13 @@ const Tree = class {
 
     constructor () {
 
-        this.change = undefined;
-
         this.childTrees = new Map();
 
+        this.localVersion = undefined;
+
         this.pendingForeignChanges = [];
+
+        this.version = Version.oldest;
 
     }
 
@@ -23,18 +25,6 @@ const Tree = class {
             yield* tree.Traversal();
 
         }
-
-    }
-
-    Version () {
-
-        return (
-
-            this.change === undefined? 
-
-            Version.oldest : this.change.versions[this.change.versions.length-1]
-
-            );
 
     }
 

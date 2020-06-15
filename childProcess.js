@@ -12,7 +12,7 @@ const Interval = require(`./interval`);
 const ip = require(`ip`);
 const multer = require(`multer`);
 const path = require(`path`);
-const RandomPort = require(`./random-port`);
+const Port = require(`./port`);
 const StoredJson = require(`./stored-json`);
 
 const apiPaths = require(`./qss-api-paths`);
@@ -38,9 +38,6 @@ const update = require(`./update-qss`);
     const {folder, isDev, shouldUpdate} = config;
 
     const syncedState = new SyncedState(folder);
-
-    // in the future, on synced state change, when media is referenced, 
-    // check if it exists and if it doesn't, try downloading it
 
     const doMaintenance = () => {
 
@@ -82,7 +79,27 @@ const update = require(`./update-qss`);
 
     const storedPortValue = storedPort.Value();
 
-    const port = storedPortValue === undefined? RandomPort() : storedPortValue;
+    let port;
+
+    if (storedPortValue === undefined) {
+
+        port = Port();
+
+    } else {
+
+        try {
+
+            port = Port.Valid(storedPortValue);
+
+        } catch (error) {
+
+            log(error);
+
+            port = Port();
+
+        }
+
+    }
 
     const ClientUrl = (ipAddress = ip.address()) => {
 

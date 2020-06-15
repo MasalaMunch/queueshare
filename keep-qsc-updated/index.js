@@ -7,11 +7,11 @@ const changeDelay = require(`../qsc-change-delay`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
 
-const keepUpdated = async () => {
+const keepUpdated = () => {
 
     let initialServerPid;
 
-    const update = async () => {
+    Interval.set(async () => {
 
         let serverPid;
 
@@ -40,13 +40,9 @@ const keepUpdated = async () => {
 
             window.location.reload();
 
-        }
+        }  
 
-    };
-
-    await update();
-
-    Interval.set(update, changeDelay);
+    }, changeDelay, true);
 
 };
 
