@@ -31,11 +31,11 @@ const SyncedJsonTree = class {
 
         const foreignChange = this._ForeignChange(localChange);
 
-        const {wasWritten, change} = this._receive(foreignChange);
+        const info = this._receive(foreignChange);
 
-        assert(wasWritten);
+        assert(info.wasWritten);
 
-        return {change};
+        return info;
 
     }
 
