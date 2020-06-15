@@ -72,7 +72,7 @@ const update = require(`./update-qss`);
 
         maintenanceInterval.set();
 
-        res.sendFile(clientFile)
+        res.sendFile(clientFile);
 
     });
 
