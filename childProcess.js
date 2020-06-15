@@ -25,6 +25,7 @@ const MediaFilename = require(`./qss-media-filename`);
 const MediaKey = require(`./qsh-media-key`);
 const packageUpdater = require(`./qsp-updater`);
 const pid = require(`./qss-pid`);
+const processMessages = require(`./qss-process-messages`);
 const restart = require(`./restart-qss`);
 const SyncedState = require(`./synced-qss-state`);
 const update = require(`./update-qss`);
@@ -32,6 +33,16 @@ const update = require(`./update-qss`);
 (async () => {
 
     log(`Setting up...`);
+
+    process.on(`message`, (message) => {
+
+        if (message === processMessages.restartConfirmation) {
+
+            process.exit();
+
+        }
+
+    });
 
     const config = Defined(JSON.parse(clArgs[0]), defaultConfig);
 
