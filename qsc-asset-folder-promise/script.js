@@ -9,7 +9,7 @@ keepUpdated();
 
 const syncedState = new SyncedState();
 
-Object.assign(window, {syncedState});
+window.ss = syncedState;
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 

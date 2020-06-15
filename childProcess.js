@@ -70,7 +70,7 @@ const update = require(`./update-qss`);
 
     app.get(apiPaths.client, (req, res) => {
 
-        maintenanceInterval.reset();
+        maintenanceInterval.set();
 
         res.sendFile(clientFile)
 
@@ -177,7 +177,7 @@ const update = require(`./update-qss`);
 
     app.post(apiPaths.syncedStateChanges, express.json(), (req, res) => {
 
-        maintenanceInterval.reset();
+        maintenanceInterval.set();
 
         syncedState.receive(req.body);
 

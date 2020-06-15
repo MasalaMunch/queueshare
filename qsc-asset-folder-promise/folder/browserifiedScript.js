@@ -393,31 +393,19 @@ const Interval = class {
 
     clear () {
 
-        assert(this._timeout !== undefined);
-
         clearTimeout(this._timeout);
 
         this._timeout = undefined;
 
     }
 
-    reset () {
-
-        this.clear();
-
-        this.set();
-
-    }
-
     set (_isStart = true) {
 
-        assert(this._timeout === undefined);
+        clearTimeout(this._timeout);
 
         this._timeout = setTimeout(async () => {
 
             await this._f();
-
-            this._timeout = undefined;
 
             this.set(false);
 
@@ -4346,7 +4334,7 @@ keepUpdated();
 
 const syncedState = new SyncedState();
 
-Object.assign(window, {syncedState});
+window.ss = syncedState;
 
 const contentElm = Elm(`div`, {className: `content`, innerText: `
 
