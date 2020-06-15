@@ -17,11 +17,13 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-syncedState._syncedJsonTree.events.on(`change`, (c) => {
+syncedState.events.on(`leafChange`, (leafChange) => {
 
-    contentElm.querySelector(`pre`).appendChild(
+    console.log(leafChange);
 
-        document.createTextNode(JSON.stringify(c, undefined, 4) + `\n\n`
+    contentElm.querySelector(`pre`).appendChild(document.createTextNode(
+
+        JSON.stringify(leafChange, undefined, 4) + `\n\n`
 
         ));
 

@@ -133,7 +133,7 @@ const eventually = (f) => new Promise((resolve, reject) => {
 
 module.exports = eventually;
 
-},{"../queue":44,"assert":13}],4:[function(require,module,exports){
+},{"../queue":46,"assert":13}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -311,7 +311,7 @@ const keepUpdated = () => {
 
 module.exports = keepUpdated;
 
-},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43}],9:[function(require,module,exports){
+},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":45}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3516,17 +3516,19 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-syncedState._syncedJsonTree.events.on(`change`, (c) => {
+syncedState.events.on(`leafChange`, (leafChange) => {
 
-    contentElm.querySelector(`pre`).appendChild(
+    console.log(leafChange);
 
-        document.createTextNode(JSON.stringify(c, undefined, 4) + `\n\n`
+    contentElm.querySelector(`pre`).appendChild(document.createTextNode(
+
+        JSON.stringify(leafChange, undefined, 4) + `\n\n`
 
         ));
 
 });
 
-},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":48}],41:[function(require,module,exports){
+},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":50}],41:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
@@ -3551,7 +3553,60 @@ const IsDev = () => isDev;
 
 module.exports = IsDev;
 
-},{"../json-fetch":7,"../qss-api-paths":43}],43:[function(require,module,exports){
+},{"../json-fetch":7,"../qss-api-paths":45}],43:[function(require,module,exports){
+"use strict";
+
+const OwnProps = require(`../own-props`);
+
+const Value = require(`../qsh-value`);
+
+const Change = {
+
+    Leaves: function* (localChange) {
+
+        const {path, value} = localChange;
+
+        if (Value.IsPrimitive(value)) {
+
+            yield localChange;
+
+        }
+        else {
+
+            for (const child of OwnProps(value)) {
+
+                yield* Change.Leaves(
+
+                    {path: [...path, child], value: value[child]}
+
+                    );
+
+            }
+
+        }
+
+    },
+
+    };
+
+module.exports = Change;
+
+},{"../own-props":37,"../qsh-value":44}],44:[function(require,module,exports){
+"use strict";
+
+const Value = {
+
+    IsPrimitive: (value) => {
+
+        return typeof value !== `object` || Array.isArray(value);
+
+    },
+
+    };
+
+module.exports = Value;
+
+},{}],45:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -3574,7 +3629,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],44:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 
 const Queue = class {
@@ -3633,7 +3688,7 @@ const Queue = class {
 
 module.exports = Queue;
 
-},{}],45:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 "use strict";
 
 const Version = require(`./Version.js`);
@@ -3668,7 +3723,7 @@ const Tree = class {
 
 module.exports = Tree;
 
-},{"./Version.js":46}],46:[function(require,module,exports){
+},{"./Version.js":48}],48:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3701,7 +3756,7 @@ const Version = {
 
 module.exports = Version;
 
-},{"../portable-uuid":39,"assert":13,"uuid":28}],47:[function(require,module,exports){
+},{"../portable-uuid":39,"assert":13,"uuid":28}],49:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3725,7 +3780,7 @@ const SyncedJsonTree = class {
 
     receive (foreignChange) {
 
-        return this._receive(this._ValidForeignChange(foreignChange));
+        this._receive(this._ValidForeignChange(foreignChange));
 
     }
 
@@ -3733,13 +3788,19 @@ const SyncedJsonTree = class {
 
         localChange = this._ValidLocalChange(localChange);
 
-        const foreignChange = this._ForeignChange(localChange);
+        this._write(this._ForeignChange(localChange), true);
 
-        const info = this._receive(foreignChange);
+    }
 
-        assert(info.wasWritten);
+    _build (path) {
 
-        return info;
+        let tree;
+
+        for (tree of this._iterativelyBuild(path)) {
+
+        }
+
+        return tree;
 
     }
 
@@ -3803,12 +3864,6 @@ const SyncedJsonTree = class {
 
         let i = 0;
 
-        let wasRejected = true;
-
-        let change;
-
-        let wasWritten = false;
-
         for (const tree of this._iterativelyBuild(foreignChange.path)) {
 
             const versionComparison = (
@@ -3821,13 +3876,9 @@ const SyncedJsonTree = class {
 
                 if (versionComparison > 0) {
 
-                    wasRejected = false;
-
                     if (i === versions.length-1) {
 
-                        change = this._write(foreignChange, tree);
-
-                        wasWritten = true;
+                        this._write(foreignChange, false);
 
                     }
                     else {
@@ -3845,8 +3896,6 @@ const SyncedJsonTree = class {
             i++;
 
         }
-
-        return {wasRejected, wasWritten, change};
 
     }
 
@@ -3908,7 +3957,9 @@ const SyncedJsonTree = class {
 
     }
 
-    _write (foreignChange, tree) {
+    _write (foreignChange, isFromWrite) {
+
+        const tree = this._build(foreignChange.path);
 
         for (const {localVersion} of tree.Traversal()) {
 
@@ -3922,17 +3973,15 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
+        tree.version = foreignChange.versions[foreignChange.versions.length-1];
+
         const change = this._Change(foreignChange);
 
-        tree.version = change.versions[change.versions.length-1];
+        tree.localVersion = change.localVersion;
 
-        const {localVersion} = change;
+        this._currentLocalVersion = change.localVersion;
 
-        tree.localVersion = localVersion;
-
-        this._currentLocalVersion = localVersion;
-
-        this.events.emit(`change`, change);
+        this.events.emit(`change`, change, isFromWrite);
 
         const {pendingForeignChanges} = tree;
 
@@ -3944,17 +3993,16 @@ const SyncedJsonTree = class {
 
         }
 
-        return change;
-
     }
 
     };
 
 module.exports = SyncedJsonTree;
 
-},{"../local-version":9,"./Tree.js":45,"./Version.js":46,"assert":13,"events":17}],48:[function(require,module,exports){
+},{"../local-version":9,"./Tree.js":47,"./Version.js":48,"assert":13,"events":17}],50:[function(require,module,exports){
 "use strict";
 
+const EventEmitter = require(`events`);
 const eventually = require(`../eventually`);
 const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
@@ -3963,21 +4011,80 @@ const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
 const IsDev = require(`../qsc-is-dev`);
+const Change = require(`../qsh-change`);
 const serverApiPaths = require(`../qss-api-paths`);
 
 const SyncedState = class {
 
     constructor () {
 
+        this.events = new EventEmitter();
+
         this._serverLocalVersion = undefined;
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (change) => {
+        this._syncedJsonTree.events.on(`change`, (c, isFromWrite) => {
 
-            console.log(change);
+            if (isFromWrite) {
 
-        }); 
+                const pushInterval = Interval.set(async () => {
+
+                    try {
+
+                        await fetch(serverApiPaths.syncedStateChanges, {
+
+                            body: JSON.stringify(c),
+
+                            headers: {[`Content-Type`]: `application/json`},
+
+                            method: `POST`,
+
+                        });
+
+                    } catch (error) {
+
+                        if (IsDev()) {
+
+                            console.error(error);
+
+                        }
+
+                        return;
+
+                    }
+
+                    pushInterval.destroy();
+
+                }, changeDelay, true);
+
+                for (const leafChange of Change.Leaves(c)) {
+
+                    this.events.emit(`leafChange`, leafChange)
+
+                }
+
+            }
+
+        });
+
+        this._syncedJsonTree.events.on(`change`, async (c, isFromWrite) => {
+
+            if (!isFromWrite) {
+
+                for (const leafChange of Change.Leaves(c)) {
+
+                    eventually(
+
+                        () => this.events.emit(`leafChange`, leafChange)
+
+                        );
+
+                }                
+
+            }
+
+        });
 
         Interval.set(async () => {
 
@@ -4029,37 +4136,7 @@ const SyncedState = class {
 
     write (localChange) {
 
-        const {change} = this._syncedJsonTree.write(localChange);
-
-        const pushInterval = Interval.set(async () => {
-
-            try {
-
-                await fetch(serverApiPaths.syncedStateChanges, {
-
-                    body: JSON.stringify(change),
-
-                    headers: {[`Content-Type`]: `application/json`},
-
-                    method: `POST`,
-
-                });
-
-            } catch (error) {
-
-                if (IsDev()) {
-
-                    console.error(error);
-
-                }
-
-                return;
-
-            }
-
-            pushInterval.destroy();
-
-        }, changeDelay, true);
+        this._syncedJsonTree.write(localChange);
 
     }
 
@@ -4069,4 +4146,4 @@ const syncedState = new SyncedState();
 
 module.exports = syncedState;
 
-},{"../eventually":3,"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43,"../synced-json-tree":47,"querystring":22}]},{},[40]);
+},{"../eventually":3,"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qsh-change":43,"../qss-api-paths":45,"../synced-json-tree":49,"events":17,"querystring":22}]},{},[40]);

@@ -21,7 +21,7 @@ const SyncedJsonTree = class {
 
     receive (foreignChange) {
 
-        return this._receive(this._ValidForeignChange(foreignChange));
+        this._receive(this._ValidForeignChange(foreignChange));
 
     }
 
@@ -29,13 +29,19 @@ const SyncedJsonTree = class {
 
         localChange = this._ValidLocalChange(localChange);
 
-        const foreignChange = this._ForeignChange(localChange);
+        this._write(this._ForeignChange(localChange), true);
 
-        const info = this._receive(foreignChange);
+    }
 
-        assert(info.wasWritten);
+    _build (path) {
 
-        return info;
+        let tree;
+
+        for (tree of this._iterativelyBuild(path)) {
+
+        }
+
+        return tree;
 
     }
 
@@ -99,12 +105,6 @@ const SyncedJsonTree = class {
 
         let i = 0;
 
-        let wasRejected = true;
-
-        let change;
-
-        let wasWritten = false;
-
         for (const tree of this._iterativelyBuild(foreignChange.path)) {
 
             const versionComparison = (
@@ -117,13 +117,9 @@ const SyncedJsonTree = class {
 
                 if (versionComparison > 0) {
 
-                    wasRejected = false;
-
                     if (i === versions.length-1) {
 
-                        change = this._write(foreignChange, tree);
-
-                        wasWritten = true;
+                        this._write(foreignChange, false);
 
                     }
                     else {
@@ -141,8 +137,6 @@ const SyncedJsonTree = class {
             i++;
 
         }
-
-        return {wasRejected, wasWritten, change};
 
     }
 
@@ -204,7 +198,9 @@ const SyncedJsonTree = class {
 
     }
 
-    _write (foreignChange, tree) {
+    _write (foreignChange, isFromWrite) {
+
+        const tree = this._build(foreignChange.path);
 
         for (const {localVersion} of tree.Traversal()) {
 
@@ -218,17 +214,15 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
+        tree.version = foreignChange.versions[foreignChange.versions.length-1];
+
         const change = this._Change(foreignChange);
 
-        tree.version = change.versions[change.versions.length-1];
+        tree.localVersion = change.localVersion;
 
-        const {localVersion} = change;
+        this._currentLocalVersion = change.localVersion;
 
-        tree.localVersion = localVersion;
-
-        this._currentLocalVersion = localVersion;
-
-        this.events.emit(`change`, change);
+        this.events.emit(`change`, change, isFromWrite);
 
         const {pendingForeignChanges} = tree;
 
@@ -239,8 +233,6 @@ const SyncedJsonTree = class {
             this._receive(foreignChange);
 
         }
-
-        return change;
 
     }
 
