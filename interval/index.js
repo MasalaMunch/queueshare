@@ -12,35 +12,41 @@ const Interval = class {
 
         assert(typeof dontDelayStart === `boolean`);
 
-        this._f = f;
-
         this._delay = delay;
 
         this._dontDelayStart = dontDelayStart;
+
+        this._f = f;
+
+        this._hasBeenDestroyed = false;
 
         this._timeout = undefined;
 
     }
 
-    clear () {
+    destroy () {
 
         clearTimeout(this._timeout);
 
-        this._timeout = undefined;
+        this._hasBeenDestroyed = true;
 
     }
 
     set (_isStart = true) {
 
-        clearTimeout(this._timeout);
+        if (!this._hasBeenDestroyed) {
 
-        this._timeout = setTimeout(async () => {
+            clearTimeout(this._timeout);
 
-            await this._f();
+            this._timeout = setTimeout(async () => {
 
-            this.set(false);
+                await this._f();
 
-        }, _isStart && this._dontDelayStart? 0 : this._delay);
+                this.set(false);
+
+            }, _isStart && this._dontDelayStart? 0 : this._delay);            
+
+        }
 
     }
 

@@ -23,7 +23,7 @@ const Defined = (target, source) => {
 
 module.exports = Defined;
 
-},{"../own-props":38}],2:[function(require,module,exports){
+},{"../own-props":37}],2:[function(require,module,exports){
 "use strict";
 
 const Defined = require(`../defined`);
@@ -77,7 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":1,"../extend":4,"../filtered":5,"../mapped":11}],3:[function(require,module,exports){
+},{"../defined":1,"../extend":4,"../filtered":5,"../mapped":10}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -133,7 +133,7 @@ const eventually = (f) => new Promise((resolve, reject) => {
 
 module.exports = eventually;
 
-},{"../queue":45,"assert":14}],4:[function(require,module,exports){
+},{"../queue":44,"assert":13}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -153,7 +153,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":38,"assert":14}],5:[function(require,module,exports){
+},{"../own-props":37,"assert":13}],5:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -178,195 +178,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":38}],6:[function(require,module,exports){
-"use strict";
-
-const assert = require(`assert`);
-
-const HeapedSet = class {
-
-    constructor (ValueComparison) {
-
-        assert(typeof ValueComparison === `function`);
-
-        this._heap = [];
-
-        this._ValueComparison = ValueComparison;
-
-        this._valueHeapIndices = new Map();
-
-    }
-
-    add (value) {
-
-        const valueIsNew = !this.Has(value);
-
-        if (valueIsNew) {
-
-            let heapIndex = this._heap.length;
-
-            while (heapIndex > 0) {
-
-                const parentIndex = (heapIndex - 1) >> 1;
-
-                const parentValue = this._heap[parentIndex];
-
-                if (this._ValueComparison(value, parentValue) < 0) {
-
-                    this._set(parentValue, heapIndex);
-
-                    heapIndex = parentIndex;
-
-                }
-                else {
-
-                    break;
-
-                }
-
-            }
-
-            this._set(value, heapIndex);
-
-        }
-
-        return valueIsNew;
-
-    }
-
-    delete (value) {
-
-        const valueExists = this.Has(value);
-
-        if (valueExists) {
-
-            const lastValue = this._heap.pop();
-
-            if (value !== lastValue) {
-
-                this._fixChildren(lastValue, this._valueHeapIndices.get(value));
-
-            }
-
-            this._valueHeapIndices.delete(value);
-
-        }
-
-        return valueExists;
-
-    }
-
-    fix () {
-
-        for (let i=(this._heap.length-2)>>1; i>=0; i--) {
-
-            this._fixChildren(this._heap[i], i);
-
-        }
-
-    }
-
-    Has (value) {
-
-        return this._valueHeapIndices.has(value);
-
-    }
-
-    get min () {
-
-        return this._heap[0];
-
-    }
-
-    get size () {
-
-        return this._heap.length;
-
-    }
-
-    _fixChildren (value, heapIndex) {
-
-        const ValueComparison = this._ValueComparison;
-
-        while (true) {
-
-            const leftChildIndex = (heapIndex << 1) + 1;
-
-            if (leftChildIndex < this._heap.length) {
-
-                const leftChildValue = this._heap[leftChildIndex];
-
-                let minChildIndex, minChildValue;
-
-                const rightChildIndex = leftChildIndex + 1;
-
-                if (rightChildIndex < this._heap.length) {
-
-                    const rightChildValue = this._heap[rightChildIndex];
-
-                    if (ValueComparison(rightChildValue, leftChildValue) < 0) {
-
-                        minChildIndex = rightChildIndex;
-
-                        minChildValue = rightChildValue;
-
-                    }
-                    else {
-
-                        minChildIndex = leftChildIndex;
-
-                        minChildValue = leftChildValue;
-
-                    }
-
-                }
-                else {
-
-                    minChildIndex = leftChildIndex;
-
-                    minChildValue = leftChildValue;
-
-                }
-
-                if (ValueComparison(minChildValue, value) < 0) {
-
-                    this._set(minChildValue, heapIndex);
-
-                    heapIndex = minChildIndex;
-
-                }
-                else {
-
-                    break;
-
-                }
-
-            }
-            else {
-
-                break;
-
-            }
-
-        }
-
-        this._set(value, heapIndex);
-
-    }
-
-    _set (value, heapIndex) {
-
-        this._heap[heapIndex] = value;
-
-        this._valueHeapIndices.set(value, heapIndex);
-
-    }
-
-};
-
-module.exports = HeapedSet;
-
-},{"assert":14}],7:[function(require,module,exports){
+},{"../own-props":37}],6:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -381,35 +193,41 @@ const Interval = class {
 
         assert(typeof dontDelayStart === `boolean`);
 
-        this._f = f;
-
         this._delay = delay;
 
         this._dontDelayStart = dontDelayStart;
+
+        this._f = f;
+
+        this._hasBeenDestroyed = false;
 
         this._timeout = undefined;
 
     }
 
-    clear () {
+    destroy () {
 
         clearTimeout(this._timeout);
 
-        this._timeout = undefined;
+        this._hasBeenDestroyed = true;
 
     }
 
     set (_isStart = true) {
 
-        clearTimeout(this._timeout);
+        if (!this._hasBeenDestroyed) {
 
-        this._timeout = setTimeout(async () => {
+            clearTimeout(this._timeout);
 
-            await this._f();
+            this._timeout = setTimeout(async () => {
 
-            this.set(false);
+                await this._f();
 
-        }, _isStart && this._dontDelayStart? 0 : this._delay);
+                this.set(false);
+
+            }, _isStart && this._dontDelayStart? 0 : this._delay);            
+
+        }
 
     }
 
@@ -427,7 +245,7 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"assert":14}],8:[function(require,module,exports){
+},{"assert":13}],7:[function(require,module,exports){
 "use strict";
 
 const JsonFetch = async (resource) => {
@@ -442,7 +260,7 @@ const JsonFetch = async (resource) => {
 
 module.exports = JsonFetch;
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 const Interval = require(`../interval`);
@@ -493,7 +311,7 @@ const keepUpdated = () => {
 
 module.exports = keepUpdated;
 
-},{"../interval":7,"../json-fetch":8,"../qsc-change-delay":42,"../qsc-is-dev":43,"../qss-api-paths":44}],10:[function(require,module,exports){
+},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -518,7 +336,7 @@ const LocalVersion = {
 
 module.exports = LocalVersion;
 
-},{"assert":14}],11:[function(require,module,exports){
+},{"assert":13}],10:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -539,7 +357,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":38}],12:[function(require,module,exports){
+},{"../own-props":37}],11:[function(require,module,exports){
 var Converter = require('./src/converter');
 
 /**
@@ -570,7 +388,7 @@ anyBase.DEC = '0123456789';
 anyBase.HEX = '0123456789abcdef';
 
 module.exports = anyBase;
-},{"./src/converter":13}],13:[function(require,module,exports){
+},{"./src/converter":12}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -651,7 +469,7 @@ Converter.prototype.isValid = function(number) {
 };
 
 module.exports = Converter;
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1161,7 +979,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":19,"util/":17}],15:[function(require,module,exports){
+},{"object-assign":18,"util/":16}],14:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1186,14 +1004,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1783,7 +1601,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":16,"_process":20,"inherits":15}],18:[function(require,module,exports){
+},{"./support/isBuffer":15,"_process":19,"inherits":14}],17:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2308,7 +2126,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -2400,7 +2218,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2586,7 +2404,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2672,7 +2490,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2759,13 +2577,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],23:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":21,"./encode":22}],24:[function(require,module,exports){
+},{"./decode":20,"./encode":21}],23:[function(require,module,exports){
 /**
  * Created by Samuel on 6/4/2016.
  * Simple wrapper functions to produce shorter UUIDs for cookies, maybe everything?
@@ -2864,7 +2682,7 @@ module.exports = (function(){
     return MakeConvertor;
 }());
 
-},{"any-base":12,"uuid/v4":27}],25:[function(require,module,exports){
+},{"any-base":11,"uuid/v4":26}],24:[function(require,module,exports){
 /**
  * Convert array of 16 byte values to UUID string format of the form:
  * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -2892,7 +2710,7 @@ function bytesToUuid(buf, offset) {
 
 module.exports = bytesToUuid;
 
-},{}],26:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Unique ID creation requires a high quality random # generator.  In the
 // browser this is a little complicated due to unknown quality of Math.random()
 // and inconsistent support for the `crypto` API.  We do the best we can via
@@ -2928,7 +2746,7 @@ if (getRandomValues) {
   };
 }
 
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var rng = require('./lib/rng');
 var bytesToUuid = require('./lib/bytesToUuid');
 
@@ -2959,7 +2777,7 @@ function v4(options, buf, offset) {
 
 module.exports = v4;
 
-},{"./lib/bytesToUuid":25,"./lib/rng":26}],28:[function(require,module,exports){
+},{"./lib/bytesToUuid":24,"./lib/rng":25}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2987,7 +2805,7 @@ function bytesToUuid(buf, offset) {
 
 var _default = bytesToUuid;
 exports.default = _default;
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3027,7 +2845,7 @@ var _v3 = _interopRequireDefault(require("./v4.js"));
 var _v4 = _interopRequireDefault(require("./v5.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./v1.js":33,"./v3.js":34,"./v4.js":36,"./v5.js":37}],30:[function(require,module,exports){
+},{"./v1.js":32,"./v3.js":33,"./v4.js":35,"./v5.js":36}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3251,7 +3069,7 @@ function md5ii(a, b, c, d, x, s, t) {
 
 var _default = md5;
 exports.default = _default;
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3273,7 +3091,7 @@ function rng() {
 
   return getRandomValues(rnds8);
 }
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3375,7 +3193,7 @@ function sha1(bytes) {
 
 var _default = sha1;
 exports.default = _default;
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3483,7 +3301,7 @@ function v1(options, buf, offset) {
 
 var _default = v1;
 exports.default = _default;
-},{"./bytesToUuid.js":28,"./rng.js":31}],34:[function(require,module,exports){
+},{"./bytesToUuid.js":27,"./rng.js":30}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3500,7 +3318,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v3 = (0, _v.default)('v3', 0x30, _md.default);
 var _default = v3;
 exports.default = _default;
-},{"./md5.js":30,"./v35.js":35}],35:[function(require,module,exports){
+},{"./md5.js":29,"./v35.js":34}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3577,7 +3395,7 @@ function _default(name, version, hashfunc) {
   generateUUID.URL = URL;
   return generateUUID;
 }
-},{"./bytesToUuid.js":28}],36:[function(require,module,exports){
+},{"./bytesToUuid.js":27}],35:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3620,7 +3438,7 @@ function v4(options, buf, offset) {
 
 var _default = v4;
 exports.default = _default;
-},{"./bytesToUuid.js":28,"./rng.js":31}],37:[function(require,module,exports){
+},{"./bytesToUuid.js":27,"./rng.js":30}],36:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3637,7 +3455,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v5 = (0, _v.default)('v5', 0x50, _sha.default);
 var _default = v5;
 exports.default = _default;
-},{"./sha1.js":32,"./v35.js":35}],38:[function(require,module,exports){
+},{"./sha1.js":31,"./v35.js":34}],37:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -3656,7 +3474,7 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 const portableChars = `ABDEFGHIJKLMNOQRSTVWXYZabdefghijklmnoqrstvwxyz0123456789-_!~'()`;
@@ -3666,7 +3484,7 @@ const portableChars = `ABDEFGHIJKLMNOQRSTVWXYZabdefghijklmnoqrstvwxyz0123456789-
 
 module.exports = portableChars;
 
-},{}],40:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 "use strict";
 
 const portableChars = require(`../portable-chars`);
@@ -3678,7 +3496,7 @@ const PortableUuid = (uuid) => uuidTranslator.fromUUID(uuid);
 
 module.exports = PortableUuid;
 
-},{"../portable-chars":39,"short-uuid":24}],41:[function(require,module,exports){
+},{"../portable-chars":38,"short-uuid":23}],40:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
@@ -3712,14 +3530,14 @@ const fabElm = Elm(`div`, {className: `fab`, childNodes: [Elm(`button`)]});
 
 document.body.appendChild(fabElm);
 
-},{"../elm":2,"../keep-qsc-updated":9,"../synced-qsc-state":49}],42:[function(require,module,exports){
+},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":48}],41:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
 
 module.exports = changeDelay;
 
-},{}],43:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 "use strict";
 
 const serverApiPaths = require(`../qss-api-paths`);
@@ -3737,7 +3555,7 @@ const IsDev = () => isDev;
 
 module.exports = IsDev;
 
-},{"../json-fetch":8,"../qss-api-paths":44}],44:[function(require,module,exports){
+},{"../json-fetch":7,"../qss-api-paths":43}],43:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -3760,7 +3578,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 
 const Queue = class {
@@ -3819,7 +3637,7 @@ const Queue = class {
 
 module.exports = Queue;
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 const Version = require(`./Version.js`);
@@ -3854,7 +3672,7 @@ const Tree = class {
 
 module.exports = Tree;
 
-},{"./Version.js":47}],47:[function(require,module,exports){
+},{"./Version.js":46}],46:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3887,7 +3705,7 @@ const Version = {
 
 module.exports = Version;
 
-},{"../portable-uuid":40,"assert":14,"uuid":29}],48:[function(require,module,exports){
+},{"../portable-uuid":39,"assert":13,"uuid":28}],47:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -4138,14 +3956,13 @@ const SyncedJsonTree = class {
 
 module.exports = SyncedJsonTree;
 
-},{"../local-version":10,"./Tree.js":46,"./Version.js":47,"assert":14,"events":18}],49:[function(require,module,exports){
+},{"../local-version":9,"./Tree.js":45,"./Version.js":46,"assert":13,"events":17}],48:[function(require,module,exports){
 "use strict";
 
 const eventually = require(`../eventually`);
 const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
 const SyncedJsonTree = require(`../synced-json-tree`);
-const HeapedSet = require(`../heaped-set`);
 const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
@@ -4156,27 +3973,15 @@ const SyncedState = class {
 
     constructor () {
 
-        this._heapedLocalVersions = new HeapedSet((a, b) => b - a);
-
-        this._localVersionChanges = new Map();
-
         this._serverLocalVersion = undefined;
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (c) => {
+        this._syncedJsonTree.events.on(`change`, (change) => {
 
-            console.log(c);
+            console.log(change);
 
         }); 
-
-        this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
-
-            this._heapedLocalVersions.delete(v);
-
-            this._localVersionChanges.delete(v);
-
-        });
 
         Interval.set(async () => {
 
@@ -4224,57 +4029,41 @@ const SyncedState = class {
 
         }, changeDelay, true);
 
-        Interval.set(async () => {
-
-            const localVersionToSend = this._heapedLocalVersions.min;
-
-            if (localVersionToSend !== undefined) {
-
-                try {
-
-                    await fetch(serverApiPaths.syncedStateChanges, {
-
-                        body: JSON.stringify(
-
-                            this._localVersionChanges.get(localVersionToSend)
-
-                            ),
-
-                        headers: {[`Content-Type`]: `application/json`},
-
-                        method: `POST`,
-
-                    });
-
-                } catch (error) {
-
-                    if (IsDev()) {
-
-                        console.error(error);
-
-                    }
-
-                    return;
-
-                }
-
-                this._heapedLocalVersions.delete(localVersionToSend);
-
-                this._localVersionChanges.delete(localVersionToSend);
-
-            }
-
-        }, changeDelay, true);
-
     }
 
     write (localChange) {
 
         const {change} = this._syncedJsonTree.write(localChange);
 
-        this._heapedLocalVersions.add(change.localVersion);
+        const pushInterval = Interval.set(async () => {
 
-        this._localVersionChanges.set(change.localVersion, change);
+            try {
+
+                await fetch(serverApiPaths.syncedStateChanges, {
+
+                    body: JSON.stringify(change),
+
+                    headers: {[`Content-Type`]: `application/json`},
+
+                    method: `POST`,
+
+                });
+
+            } catch (error) {
+
+                if (IsDev()) {
+
+                    console.error(error);
+
+                }
+
+                return;
+
+            }
+
+            pushInterval.destroy();
+
+        }, changeDelay, true);
 
     }
 
@@ -4282,4 +4071,4 @@ const SyncedState = class {
 
 module.exports = SyncedState;
 
-},{"../eventually":3,"../heaped-set":6,"../interval":7,"../json-fetch":8,"../qsc-change-delay":42,"../qsc-is-dev":43,"../qss-api-paths":44,"../synced-json-tree":48,"querystring":23}]},{},[41]);
+},{"../eventually":3,"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43,"../synced-json-tree":47,"querystring":22}]},{},[40]);

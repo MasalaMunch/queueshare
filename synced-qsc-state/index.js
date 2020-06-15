@@ -4,7 +4,6 @@ const eventually = require(`../eventually`);
 const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
 const SyncedJsonTree = require(`../synced-json-tree`);
-const HeapedSet = require(`../heaped-set`);
 const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
@@ -15,27 +14,15 @@ const SyncedState = class {
 
     constructor () {
 
-        this._heapedLocalVersions = new HeapedSet((a, b) => b - a);
-
-        this._localVersionChanges = new Map();
-
         this._serverLocalVersion = undefined;
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (c) => {
+        this._syncedJsonTree.events.on(`change`, (change) => {
 
-            console.log(c);
+            console.log(change);
 
         }); 
-
-        this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
-
-            this._heapedLocalVersions.delete(v);
-
-            this._localVersionChanges.delete(v);
-
-        });
 
         Interval.set(async () => {
 
@@ -83,57 +70,41 @@ const SyncedState = class {
 
         }, changeDelay, true);
 
-        Interval.set(async () => {
-
-            const localVersionToSend = this._heapedLocalVersions.min;
-
-            if (localVersionToSend !== undefined) {
-
-                try {
-
-                    await fetch(serverApiPaths.syncedStateChanges, {
-
-                        body: JSON.stringify(
-
-                            this._localVersionChanges.get(localVersionToSend)
-
-                            ),
-
-                        headers: {[`Content-Type`]: `application/json`},
-
-                        method: `POST`,
-
-                    });
-
-                } catch (error) {
-
-                    if (IsDev()) {
-
-                        console.error(error);
-
-                    }
-
-                    return;
-
-                }
-
-                this._heapedLocalVersions.delete(localVersionToSend);
-
-                this._localVersionChanges.delete(localVersionToSend);
-
-            }
-
-        }, changeDelay, true);
-
     }
 
     write (localChange) {
 
         const {change} = this._syncedJsonTree.write(localChange);
 
-        this._heapedLocalVersions.add(change.localVersion);
+        const pushInterval = Interval.set(async () => {
 
-        this._localVersionChanges.set(change.localVersion, change);
+            try {
+
+                await fetch(serverApiPaths.syncedStateChanges, {
+
+                    body: JSON.stringify(change),
+
+                    headers: {[`Content-Type`]: `application/json`},
+
+                    method: `POST`,
+
+                });
+
+            } catch (error) {
+
+                if (IsDev()) {
+
+                    console.error(error);
+
+                }
+
+                return;
+
+            }
+
+            pushInterval.destroy();
+
+        }, changeDelay, true);
 
     }
 
