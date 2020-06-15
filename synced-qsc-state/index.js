@@ -22,9 +22,9 @@ const SyncedState = class {
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (c, isFromWrite) => {
+        this._syncedJsonTree.events.on(`change`, (change, isLocal) => {
 
-            if (isFromWrite) {
+            if (isLocal) {
 
                 const pushInterval = Interval.set(async () => {
 
@@ -32,7 +32,7 @@ const SyncedState = class {
 
                         await fetch(serverApiPaths.syncedStateChanges, {
 
-                            body: JSON.stringify(c),
+                            body: JSON.stringify(change),
 
                             headers: {[`Content-Type`]: `application/json`},
 
@@ -56,7 +56,7 @@ const SyncedState = class {
 
                 }, changeDelay, true);
 
-                for (const leafChange of Change.Leaves(c)) {
+                for (const leafChange of Change.Leaves(change)) {
 
                     this.events.emit(`leafChange`, leafChange)
 
@@ -66,11 +66,11 @@ const SyncedState = class {
 
         });
 
-        this._syncedJsonTree.events.on(`change`, async (c, isFromWrite) => {
+        this._syncedJsonTree.events.on(`change`, async (change, isLocal) => {
 
-            if (!isFromWrite) {
+            if (!isLocal) {
 
-                for (const leafChange of Change.Leaves(c)) {
+                for (const leafChange of Change.Leaves(change)) {
 
                     eventually(
 
@@ -120,7 +120,7 @@ const SyncedState = class {
 
                 await eventually(() => {
 
-                    this._syncedJsonTree.receive(c);
+                    this._syncedJsonTree.receive(c, false);
 
                     this._serverLocalVersion = c.localVersion;
 
@@ -134,7 +134,7 @@ const SyncedState = class {
 
     write (localChange) {
 
-        this._syncedJsonTree.write(localChange);
+        this._syncedJsonTree.write(localChange, true);
 
     }
 

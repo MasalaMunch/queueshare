@@ -3701,7 +3701,7 @@ const Tree = class {
 
         this.localVersion = undefined;
 
-        this.pendingForeignChanges = [];
+        this.pendingReceipts = [];
 
         this.version = Version.oldest;
 
@@ -3778,17 +3778,17 @@ const SyncedJsonTree = class {
 
     }
 
-    receive (foreignChange) {
+    receive (foreignChange, extraInfo = undefined) {
 
-        this._receive(this._ValidForeignChange(foreignChange));
+        this._receive(this._ValidForeignChange(foreignChange), extraInfo);
 
     }
 
-    write (localChange) {
+    write (localChange, extraInfo = undefined) {
 
         localChange = this._ValidLocalChange(localChange);
 
-        this._write(this._ForeignChange(localChange), true);
+        this._write(this._ForeignChange(localChange), extraInfo);
 
     }
 
@@ -3858,7 +3858,7 @@ const SyncedJsonTree = class {
 
     }
 
-    _receive (foreignChange) {
+    _receive (foreignChange, extraInfo) {
 
         const {versions} = foreignChange;
 
@@ -3878,12 +3878,12 @@ const SyncedJsonTree = class {
 
                     if (i === versions.length-1) {
 
-                        this._write(foreignChange, false);
+                        this._write(foreignChange, extraInfo);
 
                     }
                     else {
 
-                        tree.pendingForeignChanges.push(foreignChange);
+                        tree.pendingReceipts.push([foreignChange, extraInfo]);
 
                     }
 
@@ -3957,9 +3957,11 @@ const SyncedJsonTree = class {
 
     }
 
-    _write (foreignChange, isFromWrite) {
+    _write (foreignChange, extraInfo) {
 
         const tree = this._build(foreignChange.path);
+
+        tree.version = foreignChange.versions[foreignChange.versions.length-1];
 
         for (const {localVersion} of tree.Traversal()) {
 
@@ -3973,23 +3975,21 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
-        tree.version = foreignChange.versions[foreignChange.versions.length-1];
-
         const change = this._Change(foreignChange);
 
         tree.localVersion = change.localVersion;
 
         this._currentLocalVersion = change.localVersion;
 
-        this.events.emit(`change`, change, isFromWrite);
+        this.events.emit(`change`, change, extraInfo);
 
-        const {pendingForeignChanges} = tree;
+        const {pendingReceipts} = tree;
 
-        tree.pendingForeignChanges = [];
+        tree.pendingReceipts = [];
 
-        for (const foreignChange of pendingForeignChanges) {
+        for (const receipt of pendingReceipts) {
 
-            this._receive(foreignChange);
+            this._receive(...receipt);
 
         }
 
