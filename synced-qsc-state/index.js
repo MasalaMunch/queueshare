@@ -110,4 +110,6 @@ const SyncedState = class {
 
     };
 
-module.exports = SyncedState;
+const syncedState = new SyncedState();
+
+module.exports = syncedState;

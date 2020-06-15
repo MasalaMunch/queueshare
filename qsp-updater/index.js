@@ -20,24 +20,30 @@ const JsonPromise = async () => {
 
 const parentPackageFolder = path.resolve(folder, `..`, `..`);
 
-const updater = {
-    
-    hasUpdated: false,
+const Updater = class {
 
-    tryUpdating: async () => {
+    constructor () {
+
+        this.hasUpdated = false;
+
+    }
+
+    async tryUpdating () {
 
         const {name, version} = await JsonPromise();
 
         await execa(`npm`, [`update`, name], {cwd: parentPackageFolder});
 
-        if (!updater.hasUpdated) {
+        if (!this.hasUpdated) {
 
-            updater.hasUpdated = version !== (await JsonPromise()).version;
+            this.hasUpdated = version !== (await JsonPromise()).version;
 
         }
 
-    },
+    } 
 
     };
+
+const updater = new Updater();
 
 module.exports = updater;
