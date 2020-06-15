@@ -59,9 +59,7 @@ const StoredJsonLog = class {
 
         }
 
-        this._fileAppendStream.write(JsonString(entry));
-
-        this._fileAppendStream.write(jsonStringSeparator);
+        this._fileAppendStream.write(JsonString(entry) + jsonStringSeparator);
 
     }
 
