@@ -19,17 +19,17 @@ const SyncedJsonTree = class {
 
     }
 
-    receive (foreignChange, extraInfo = undefined) {
+    receive (foreignChange) {
 
-        this._receive(this._ValidForeignChange(foreignChange), extraInfo);
+        this._receive(this._ValidForeignChange(foreignChange));
 
     }
 
-    write (localChange, extraInfo = undefined) {
+    write (localChange) {
 
         localChange = this._ValidLocalChange(localChange);
 
-        this._write(this._ForeignChange(localChange), extraInfo);
+        this._write(this._ForeignChange(localChange), true);
 
     }
 
@@ -99,7 +99,7 @@ const SyncedJsonTree = class {
 
     }
 
-    _receive (foreignChange, extraInfo) {
+    _receive (foreignChange) {
 
         const {versions} = foreignChange;
 
@@ -119,12 +119,12 @@ const SyncedJsonTree = class {
 
                     if (i === versions.length-1) {
 
-                        this._write(foreignChange, extraInfo);
+                        this._write(foreignChange, false);
 
                     }
                     else {
 
-                        tree.pendingReceipts.push([foreignChange, extraInfo]);
+                        tree.pendingForeignChanges.push(foreignChange);
 
                     }
 
@@ -198,11 +198,9 @@ const SyncedJsonTree = class {
 
     }
 
-    _write (foreignChange, extraInfo) {
+    _write (foreignChange, isFromWrite) {
 
         const tree = this._build(foreignChange.path);
-
-        tree.version = foreignChange.versions[foreignChange.versions.length-1];
 
         for (const {localVersion} of tree.Traversal()) {
 
@@ -216,21 +214,23 @@ const SyncedJsonTree = class {
 
         tree.childTrees = new Map();
 
+        tree.version = foreignChange.versions[foreignChange.versions.length-1];
+
         const change = this._Change(foreignChange);
 
         tree.localVersion = change.localVersion;
 
         this._currentLocalVersion = change.localVersion;
 
-        this.events.emit(`change`, change, extraInfo);
+        this.events.emit(`change`, change, isFromWrite);
 
-        const {pendingReceipts} = tree;
+        const {pendingForeignChanges} = tree;
 
-        tree.pendingReceipts = [];
+        tree.pendingForeignChanges = [];
 
-        for (const receipt of pendingReceipts) {
+        for (const foreignChange of pendingForeignChanges) {
 
-            this._receive(...receipt);
+            this._receive(foreignChange);
 
         }
 

@@ -25,17 +25,13 @@ const SyncedState = class {
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (c, shouldStore) => {
+        this._syncedJsonTree.events.on(`change`, (c) => {
 
             this._localVersionChanges.set(c.localVersion, c);
 
             this._orderedLocalVersions.insert(c.localVersion);
 
-            if (shouldStore) {
-
-                this._storedChanges.eventuallyAppend(c);
-
-            }
+            this._storedChanges.eventuallyAppend(c);
 
         });
 
@@ -64,7 +60,7 @@ const SyncedState = class {
 
                     try {
 
-                        this.receive(change, false);
+                        this.receive(change);
 
                     } catch (error) {
 
@@ -160,15 +156,15 @@ const SyncedState = class {
 
         }
 
-        this._syncedJsonTree.write({path: [], value: compressedValue}, false);
+        this._syncedJsonTree.write({path: [], value: compressedValue});
 
         this._storedChanges.write(this.Changes());
 
     }
 
-    receive (foreignChange, _shouldStore = true) {
+    receive (foreignChange) {
 
-        this._syncedJsonTree.receive(foreignChange, _shouldStore);
+        this._syncedJsonTree.receive(foreignChange);
 
     }
 

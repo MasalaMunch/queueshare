@@ -10,7 +10,7 @@ const Tree = class {
 
         this.localVersion = undefined;
 
-        this.pendingReceipts = [];
+        this.pendingForeignChanges = [];
 
         this.version = Version.oldest;
 
