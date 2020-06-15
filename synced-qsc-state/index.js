@@ -5,7 +5,7 @@ const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 const HeapedSet = require(`../heaped-set`);
-const qs = require(`qs`);
+const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
 const IsDev = require(`../qsc-is-dev`);
@@ -45,13 +45,13 @@ const SyncedState = class {
 
                 changes = await JsonFetch(
 
-                    serverApiPaths.syncedStateChanges 
+                    serverApiPaths.syncedStateChanges
 
-                    + qs.stringify(
+                    + `?` 
+
+                    + querystring.stringify(
 
                         {localVersion: this._serverLocalVersion},
-
-                        {addQueryPrefix: true},
 
                         )
 
