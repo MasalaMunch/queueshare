@@ -50,6 +50,9 @@ const update = require(`./update-qss`);
 
     const syncedState = new SyncedState(folder);
 
+    // in the future, on synced state change, when media is referenced, check if 
+    // it exists and if it doesn't, try downloading it
+
     const doMaintenance = () => {
 
         update();
