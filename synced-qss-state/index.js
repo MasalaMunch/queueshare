@@ -38,9 +38,6 @@ const SyncedState = class {
 
         });
 
-        // in the future, on change, when media is referenced, check if it 
-        // exists and if it doesn't, try downloading it
-
         this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
 
             this._localVersionChanges.delete(v);
