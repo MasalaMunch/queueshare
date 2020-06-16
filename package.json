@@ -12,7 +12,7 @@
   },
   "homepage": "https://github.com/MasalaMunch/queueshare#readme",
   "bin": {
-    "queueshare": "cli.js"
+    "queueshare": "cli.script.js"
   },
   "dependencies": {
     "bintrees": "^1.0.2",
