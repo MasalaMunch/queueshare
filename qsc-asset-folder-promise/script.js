@@ -2,10 +2,7 @@
 
 const Elm = require(`../elm`);
 
-const keepUpdated = require(`../keep-qsc-updated`);
 const syncedState = require(`../synced-qsc-state`);
-
-keepUpdated();
 
 window.ss = syncedState;
 

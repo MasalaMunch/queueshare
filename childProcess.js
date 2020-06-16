@@ -1,6 +1,7 @@
 "use strict";
 
 const anHourInMs = require(`./an-hour-in-ms`);
+const assert = require(`assert`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
 const compression = require(`compression`);
@@ -17,6 +18,7 @@ const Port = require(`./port`);
 const StoredJson = require(`./stored-json`);
 
 const apiPaths = require(`./qss-api-paths`);
+const badPidStatus = require(`./qss-bad-pid-status`);
 const ClientAssetFolderPromise = require(`./qsc-asset-folder-promise`);
 const ClientFile = require(`./qsc-file`);
 const defaultConfig = require(`./default-qss-config`);
@@ -91,7 +93,8 @@ const update = require(`./update-qss`);
 
         port = Port();
 
-    } else {
+    }
+    else {
 
         try {
 
@@ -156,9 +159,18 @@ const update = require(`./update-qss`);
 
     app.get(apiPaths.syncedStateChanges, (req, res) => {
 
-        const {localVersion, limit} = Mapped(req.query, Number);
+        if (pid === req.query.pid) {
 
-        res.json(syncedState.ChangesSince(localVersion, limit));
+            const {localVersion, limit} = Mapped(req.query, Number);
+
+            res.json(syncedState.ChangesSince(localVersion, limit));            
+
+        }
+        else {
+
+            res.status(badPidStatus).end();
+
+        }
 
     });
 

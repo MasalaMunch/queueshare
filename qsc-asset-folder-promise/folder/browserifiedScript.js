@@ -23,7 +23,7 @@ const Defined = (target, source) => {
 
 module.exports = Defined;
 
-},{"../own-props":37}],2:[function(require,module,exports){
+},{"../own-props":36}],2:[function(require,module,exports){
 "use strict";
 
 const Defined = require(`../defined`);
@@ -77,7 +77,7 @@ const Elm = (tagName, props) => {
 
 module.exports = Elm;
 
-},{"../defined":1,"../extend":4,"../filtered":5,"../mapped":10}],3:[function(require,module,exports){
+},{"../defined":1,"../extend":4,"../filtered":5,"../mapped":9}],3:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -133,7 +133,7 @@ const eventually = (f) => new Promise((resolve, reject) => {
 
 module.exports = eventually;
 
-},{"../queue":44,"assert":13}],4:[function(require,module,exports){
+},{"../queue":44,"assert":12}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -153,7 +153,7 @@ const extend = (target, source) => {
 
 module.exports = extend;
 
-},{"../own-props":37,"assert":13}],5:[function(require,module,exports){
+},{"../own-props":36,"assert":12}],5:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -178,7 +178,7 @@ const Filtered = (target, callback) => {
 
 module.exports = Filtered;
 
-},{"../own-props":37}],6:[function(require,module,exports){
+},{"../own-props":36}],6:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -245,12 +245,18 @@ Interval.set = (...constructorArgs) => {
 
 module.exports = Interval;
 
-},{"assert":13}],7:[function(require,module,exports){
+},{"assert":12}],7:[function(require,module,exports){
 "use strict";
 
 const JsonFetch = async (resource) => {
 
     const response = await fetch(resource);
+
+    if (response.status >= 400) {
+
+        throw response;
+
+    }
 
     const json = await response.json();
 
@@ -261,57 +267,6 @@ const JsonFetch = async (resource) => {
 module.exports = JsonFetch;
 
 },{}],8:[function(require,module,exports){
-"use strict";
-
-const Interval = require(`../interval`);
-const JsonFetch = require(`../json-fetch`);
-
-const changeDelay = require(`../qsc-change-delay`);
-const IsDev = require(`../qsc-is-dev`);
-const serverApiPaths = require(`../qss-api-paths`);
-
-const keepUpdated = () => {
-
-    let initialServerPid;
-
-    Interval.set(async () => {
-
-        let serverPid;
-
-        try {
-
-            serverPid = await JsonFetch(serverApiPaths.pid);
-
-        } catch (error) {
-
-            if (IsDev()) {
-
-                console.error(error);
-
-            }
-
-            return;
-
-        }
-
-        if (initialServerPid === undefined) {
-
-            initialServerPid = serverPid;
-
-        }
-        else if (initialServerPid !== serverPid) {
-
-            window.location.reload();
-
-        }  
-
-    }, changeDelay, true);
-
-};
-
-module.exports = keepUpdated;
-
-},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -336,7 +291,7 @@ const LocalVersion = {
 
 module.exports = LocalVersion;
 
-},{"assert":13}],10:[function(require,module,exports){
+},{"assert":12}],9:[function(require,module,exports){
 "use strict";
 
 const OwnProps = require(`../own-props`);
@@ -357,7 +312,7 @@ const Mapped = (target, callback) => {
 
 module.exports = Mapped;
 
-},{"../own-props":37}],11:[function(require,module,exports){
+},{"../own-props":36}],10:[function(require,module,exports){
 var Converter = require('./src/converter');
 
 /**
@@ -388,7 +343,7 @@ anyBase.DEC = '0123456789';
 anyBase.HEX = '0123456789abcdef';
 
 module.exports = anyBase;
-},{"./src/converter":12}],12:[function(require,module,exports){
+},{"./src/converter":11}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -469,7 +424,7 @@ Converter.prototype.isValid = function(number) {
 };
 
 module.exports = Converter;
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -979,7 +934,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"object-assign":18,"util/":16}],14:[function(require,module,exports){
+},{"object-assign":17,"util/":15}],13:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1004,14 +959,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1601,7 +1556,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":15,"_process":19,"inherits":14}],17:[function(require,module,exports){
+},{"./support/isBuffer":14,"_process":18,"inherits":13}],16:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2126,7 +2081,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -2218,7 +2173,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2404,7 +2359,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2490,7 +2445,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2577,13 +2532,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":20,"./encode":21}],23:[function(require,module,exports){
+},{"./decode":19,"./encode":20}],22:[function(require,module,exports){
 /**
  * Created by Samuel on 6/4/2016.
  * Simple wrapper functions to produce shorter UUIDs for cookies, maybe everything?
@@ -2682,7 +2637,7 @@ module.exports = (function(){
     return MakeConvertor;
 }());
 
-},{"any-base":11,"uuid/v4":26}],24:[function(require,module,exports){
+},{"any-base":10,"uuid/v4":25}],23:[function(require,module,exports){
 /**
  * Convert array of 16 byte values to UUID string format of the form:
  * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -2710,7 +2665,7 @@ function bytesToUuid(buf, offset) {
 
 module.exports = bytesToUuid;
 
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 // Unique ID creation requires a high quality random # generator.  In the
 // browser this is a little complicated due to unknown quality of Math.random()
 // and inconsistent support for the `crypto` API.  We do the best we can via
@@ -2746,7 +2701,7 @@ if (getRandomValues) {
   };
 }
 
-},{}],26:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var rng = require('./lib/rng');
 var bytesToUuid = require('./lib/bytesToUuid');
 
@@ -2777,7 +2732,7 @@ function v4(options, buf, offset) {
 
 module.exports = v4;
 
-},{"./lib/bytesToUuid":24,"./lib/rng":25}],27:[function(require,module,exports){
+},{"./lib/bytesToUuid":23,"./lib/rng":24}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2805,7 +2760,7 @@ function bytesToUuid(buf, offset) {
 
 var _default = bytesToUuid;
 exports.default = _default;
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2845,7 +2800,7 @@ var _v3 = _interopRequireDefault(require("./v4.js"));
 var _v4 = _interopRequireDefault(require("./v5.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./v1.js":32,"./v3.js":33,"./v4.js":35,"./v5.js":36}],29:[function(require,module,exports){
+},{"./v1.js":31,"./v3.js":32,"./v4.js":34,"./v5.js":35}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3069,7 +3024,7 @@ function md5ii(a, b, c, d, x, s, t) {
 
 var _default = md5;
 exports.default = _default;
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3091,7 +3046,7 @@ function rng() {
 
   return getRandomValues(rnds8);
 }
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3193,7 +3148,7 @@ function sha1(bytes) {
 
 var _default = sha1;
 exports.default = _default;
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3301,7 +3256,7 @@ function v1(options, buf, offset) {
 
 var _default = v1;
 exports.default = _default;
-},{"./bytesToUuid.js":27,"./rng.js":30}],33:[function(require,module,exports){
+},{"./bytesToUuid.js":26,"./rng.js":29}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3318,7 +3273,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v3 = (0, _v.default)('v3', 0x30, _md.default);
 var _default = v3;
 exports.default = _default;
-},{"./md5.js":29,"./v35.js":34}],34:[function(require,module,exports){
+},{"./md5.js":28,"./v35.js":33}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3395,7 +3350,7 @@ function _default(name, version, hashfunc) {
   generateUUID.URL = URL;
   return generateUUID;
 }
-},{"./bytesToUuid.js":27}],35:[function(require,module,exports){
+},{"./bytesToUuid.js":26}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3438,7 +3393,7 @@ function v4(options, buf, offset) {
 
 var _default = v4;
 exports.default = _default;
-},{"./bytesToUuid.js":27,"./rng.js":30}],36:[function(require,module,exports){
+},{"./bytesToUuid.js":26,"./rng.js":29}],35:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3455,7 +3410,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v5 = (0, _v.default)('v5', 0x50, _sha.default);
 var _default = v5;
 exports.default = _default;
-},{"./sha1.js":31,"./v35.js":34}],37:[function(require,module,exports){
+},{"./sha1.js":30,"./v35.js":33}],36:[function(require,module,exports){
 "use strict";
 
 const OwnProps = function* (something) {
@@ -3474,7 +3429,7 @@ const OwnProps = function* (something) {
 
 module.exports = OwnProps;
 
-},{}],38:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 const portableChars = `ABDEFGHIJKLMNOQRSTVWXYZabdefghijklmnoqrstvwxyz0123456789-_!~'()`;
@@ -3484,7 +3439,7 @@ const portableChars = `ABDEFGHIJKLMNOQRSTVWXYZabdefghijklmnoqrstvwxyz0123456789-
 
 module.exports = portableChars;
 
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 const portableChars = require(`../portable-chars`);
@@ -3496,15 +3451,12 @@ const PortableUuid = (uuid) => uuidTranslator.fromUUID(uuid);
 
 module.exports = PortableUuid;
 
-},{"../portable-chars":38,"short-uuid":23}],40:[function(require,module,exports){
+},{"../portable-chars":37,"short-uuid":22}],39:[function(require,module,exports){
 "use strict";
 
 const Elm = require(`../elm`);
 
-const keepUpdated = require(`../keep-qsc-updated`);
 const syncedState = require(`../synced-qsc-state`);
-
-keepUpdated();
 
 window.ss = syncedState;
 
@@ -3526,14 +3478,14 @@ syncedState._syncedJsonTree.events.on(`change`, (c) => {
 
 });
 
-},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":48}],41:[function(require,module,exports){
+},{"../elm":2,"../synced-qsc-state":48}],40:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
 
 module.exports = changeDelay;
 
-},{}],42:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 
 const serverApiPaths = require(`../qss-api-paths`);
@@ -3551,7 +3503,7 @@ const IsDev = () => isDev;
 
 module.exports = IsDev;
 
-},{"../json-fetch":7,"../qss-api-paths":43}],43:[function(require,module,exports){
+},{"../json-fetch":7,"../qss-api-paths":42}],42:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -3573,6 +3525,13 @@ const apiPaths = {
     };
 
 module.exports = apiPaths;
+
+},{}],43:[function(require,module,exports){
+"use strict";
+
+const badPidStatus = 404;
+
+module.exports = badPidStatus;
 
 },{}],44:[function(require,module,exports){
 "use strict";
@@ -3701,7 +3660,7 @@ const Version = {
 
 module.exports = Version;
 
-},{"../portable-uuid":39,"assert":13,"uuid":28}],47:[function(require,module,exports){
+},{"../portable-uuid":38,"assert":12,"uuid":27}],47:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3950,7 +3909,7 @@ const SyncedJsonTree = class {
 
 module.exports = SyncedJsonTree;
 
-},{"../local-version":9,"./Tree.js":45,"./Version.js":46,"assert":13,"events":17}],48:[function(require,module,exports){
+},{"../local-version":8,"./Tree.js":45,"./Version.js":46,"assert":12,"events":16}],48:[function(require,module,exports){
 "use strict";
 
 const eventually = require(`../eventually`);
@@ -3963,6 +3922,7 @@ const querystring = require(`querystring`);
 const changeDelay = require(`../qsc-change-delay`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
+const serverBadPidStatus = require(`../qss-bad-pid-status`);
 
 const SyncedState = class {
 
@@ -3980,25 +3940,13 @@ const SyncedState = class {
 
         });
 
-        Interval.set(async () => {
+        const pidFetchInterval = Interval.set(async () => {
 
-            let changes;
-
-            const query = querystring.stringify({
-
-                localVersion: this._serverLocalVersion,
-
-                limit: this._hasFetchedChanges? 100 : "Infinity",
-
-                });
+            let serverPid;
 
             try {
 
-                changes = await JsonFetch(
-
-                    serverApiPaths.syncedStateChanges + `?` + query
-
-                    );
+                serverPid = await JsonFetch(serverApiPaths.pid);
 
             } catch (error) {
 
@@ -4012,26 +3960,69 @@ const SyncedState = class {
 
             }
 
-            if (this._hasFetchedChanges) {
+            pidFetchInterval.destroy();
 
-                for (const c of changes) {
+            Interval.set(async () => {
 
-                    await eventually(() => this._receive(c));
+                let changes;
+
+                const query = querystring.stringify({
+
+                    localVersion: this._serverLocalVersion,
+
+                    limit: this._hasFetchedChanges? 100 : "Infinity",
+
+                    pid: serverPid,
+
+                    });
+
+                try {
+
+                    changes = await JsonFetch(
+
+                        serverApiPaths.syncedStateChanges + `?` + query
+
+                        );
+
+                } catch (error) {
+
+                    if (error.status === serverBadPidStatus) {
+
+                        window.location.reload();
+
+                    }
+                    else if (IsDev()) {
+
+                        console.error(error);
+
+                    }
+
+                    return;
 
                 }
 
-            }
-            else {
+                if (this._hasFetchedChanges) {
 
-                for (const c of changes) {
+                    for (const c of changes) {
 
-                    this._receive(c);
+                        await eventually(() => this._receive(c));
+
+                    }
+
+                }
+                else {
+
+                    for (const c of changes) {
+
+                        this._receive(c);
+
+                    }
+
+                    this._hasFetchedChanges = true;
 
                 }
 
-                this._hasFetchedChanges = true;
-
-            }
+            }, changeDelay, true);
 
         }, changeDelay, true);
 
@@ -4087,4 +4078,4 @@ const syncedState = new SyncedState();
 
 module.exports = syncedState;
 
-},{"../eventually":3,"../interval":6,"../json-fetch":7,"../local-version":9,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43,"../synced-json-tree":47,"querystring":22}]},{},[40]);
+},{"../eventually":3,"../interval":6,"../json-fetch":7,"../local-version":8,"../qsc-change-delay":40,"../qsc-is-dev":41,"../qss-api-paths":42,"../qss-bad-pid-status":43,"../synced-json-tree":47,"querystring":21}]},{},[39]);

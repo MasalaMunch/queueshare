@@ -10,6 +10,7 @@ const querystring = require(`querystring`);
 const changeDelay = require(`../qsc-change-delay`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
+const serverBadPidStatus = require(`../qss-bad-pid-status`);
 
 const SyncedState = class {
 
@@ -27,25 +28,13 @@ const SyncedState = class {
 
         });
 
-        Interval.set(async () => {
+        const pidFetchInterval = Interval.set(async () => {
 
-            let changes;
-
-            const query = querystring.stringify({
-
-                localVersion: this._serverLocalVersion,
-
-                limit: this._hasFetchedChanges? 100 : "Infinity",
-
-                });
+            let serverPid;
 
             try {
 
-                changes = await JsonFetch(
-
-                    serverApiPaths.syncedStateChanges + `?` + query
-
-                    );
+                serverPid = await JsonFetch(serverApiPaths.pid);
 
             } catch (error) {
 
@@ -59,26 +48,69 @@ const SyncedState = class {
 
             }
 
-            if (this._hasFetchedChanges) {
+            pidFetchInterval.destroy();
 
-                for (const c of changes) {
+            Interval.set(async () => {
 
-                    await eventually(() => this._receive(c));
+                let changes;
+
+                const query = querystring.stringify({
+
+                    localVersion: this._serverLocalVersion,
+
+                    limit: this._hasFetchedChanges? 100 : "Infinity",
+
+                    pid: serverPid,
+
+                    });
+
+                try {
+
+                    changes = await JsonFetch(
+
+                        serverApiPaths.syncedStateChanges + `?` + query
+
+                        );
+
+                } catch (error) {
+
+                    if (error.status === serverBadPidStatus) {
+
+                        window.location.reload();
+
+                    }
+                    else if (IsDev()) {
+
+                        console.error(error);
+
+                    }
+
+                    return;
 
                 }
 
-            }
-            else {
+                if (this._hasFetchedChanges) {
 
-                for (const c of changes) {
+                    for (const c of changes) {
 
-                    this._receive(c);
+                        await eventually(() => this._receive(c));
+
+                    }
+
+                }
+                else {
+
+                    for (const c of changes) {
+
+                        this._receive(c);
+
+                    }
+
+                    this._hasFetchedChanges = true;
 
                 }
 
-                this._hasFetchedChanges = true;
-
-            }
+            }, changeDelay, true);
 
         }, changeDelay, true);
 

@@ -94,7 +94,7 @@ const SyncedState = class {
 
         while (iterator.data() !== null) {
 
-            if (changes.length === limit) {
+            if (changes.length >= limit) {
 
                 break;
 
@@ -192,7 +192,8 @@ const SyncedState = class {
 
                 tombstoneFreeValue = JsonCopy(value);
 
-            } else {
+            }
+            else {
 
                 if (IsPrimitive(tombstoneFreeValue)) {
 
