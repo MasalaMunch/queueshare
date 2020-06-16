@@ -1,5 +1,5 @@
 "use strict";
 
-const changeDelay = 1000;
+const changeDelay = 250;
 
 module.exports = changeDelay;

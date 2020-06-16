@@ -3481,7 +3481,7 @@ syncedState._syncedJsonTree.events.on(`change`, (c) => {
 },{"../elm":2,"../synced-qsc-state":48}],40:[function(require,module,exports){
 "use strict";
 
-const changeDelay = 1000;
+const changeDelay = 250;
 
 module.exports = changeDelay;
 
