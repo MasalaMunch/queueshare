@@ -74,7 +74,7 @@ const SyncedState = class {
 
                 } catch (error) {
 
-                    if (error.status === serverBadPidStatus) {
+                    if (error && error.status === serverBadPidStatus) {
 
                         window.location.reload();
 
