@@ -10,7 +10,6 @@ const express = require(`express`);
 const fs = require(`fs`);
 const Interval = require(`./interval`);
 const ip = require(`ip`);
-const Mapped = require(`./mapped`);
 const multer = require(`multer`);
 const path = require(`path`);
 const Port = require(`./port`);
@@ -172,9 +171,13 @@ const update = require(`./update-qss`);
 
         if (pid === req.query.pid) {
 
-            const {localVersion, limit} = Mapped(req.query, Number);
+            res.json(syncedState.ChangesSince(
 
-            res.json(syncedState.ChangesSince(localVersion, limit));            
+                Number(req.query.localVersion), 
+
+                Number(req.query.limit),
+
+                ));            
 
         }
         else {
