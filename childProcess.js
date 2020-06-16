@@ -177,7 +177,7 @@ const update = require(`./update-qss`);
 
                 Number(req.query.limit),
 
-                ));            
+                ));      
 
         }
         else {
