@@ -1,7 +1,6 @@
 "use strict";
 
 const anHourInMs = require(`./an-hour-in-ms`);
-const assert = require(`assert`);
 const CallbackArgs = require(`./callback-args`);
 const clArgs = require(`./cl-args`);
 const compression = require(`compression`);
