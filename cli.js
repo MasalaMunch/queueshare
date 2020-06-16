@@ -4,10 +4,10 @@
 
 const {program} = require(`commander`);
 
-const defaultConfig = require(`./default-qss-config`);
-const log = require(`./log-to-qss`);
-const packageFile = require(`./qsp-file`);
-const start = require(`.`);
+const defaultConfig = require(`./lib/default-qss-config`);
+const log = require(`./lib/log-to-qss`);
+const packageFile = require(`./lib/qsp-file`);
+const start = require(`./lib/start-qss`);
 
 program.option(
     `-f, --folder <folder>`, 
