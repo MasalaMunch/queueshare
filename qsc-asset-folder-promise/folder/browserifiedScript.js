@@ -3953,12 +3953,6 @@ const SyncedState = class {
 
         this._syncedJsonTree = new SyncedJsonTree();
 
-        this._syncedJsonTree.events.on(`change`, (change) => {
-
-            console.log(change);
-
-        });
-
         const pidFetchInterval = Interval.set(async () => {
 
             let serverPid;
