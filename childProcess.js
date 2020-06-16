@@ -58,15 +58,21 @@ const update = require(`./update-qss`);
 
     const maintenanceInterval = new Interval(doMaintenance, anHourInMs);
 
+    const emitActivityMiddleware = (req, res, next) => {
+
+        maintenanceInterval.set();
+
+        next();
+
+    };
+
     const app = express();
 
     app.use(compression());
 
     const clientFile = ClientFile(isDev);
 
-    app.get(apiPaths.client, (req, res) => {
-
-        maintenanceInterval.set();
+    app.get(apiPaths.client, emitActivityMiddleware, (req, res) => {
 
         res.sendFile(clientFile);
 
@@ -148,11 +154,17 @@ const update = require(`./update-qss`);
 
         })}); 
 
-    app.put(`${apiPaths.media}/:key`, upload.single(`file`), (req, res) => {
+    app.put(
 
-        res.end();
+        `${apiPaths.media}/:key`, 
 
-    });
+        emitActivityMiddleware,
+
+        upload.single(`file`), 
+
+        (req, res) => res.end(),
+
+        );
 
     app.get(apiPaths.pid, (req, res) => res.json(pid));
 
@@ -173,15 +185,23 @@ const update = require(`./update-qss`);
 
     });
 
-    app.post(apiPaths.syncedStateChanges, express.json(), (req, res) => {
+    app.post(
 
-        maintenanceInterval.set();
+        apiPaths.syncedStateChanges, 
 
-        syncedState.receive(req.body);
+        emitActivityMiddleware, 
 
-        res.end();
+        express.json(), 
 
-    });
+        (req, res) => {
+
+            syncedState.receive(req.body);
+
+            res.end();
+
+        },
+
+        );
 
     const server = app.listen(port);
 
