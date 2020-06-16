@@ -3488,22 +3488,41 @@ module.exports = changeDelay;
 },{}],41:[function(require,module,exports){
 "use strict";
 
-const serverApiPaths = require(`../qss-api-paths`);
+const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
+
+const changeDelay = require(`../qsc-change-delay`);
+const serverApiPaths = require(`../qss-api-paths`);
 
 let isDev = false;
 
-(async () => {
+const fetchInterval = Interval.set(async () => {
 
-    isDev = await JsonFetch(serverApiPaths.isDev);
+    try {
 
-})();
+        isDev = await JsonFetch(serverApiPaths.isDev);
+
+    } catch (error) {
+
+        if (IsDev()) {
+
+            console.error(error);
+
+        }
+
+        return;
+
+    }
+
+    fetchInterval.destroy();
+
+}, changeDelay, true);
 
 const IsDev = () => isDev;
 
 module.exports = IsDev;
 
-},{"../json-fetch":7,"../qss-api-paths":42}],42:[function(require,module,exports){
+},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":40,"../qss-api-paths":42}],42:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
