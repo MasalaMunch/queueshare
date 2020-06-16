@@ -9,7 +9,7 @@ keepUpdated();
 
 window.ss = syncedState;
 
-const contentElm = Elm(`code`, {className: `content`, childNodes: [Elm(`pre`)]});
+const contentElm = Elm(`pre`, {className: `content`, childNodes: [Elm(`code`)]});
 
 document.body.appendChild(contentElm);
 
@@ -19,7 +19,7 @@ document.body.appendChild(fabElm);
 
 syncedState._syncedJsonTree.events.on(`change`, (c) => {
 
-    contentElm.querySelector(`pre`).appendChild(
+    contentElm.querySelector(`code`).appendChild(
 
         document.createTextNode(JSON.stringify(c, undefined, 4) + `\n\n`
 

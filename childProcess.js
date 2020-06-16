@@ -10,6 +10,7 @@ const express = require(`express`);
 const fs = require(`fs`);
 const Interval = require(`./interval`);
 const ip = require(`ip`);
+const Mapped = require(`./mapped`);
 const multer = require(`multer`);
 const path = require(`path`);
 const Port = require(`./port`);
@@ -25,7 +26,6 @@ const MediaFilename = require(`./qss-media-filename`);
 const MediaKey = require(`./qsh-media-key`);
 const packageUpdater = require(`./qsp-updater`);
 const pid = require(`./qss-pid`);
-const processMessages = require(`./qss-process-messages`);
 const restart = require(`./restart-qss`);
 const SyncedState = require(`./synced-qss-state`);
 const update = require(`./update-qss`);
@@ -33,16 +33,6 @@ const update = require(`./update-qss`);
 (async () => {
 
     log(`Setting up...`);
-
-    process.on(`message`, (message) => {
-
-        if (message === processMessages.restartConfirmation) {
-
-            process.exit();
-
-        }
-
-    });
 
     const config = Defined(JSON.parse(clArgs[0]), defaultConfig);
 
@@ -55,11 +45,13 @@ const update = require(`./update-qss`);
 
     const doMaintenance = () => {
 
-        update();
+        if (!update()) {
 
-        syncedState.compress();
+            syncedState.compress();
 
-        //TODO delete dereferenced media
+            //TODO delete dereferenced media         
+
+        }
 
     };
 
@@ -164,17 +156,9 @@ const update = require(`./update-qss`);
 
     app.get(apiPaths.syncedStateChanges, (req, res) => {
 
-        const {localVersion} = req.query;
+        const {localVersion, limit} = Mapped(req.query, Number);
 
-        res.json(
-
-            localVersion === undefined?
-
-            syncedState.Changes() 
-
-            : syncedState.ChangesSince(Number(localVersion))
-
-            );
+        res.json(syncedState.ChangesSince(localVersion, limit));
 
     });
 

@@ -1,5 +1,6 @@
 "use strict";
 
+const assert = require(`assert`);
 const JsonCopy = require(`../json-copy`);
 const LocalVersion = require(`../local-version`);
 const path = require(`path`);
@@ -7,8 +8,10 @@ const RedBlackTree = require(`bintrees`).RBTree;
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
+const clientChangeLimit = require(`../qsc-change-limit`);
 const folderPaths = require(`../qss-folder-paths`);
 const log = require(`../log-to-qss`);
+const restart = require(`../restart-qss`);
 
 const IsPrimitive = (value) => {
 
@@ -44,6 +47,8 @@ const SyncedState = class {
 
             }
 
+            log(this._tombstoneLocalVersions);
+
         });
 
         this._syncedJsonTree.events.on(`localVersionDeletion`, (v) => {
@@ -58,61 +63,45 @@ const SyncedState = class {
 
         process.nextTick(() => {
 
-            for (const foreignChange of this._storedForeignChanges.Entries()) {
+            this._loadStorage();
 
-                let somethingWasThrown, thrownThing;
+            this._syncedJsonTree.write({
 
-                if (foreignChange instanceof Error) {
+                path: [], 
 
-                    somethingWasThrown = true;
+                value: this._TombstoneFreeValue(),
 
-                    thrownThing = foreignChange;
+                });
 
-                }
-                else {
-
-                    try {
-
-                        this.receive(foreignChange, true);
-
-                    } catch (error) {
-
-                        somethingWasThrown = true;
-
-                        thrownThing = error;
-
-                    }
-
-                }
-
-                if (somethingWasThrown) {
-
-                    log(thrownThing);
-
-                }
-
-            }
+            this._compressStorage();
 
         });
 
     }
 
-    Changes () {
+    Changes (limit = undefined) {
 
-        return this.ChangesSince(LocalVersion.oldest);
+        return this.ChangesSince(LocalVersion.oldest, limit);
 
     }
 
-
-    ChangesSince (localVersion) {
+    ChangesSince (localVersion, limit = Infinity) {
 
         localVersion = LocalVersion.Valid(localVersion);
+
+        assert(typeof limit === `number` && limit >= 0);
 
         const iterator = this._orderedLocalVersions.upperBound(localVersion);
 
         const changes = [];
 
         while (iterator.data() !== null) {
+
+            if (changes.length === limit) {
+
+                break;
+
+            }
 
             changes.push(this._localVersionChanges.get(iterator.data()));
 
@@ -126,23 +115,95 @@ const SyncedState = class {
 
     compress () {
 
-        let compressedValue = {};
+        if (this._tombstoneLocalVersions.size > clientChangeLimit) {
+
+            restart(`The database needs maintenance.`);
+
+        }
+        else {
+
+            this._compressStorage();
+
+        }
+
+    }
+
+    receive (foreignChange, _dontStore = false) {
+
+        const {wasRejected} = this._syncedJsonTree.receive(foreignChange);
+
+        if (!_dontStore && !wasRejected) {
+
+            this._storedForeignChanges.eventuallyAppend(foreignChange);
+
+        }
+
+    }
+
+    _compressStorage () {
+
+        this._storedForeignChanges.write(this.Changes());
+
+    }
+
+    _loadStorage () {
+
+        for (const foreignChange of this._storedForeignChanges.Entries()) {
+
+            let somethingWasThrown, thrownThing;
+
+            if (foreignChange instanceof Error) {
+
+                somethingWasThrown = true;
+
+                thrownThing = foreignChange;
+
+            }
+            else {
+
+                try {
+
+                    this.receive(foreignChange, true);
+
+                } catch (error) {
+
+                    somethingWasThrown = true;
+
+                    thrownThing = error;
+
+                }
+
+            }
+
+            if (somethingWasThrown) {
+
+                log(thrownThing);
+
+            }
+
+        }
+
+    }
+
+    _TombstoneFreeValue () {
+
+        let tombstoneFreeValue = {};
 
         for (const {path, value} of this.Changes()) {
 
             if (path.length === 0) {
 
-                compressedValue = JsonCopy(value);
+                tombstoneFreeValue = JsonCopy(value);
 
             } else {
 
-                if (IsPrimitive(compressedValue)) {
+                if (IsPrimitive(tombstoneFreeValue)) {
 
-                    compressedValue = {};
+                    tombstoneFreeValue = {};
 
                 }
 
-                let parentValue = compressedValue;
+                let parentValue = tombstoneFreeValue;
 
                 for (const [i, child] of path.entries()) {
 
@@ -169,21 +230,7 @@ const SyncedState = class {
 
         }
 
-        this._syncedJsonTree.write({path: [], value: compressedValue});
-
-        this._storedForeignChanges.write(this.Changes());
-
-    }
-
-    receive (foreignChange, _dontStore = false) {
-
-        const {wasRejected} = this._syncedJsonTree.receive(foreignChange);
-
-        if (!_dontStore && !wasRejected) {
-
-            this._storedForeignChanges.eventuallyAppend(foreignChange);
-
-        }
+        return tombstoneFreeValue;
 
     }
 

@@ -206,6 +206,8 @@ const SyncedJsonTree = class {
 
     _write (foreignChange, tree) {
 
+        tree.version = foreignChange.versions[foreignChange.versions.length-1];
+
         for (const {localVersion} of tree.Traversal()) {
 
             if (localVersion !== undefined) {
@@ -220,13 +222,9 @@ const SyncedJsonTree = class {
 
         const change = this._Change(foreignChange);
 
-        tree.version = change.versions[change.versions.length-1];
+        tree.localVersion = change.localVersion;
 
-        const {localVersion} = change;
-
-        tree.localVersion = localVersion;
-
-        this._currentLocalVersion = localVersion;
+        this._currentLocalVersion = change.localVersion;
 
         this.events.emit(`change`, change);
 

@@ -3,10 +3,12 @@
 const eventually = require(`../eventually`);
 const Interval = require(`../interval`);
 const JsonFetch = require(`../json-fetch`);
+const LocalVersion = require(`../local-version`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
+const changeLimit = require(`../qsc-change-limit`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
 
@@ -14,7 +16,9 @@ const SyncedState = class {
 
     constructor () {
 
-        this._serverLocalVersion = undefined;
+        this._hasFetchedChanges = false;
+
+        this._serverLocalVersion = LocalVersion.oldest;
 
         this._syncedJsonTree = new SyncedJsonTree();
 
@@ -22,25 +26,25 @@ const SyncedState = class {
 
             console.log(change);
 
-        }); 
+        });
 
         Interval.set(async () => {
 
             let changes;
 
+            const query = querystring.stringify({
+
+                localVersion: this._serverLocalVersion,
+
+                limit: this._hasFetchedChanges? changeLimit : "Infinity",
+
+                });
+
             try {
 
                 changes = await JsonFetch(
 
-                    serverApiPaths.syncedStateChanges
-
-                    + `?` 
-
-                    + querystring.stringify(
-
-                        {localVersion: this._serverLocalVersion},
-
-                        )
+                    serverApiPaths.syncedStateChanges + `?` + query
 
                     );
 
@@ -56,15 +60,24 @@ const SyncedState = class {
 
             }
 
-            for (const c of changes) {
+            if (this._hasFetchedChanges) {
 
-                await eventually(() => {
+                for (const c of changes) {
 
-                    this._syncedJsonTree.receive(c);
+                    await eventually(() => this._receive(c));
 
-                    this._serverLocalVersion = c.localVersion;
+                }
 
-                });
+            }
+            else {
+
+                for (const c of changes) {
+
+                    this._receive(c);
+
+                }
+
+                this._hasFetchedChanges = true;
 
             }
 
@@ -76,7 +89,7 @@ const SyncedState = class {
 
         const {change} = this._syncedJsonTree.write(localChange);
 
-        const pushInterval = Interval.set(async () => {
+        const sendInterval = Interval.set(async () => {
 
             try {
 
@@ -102,9 +115,17 @@ const SyncedState = class {
 
             }
 
-            pushInterval.destroy();
+            sendInterval.destroy();
 
         }, changeDelay, true);
+
+    }
+
+    _receive (serverChange) {
+
+        this._syncedJsonTree.receive(serverChange);
+
+        this._serverLocalVersion = serverChange.localVersion;
 
     }
 
