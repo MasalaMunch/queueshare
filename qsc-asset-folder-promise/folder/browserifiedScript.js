@@ -133,7 +133,7 @@ const eventually = (f) => new Promise((resolve, reject) => {
 
 module.exports = eventually;
 
-},{"../queue":45,"assert":13}],4:[function(require,module,exports){
+},{"../queue":44,"assert":13}],4:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -311,7 +311,7 @@ const keepUpdated = () => {
 
 module.exports = keepUpdated;
 
-},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":43,"../qss-api-paths":44}],9:[function(require,module,exports){
+},{"../interval":6,"../json-fetch":7,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43}],9:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3526,7 +3526,7 @@ syncedState._syncedJsonTree.events.on(`change`, (c) => {
 
 });
 
-},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":49}],41:[function(require,module,exports){
+},{"../elm":2,"../keep-qsc-updated":8,"../synced-qsc-state":48}],41:[function(require,module,exports){
 "use strict";
 
 const changeDelay = 1000;
@@ -3534,13 +3534,6 @@ const changeDelay = 1000;
 module.exports = changeDelay;
 
 },{}],42:[function(require,module,exports){
-"use strict";
-
-const changeLimit = 100;
-
-module.exports= changeLimit;
-
-},{}],43:[function(require,module,exports){
 "use strict";
 
 const serverApiPaths = require(`../qss-api-paths`);
@@ -3558,7 +3551,7 @@ const IsDev = () => isDev;
 
 module.exports = IsDev;
 
-},{"../json-fetch":7,"../qss-api-paths":44}],44:[function(require,module,exports){
+},{"../json-fetch":7,"../qss-api-paths":43}],43:[function(require,module,exports){
 "use strict";
 
 const apiPaths = {
@@ -3581,7 +3574,7 @@ const apiPaths = {
 
 module.exports = apiPaths;
 
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 
 const Queue = class {
@@ -3640,7 +3633,7 @@ const Queue = class {
 
 module.exports = Queue;
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 const Version = require(`./Version.js`);
@@ -3675,7 +3668,7 @@ const Tree = class {
 
 module.exports = Tree;
 
-},{"./Version.js":47}],47:[function(require,module,exports){
+},{"./Version.js":46}],46:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3708,7 +3701,7 @@ const Version = {
 
 module.exports = Version;
 
-},{"../portable-uuid":39,"assert":13,"uuid":28}],48:[function(require,module,exports){
+},{"../portable-uuid":39,"assert":13,"uuid":28}],47:[function(require,module,exports){
 "use strict";
 
 const assert = require(`assert`);
@@ -3957,7 +3950,7 @@ const SyncedJsonTree = class {
 
 module.exports = SyncedJsonTree;
 
-},{"../local-version":9,"./Tree.js":46,"./Version.js":47,"assert":13,"events":17}],49:[function(require,module,exports){
+},{"../local-version":9,"./Tree.js":45,"./Version.js":46,"assert":13,"events":17}],48:[function(require,module,exports){
 "use strict";
 
 const eventually = require(`../eventually`);
@@ -3968,7 +3961,6 @@ const SyncedJsonTree = require(`../synced-json-tree`);
 const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
-const changeLimit = require(`../qsc-change-limit`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
 
@@ -3996,7 +3988,7 @@ const SyncedState = class {
 
                 localVersion: this._serverLocalVersion,
 
-                limit: this._hasFetchedChanges? changeLimit : "Infinity",
+                limit: this._hasFetchedChanges? 100 : "Infinity",
 
                 });
 
@@ -4095,4 +4087,4 @@ const syncedState = new SyncedState();
 
 module.exports = syncedState;
 
-},{"../eventually":3,"../interval":6,"../json-fetch":7,"../local-version":9,"../qsc-change-delay":41,"../qsc-change-limit":42,"../qsc-is-dev":43,"../qss-api-paths":44,"../synced-json-tree":48,"querystring":22}]},{},[40]);
+},{"../eventually":3,"../interval":6,"../json-fetch":7,"../local-version":9,"../qsc-change-delay":41,"../qsc-is-dev":42,"../qss-api-paths":43,"../synced-json-tree":47,"querystring":22}]},{},[40]);

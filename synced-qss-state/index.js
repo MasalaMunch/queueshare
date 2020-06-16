@@ -8,7 +8,6 @@ const RedBlackTree = require(`bintrees`).RBTree;
 const StoredJsonLog = require(`../stored-json-log`);
 const SyncedJsonTree = require(`../synced-json-tree`);
 
-const clientChangeLimit = require(`../qsc-change-limit`);
 const folderPaths = require(`../qss-folder-paths`);
 const log = require(`../log-to-qss`);
 const restart = require(`../restart-qss`);
@@ -46,8 +45,6 @@ const SyncedState = class {
                 this._tombstoneLocalVersions.add(c.localVersion);
 
             }
-
-            log(this._tombstoneLocalVersions);
 
         });
 
@@ -115,7 +112,7 @@ const SyncedState = class {
 
     compress () {
 
-        if (this._tombstoneLocalVersions.size > clientChangeLimit) {
+        if (this._tombstoneLocalVersions.size > 1000) {
 
             restart(`The database needs maintenance.`);
 

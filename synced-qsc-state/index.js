@@ -8,7 +8,6 @@ const SyncedJsonTree = require(`../synced-json-tree`);
 const querystring = require(`querystring`);
 
 const changeDelay = require(`../qsc-change-delay`);
-const changeLimit = require(`../qsc-change-limit`);
 const IsDev = require(`../qsc-is-dev`);
 const serverApiPaths = require(`../qss-api-paths`);
 
@@ -36,7 +35,7 @@ const SyncedState = class {
 
                 localVersion: this._serverLocalVersion,
 
-                limit: this._hasFetchedChanges? changeLimit : "Infinity",
+                limit: this._hasFetchedChanges? 100 : "Infinity",
 
                 });
 
