@@ -6,7 +6,7 @@ const syncedState = require(`../synced-qsc-state`);
 
 window.ss = syncedState;
 
-const contentElm = Elm(`pre`, {className: `content`, childNodes: [Elm(`code`)]});
+const contentElm = Elm(`pre`, {className: `content`});
 
 document.body.appendChild(contentElm);
 
@@ -16,10 +16,10 @@ document.body.appendChild(fabElm);
 
 syncedState._syncedJsonTree.events.on(`change`, (c) => {
 
-    contentElm.querySelector(`code`).appendChild(
+    contentElm.appendChild(
 
-        document.createTextNode(JSON.stringify(c, undefined, 4) + `\n\n`
+        Elm(`code`, {innerText: JSON.stringify(c, undefined, 4) + `\n\n`})
 
-        ));
+        );
 
 });
