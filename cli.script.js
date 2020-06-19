@@ -6,7 +6,7 @@ const {program} = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
 const log = require(`./lib/log-to-qss`);
-const packageFile = require(`./lib/qsp-file`);
+const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
 
 program.option(
@@ -46,7 +46,7 @@ program.on(`option:version`, () => {
 
     log.start();
 
-    log(require(packageFile).version);
+    log(PackageJson().version);
 
     process.exit();
 
