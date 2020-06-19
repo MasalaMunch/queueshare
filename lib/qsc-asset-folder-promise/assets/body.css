@@ -1,15 +1,51 @@
+body {
+
+    --light-bg: white;
+
+    --light-text: black;
+
+    --dark-bg: #121212;
+
+    --dark-text: white;
+
+}
+
 body[data-theme="light"] {
 
-    background-color: white;
+    background-color: var(--light-bg);
     
-    color: black;
+    color: var(--light-text);
 
 }
 
 body[data-theme="dark"] {
 
-    background-color: #121212;
+    background-color: var(--dark-bg);
     
-    color: white;
+    color: var(--dark-text);
+    
+}
+
+@media (prefers-color-scheme: light) {
+
+    body[data-theme="auto"] {
+
+        background-color: var(--light-bg);
+        
+        color: var(--light-text);
+
+    }
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+    body[data-theme="auto"] {
+
+        background-color: var(--dark-bg);
+        
+        color: var(--dark-text);
+
+    }
 
 }
