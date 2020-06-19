@@ -24,7 +24,6 @@
     "ip": "^1.1.5",
     "multer": "^1.4.2",
     "random-int": "^2.0.1",
-    "rfdc": "^1.1.4",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.2",
     "short-uuid": "^3.1.1",
