@@ -1,0 +1,7 @@
+:root {
+
+    --padding: 1em;
+
+    padding: var(--padding);
+
+}

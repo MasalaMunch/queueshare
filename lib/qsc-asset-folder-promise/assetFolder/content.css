@@ -4,6 +4,20 @@ body > .content {
 
     margin: auto;
 
-    padding: var(--padding);
+    scroll-snap-type: x mandatory;
+
+    display: flex;
+
+    overflow-x: scroll;
+
+}
+
+body > .content > * {
+
+    scroll-snap-align: start;
+
+    min-width: 100%;
+
+    min-height: 100vh;
 
 }
