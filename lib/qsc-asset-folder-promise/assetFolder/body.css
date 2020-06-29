@@ -1,38 +1,46 @@
 body {
 
-    --light-bg: white;
+    padding: 0;
 
-    --light-text: black;
+    --padding: 1em;
 
-    --dark-bg: #121212;
-
-    --dark-text: white;
+    --max-width: 42em;
 
     --accent-color: mediumpurple;
 
     --darker-accent-color: #795db3;
 
-    --max-width: 42em;
+    --light-bg-color: white;
 
-    --padding: 1em;
+    --dark-text-color: black;
 
-    padding: 0;
+    --dark-bg-color: #121212;
+
+    --light-text-color: white;
+
+    --boosted-chews-yellow: #edc34d;
+
+    --darker-boosted-chews-yellow: #d9b245;
+
+    --boosted-chews-maroon: #960628;
+
+    --darker-boosted-chews-maroon: #73051f;
 
 }
 
 body[data-theme="light"] {
 
-    background-color: var(--light-bg);
+    --bg-color: var(--light-bg-color);
     
-    color: var(--light-text);
+    --text-color: var(--dark-text-color);
 
 }
 
 body[data-theme="dark"] {
 
-    background-color: var(--dark-bg);
+    --bg-color: var(--dark-bg-color);
     
-    color: var(--dark-text);
+    --text-color: var(--light-text-color);
     
 }
 
@@ -40,9 +48,9 @@ body[data-theme="dark"] {
 
     body[data-theme="system"] {
 
-        background-color: var(--light-bg);
+        --bg-color: var(--light-bg-color);
         
-        color: var(--light-text);
+        --text-color: var(--dark-text-color);
 
     }
 
@@ -52,10 +60,42 @@ body[data-theme="dark"] {
 
     body[data-theme="system"] {
 
-        background-color: var(--dark-bg);
+        --bg-color: var(--dark-bg-color);
         
-        color: var(--dark-text);
+        --text-color: var(--light-text-color);
 
     }
+
+}
+
+body[data-theme="boosted-chews-light"] {
+
+    --bg-color: var(--boosted-chews-yellow);
+
+    --text-color: var(--dark-text-color);
+
+    --accent-color: var(--boosted-chews-maroon);
+
+    --darker-accent-color: var(--darker-boosted-chews-maroon);
+
+}
+
+body[data-theme="boosted-chews-dark"] {
+
+    --bg-color: var(--boosted-chews-maroon);
+
+    --text-color: var(--light-text-color);
+
+    --accent-color: var(--boosted-chews-yellow);
+
+    --darker-accent-color: var(--darker-boosted-chews-yellow);
+
+}
+
+body {
+
+    background-color: var(--bg-color);
+
+    color: var(--text-color);
 
 }
