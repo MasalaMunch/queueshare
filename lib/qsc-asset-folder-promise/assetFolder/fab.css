@@ -54,17 +54,13 @@ body > .fab > button {
 
 }
 
-@media (any-hover: none) {
+body > .fab > button:active {
+
+    background-color: var(--darker-accent-color);
     
-    body > .fab > button:active {
-
-        background-color: var(--darker-accent-color);
-        
-    }
-
 }
 
-html[data-whatintent="keyboard"] > body > .fab > button:focus {
+body > .fab > button:focus-visible {
 
     background-color: var(--darker-accent-color);
 
