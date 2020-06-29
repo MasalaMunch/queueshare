@@ -20,8 +20,6 @@ body > .fab {
 
 body > .fab > button {
 
-    cursor: pointer;
-
     background-position: center;
 
     background-color: var(--accent-color);
