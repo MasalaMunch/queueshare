@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "browserify": "^16.5.1",
-    "chokidar": "^3.4.0",
-    "mustache": "^4.0.1"
+    "chokidar": "^3.4.0"
   }
 }
