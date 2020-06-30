@@ -6,6 +6,10 @@ body {
 
     --dark-bg-color: #121212;
 
+    --fab-diameter: 3.5em;
+
+    --padding: 1em;
+
     --light-text-color: white;
 
     --boosted-chews-yellow: #edc34d;

@@ -30,11 +30,9 @@ body > .fab > button {
 
     border-radius: 50%;
 
-    --diameter: 3.5em;
+    width: var(--fab-diameter);
 
-    width: var(--diameter);
-
-    height: var(--diameter);
+    height: var(--fab-diameter);
 
     position: absolute;
 
