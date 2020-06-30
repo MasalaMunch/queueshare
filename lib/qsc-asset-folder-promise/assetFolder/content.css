@@ -1,8 +1,10 @@
 body > .content {
 
-    max-width: var(--max-width);
+    list-style: none;
 
     margin: auto;
+
+    max-width: var(--max-width);
 
     padding: var(--padding);
 
