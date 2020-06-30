@@ -11,3 +11,11 @@ body > .content {
     padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
 
 }
+
+body > .content > li.special {
+
+    color: var(--accent-color);
+
+    font-weight: bold;
+
+}
