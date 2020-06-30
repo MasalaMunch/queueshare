@@ -54,6 +54,18 @@ body[data-theme="dark"] {
 
     }
 
+    body[data-theme="boosted-chews-system"] {
+
+        --bg-color: var(--boosted-chews-yellow);
+
+        --text-color: var(--dark-text-color);
+
+        --accent-color: var(--boosted-chews-maroon);
+
+        --darker-accent-color: var(--darker-boosted-chews-maroon);
+
+    }
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,6 +75,18 @@ body[data-theme="dark"] {
         --bg-color: var(--dark-bg-color);
         
         --text-color: var(--light-text-color);
+
+    }
+
+    body[data-theme="boosted-chews-system"] {
+
+        --bg-color: var(--boosted-chews-maroon);
+
+        --text-color: var(--light-text-color);
+
+        --accent-color: var(--boosted-chews-yellow);
+
+        --darker-accent-color: var(--darker-boosted-chews-yellow);
 
     }
 
