@@ -10,6 +10,16 @@ body > .content {
 
     overflow-x: scroll;
 
+    scrollbar-width: none;
+
+    -ms-overflow-style: none;
+
+}
+
+body > .content::-webkit-scrollbar {
+
+    display: none;
+
 }
 
 body > .content > * {
