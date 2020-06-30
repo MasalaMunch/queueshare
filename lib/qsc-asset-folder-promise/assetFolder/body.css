@@ -1,95 +1,38 @@
 body {
 
-    --light-bg-color: white;
-
-    --dark-text-color: black;
-
-    --dark-bg-color: #121212;
-
-    --fab-diameter: 3.5em;
-
-    --padding: 1em;
-
-    --light-text-color: white;
-
-    --boosted-chews-yellow: #edc34d;
-
-    --darker-boosted-chews-yellow: #d9b245;
-
-    --boosted-chews-maroon: #960628;
-
-    --darker-boosted-chews-maroon: #73051f;
-
     --accent-color: mediumpurple;
 
     --darker-accent-color: #795db3;
 
+    --dark-theme-bg-color: #121212;
+
+    --dark-theme-text-color: white;
+
+    --fab-diameter: 3.5em;
+
+    --light-theme-bg-color: white;
+
+    --light-theme-text-color: black;
+
     --max-width: 42em;
 
-}
-
-body[data-theme="light"] {
-
-    --bg-color: var(--light-bg-color);
-    
-    --text-color: var(--dark-text-color);
+    --padding: 1em;
 
 }
 
 body[data-theme="dark"] {
 
-    --bg-color: var(--dark-bg-color);
+    background-color: var(--dark-theme-bg-color);
+
+    color: var(--dark-theme-text-color);
     
-    --text-color: var(--light-text-color);
-    
 }
 
+body[data-theme="light"] {
 
-body[data-theme="boosted-chews-light"] {
+    background-color: var(--light-theme-bg-color);
 
-    --bg-color: var(--boosted-chews-yellow);
-
-    --text-color: var(--dark-text-color);
-
-    --accent-color: var(--boosted-chews-maroon);
-
-    --darker-accent-color: var(--darker-boosted-chews-maroon);
-
-}
-
-body[data-theme="boosted-chews-dark"] {
-
-    --bg-color: var(--boosted-chews-maroon);
-
-    --text-color: var(--light-text-color);
-
-    --accent-color: var(--boosted-chews-yellow);
-
-    --darker-accent-color: var(--darker-boosted-chews-yellow);
-
-}
-
-@media (prefers-color-scheme: light) {
-
-    body[data-theme="system"] {
-
-        --bg-color: var(--light-bg-color);
-        
-        --text-color: var(--dark-text-color);
-
-    }
-
-    body[data-theme="boosted-chews-system"] {
-
-        --bg-color: var(--boosted-chews-yellow);
-
-        --text-color: var(--dark-text-color);
-
-        --accent-color: var(--boosted-chews-maroon);
-
-        --darker-accent-color: var(--darker-boosted-chews-maroon);
-
-    }
+    color: var(--light-theme-text-color);
 
 }
 
@@ -97,30 +40,22 @@ body[data-theme="boosted-chews-dark"] {
 
     body[data-theme="system"] {
 
-        --bg-color: var(--dark-bg-color);
-        
-        --text-color: var(--light-text-color);
+        background-color: var(--dark-theme-bg-color);
 
-    }
-
-    body[data-theme="boosted-chews-system"] {
-
-        --bg-color: var(--boosted-chews-maroon);
-
-        --text-color: var(--light-text-color);
-
-        --accent-color: var(--boosted-chews-yellow);
-
-        --darker-accent-color: var(--darker-boosted-chews-yellow);
+        color: var(--dark-theme-text-color);
 
     }
 
 }
 
-body {
+@media (prefers-color-scheme: light) {
 
-    background-color: var(--bg-color);
+    body[data-theme="system"] {
 
-    color: var(--text-color);
+        background-color: var(--light-theme-bg-color);
+
+        color: var(--light-theme-text-color);
+
+    }
 
 }
