@@ -4,34 +4,8 @@ body > .content {
 
     margin: auto;
 
-    scroll-snap-type: x mandatory;
-
-    display: flex;
-
-    overflow-x: scroll;
-
-    scrollbar-width: none;
-
-    -ms-overflow-style: none;
-
-}
-
-body > .content::-webkit-scrollbar {
-
-    display: none;
-
-}
-
-body > .content > * {
-
     padding: var(--padding);
 
     padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
-
-    scroll-snap-align: start;
-
-    min-width: 100%;
-
-    min-height: 100vh;
 
 }
