@@ -23,8 +23,7 @@
     "multer": "^1.4.2",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.3.2",
-    "short-uuid": "^3.1.1",
-    "uuid": "^8.1.0"
+    "short-uuid": "^3.1.1"
   },
   "devDependencies": {
     "browserify": "^16.5.1",
