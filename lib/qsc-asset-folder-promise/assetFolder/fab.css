@@ -40,13 +40,15 @@ body > .fab > button {
 
     right: var(--padding);
 
+    --press-filter: brightness(75%);
+
 }
 
 @media (any-hover: hover) {
 
     body > .fab > button:hover {
 
-        background-color: var(--darker-accent-color);
+        filter: var(--press-filter);
 
     }
 
@@ -54,12 +56,12 @@ body > .fab > button {
 
 body > .fab > button:active {
 
-    background-color: var(--darker-accent-color);
+    filter: var(--press-filter);
     
 }
 
 body > .fab > button:focus-visible {
 
-    background-color: var(--darker-accent-color);
+    filter: var(--press-filter);
 
 }
