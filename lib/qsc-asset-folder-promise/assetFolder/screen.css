@@ -1,4 +1,4 @@
-body > .content {
+body > .screen {
 
     list-style: none;
 
@@ -12,7 +12,7 @@ body > .content {
 
 }
 
-body > .content > li.special {
+body > .screen > li.special {
 
     color: var(--accent-color);
 
