@@ -1,6 +1,6 @@
 body > .screen {
 
-    list-style: none;
+    --fab-padding: calc(2 * var(--padding) + var(--fab-diameter));
 
     margin: auto;
 
@@ -8,7 +8,21 @@ body > .screen {
 
     padding: var(--padding);
 
-    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
+    padding-bottom: var(--fab-padding);
+
+}
+
+body > .screen.loading {
+
+    padding-top: var(--fab-padding);
+
+    text-align: center;
+
+}
+
+body > ul.screen {
+
+    list-style: none;
 
 }
 
