@@ -18,7 +18,7 @@ body > .fab {
 
 }
     
-body > .fab > button {
+body > .fab > *:only-child {
 
     background-position: center;
 
@@ -46,7 +46,7 @@ body > .fab > button {
 
 @media (any-hover: hover) {
 
-    body > .fab > button:hover {
+    body > .fab > *:only-child:hover {
 
         filter: var(--press-filter);
 
@@ -54,13 +54,13 @@ body > .fab > button {
 
 }
 
-body > .fab > button:active {
+body > .fab > *:only-child:active {
 
     filter: var(--press-filter);
     
 }
 
-body > .fab > button:focus-visible {
+body > .fab > *:only-child:focus-visible {
 
     filter: var(--press-filter);
 
