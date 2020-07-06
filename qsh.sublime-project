@@ -3,7 +3,12 @@
     [
         {
             "path": ".",
-            "file_exclude_patterns": ["*.browserified.js"]
+            "file_exclude_patterns":
+            [
+                "*.browserified.js",
+                "LICENSE.md",
+                "package-lock.json"
+            ]
         }
     ]
 }
