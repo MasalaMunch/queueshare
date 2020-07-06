@@ -2,13 +2,17 @@
     "folders":
     [
         {
-            "path": ".",
-            "file_exclude_patterns":
+            "binary_file_patterns":
             [
                 "*.browserified.js",
                 "LICENSE.md",
                 "package-lock.json"
-            ]
+            ],
+            "folder_exclude_patterns":
+            [
+                "node_modules"
+            ],
+            "path": "."
         }
     ]
 }
