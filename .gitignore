@@ -1,4 +1,6 @@
 .*
 !.gitignore
+!.npmignore
 node_modules/
+*.browserified.js
 *.sublime-workspace
