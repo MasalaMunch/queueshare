@@ -4,7 +4,6 @@
         {
             "binary_file_patterns":
             [
-                "*.browserified.js",
                 "LICENSE.md",
                 "package-lock.json"
             ],
