@@ -29,12 +29,12 @@ else {
 
 if (defaultConfig.isDev) {
 
-    program.option(`-nd, --no-dev`, `disable developer mode`);
+    program.option(`-nd, --no-dev`, `disable dev mode`);
 
 }
 else {
 
-    program.option(`-d, --dev`, `enable developer mode`);
+    program.option(`-d, --dev`, `enable dev mode`);
 
 }
 
