@@ -3,11 +3,13 @@
 "use strict";
 
 const logp = require(`./lib/logp`);
-const {program} = require(`commander`);
+const commander = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
 const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
+
+const {program} = commander;
 
 program.option(
     `-f, --folder <folder>`, 
