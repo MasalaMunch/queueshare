@@ -5,7 +5,7 @@
 const {program} = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
-const log = require(`./lib/log-to-qss`);
+const logp = require(`./lib/logp`);
 const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
 
@@ -44,9 +44,7 @@ program.option(`-h, --help`, `output help for command`);
 
 program.on(`option:version`, () => {
 
-    log.start();
-
-    log(PackageJson().version);
+    logp(PackageJson().version);
 
     process.exit();
 
@@ -54,15 +52,23 @@ program.on(`option:version`, () => {
 
 program.on(`option:help`, () => {
 
-    log.start();
-
-    log(program.helpInformation());
+    logp(program.helpInformation());
 
     process.exit();
 
 });
 
-program.parse(process.argv);
+program.exitOverride((error) => {
+
+    console.log();
+
+    process.exit();
+
+});
+
+logp.start();
+
+program.parse(process.argv);    
 
 start({
 
