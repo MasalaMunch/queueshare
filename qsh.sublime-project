@@ -6,7 +6,7 @@
             "binary_file_patterns":
             [
                 "LICENSE.md",
-                "package-lock.json"
+                "npm-shrinkwrap.json"
             ],
             "folder_exclude_patterns":
             [
