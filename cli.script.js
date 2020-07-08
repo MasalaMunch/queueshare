@@ -2,10 +2,10 @@
 
 "use strict";
 
+const logp = require(`./lib/logp`);
 const {program} = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
-const logp = require(`./lib/logp`);
 const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
 
