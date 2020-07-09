@@ -20,23 +20,21 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="/clientAssets/sanitizeCss/sanitize.css">
-        <link rel="stylesheet" href="/clientAssets/sanitizeCss/forms.css">
-        <link rel="stylesheet" href="/clientAssets/sanitizeCss/typography.css">
-        <link rel="stylesheet" href="/clientAssets/sanitizeCss/page.css">
-
-        <link rel="stylesheet" href="/clientAssets/root.css">
-        <link rel="stylesheet" href="/clientAssets/all.css">
-        <link rel="stylesheet" href="/clientAssets/body.css">
-        <link rel="stylesheet" href="/clientAssets/screen.css">
-        <link rel="stylesheet" href="/clientAssets/button.css">
-        <link rel="stylesheet" href="/clientAssets/fab.css">
+        <style>{{{css}}}</style>
 
     </head>
 
     <body data-theme="dark">
 
-        <script src="/clientAssets/start.browser.js"></script>
+        <div class="data" id="server-pid">{{serverPid}}</div>
+
+        <div class="data" id="synced-state-changes-string">{{syncedStateChangesString}}</div>
+
+        <div class="data" id="url">{{url}}</div>
+
+        <div class="data" id="version">{{version}}</div>
+
+        <script>{{{js}}}</script>
 
     </body>
 

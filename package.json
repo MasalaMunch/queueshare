@@ -1,6 +1,6 @@
 {
   "name": "queueshare",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "A jukebox for your house.",
   "repository": {
     "type": "git",
@@ -15,18 +15,19 @@
     "queueshare": "cli.script.js"
   },
   "dependencies": {
-    "bintrees": "^1.0.2",
-    "commander": "^5.0.0",
-    "execa": "^4.0.1",
-    "express": "^4.17.1",
-    "ip": "^1.1.5",
-    "multer": "^1.4.2",
-    "sanitize-filename": "^1.6.3",
-    "semver": "^7.3.2",
-    "short-uuid": "^3.1.1"
-  },
-  "devDependencies": {
-    "browserify": "^16.5.1",
-    "chokidar": "^3.4.0"
+    "bintrees": "latest",
+    "browserify": "latest",
+    "chokidar": "latest",
+    "commander": "latest",
+    "compression": "latest",
+    "execa": "latest",
+    "express": "latest",
+    "ip": "latest",
+    "multer": "latest",
+    "mustache": "latest",
+    "random-int": "latest",
+    "sanitize-filename": "latest",
+    "semver": "latest",
+    "short-uuid": "latest"
   }
 }

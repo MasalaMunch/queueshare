@@ -1,0 +1,17 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "binary_file_patterns":
+            [
+                "LICENSE.md",
+                "npm-shrinkwrap.json"
+            ],
+            "folder_exclude_patterns":
+            [
+                "node_modules"
+            ]
+        }
+    ]
+}

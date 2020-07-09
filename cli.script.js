@@ -2,12 +2,14 @@
 
 "use strict";
 
-const {program} = require(`commander`);
+const logp = require(`./lib/logp`);
+const commander = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
-const log = require(`./lib/log-to-qss`);
 const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
+
+const {program} = commander;
 
 program.option(
     `-f, --folder <folder>`, 
@@ -29,12 +31,12 @@ else {
 
 if (defaultConfig.isDev) {
 
-    program.option(`-nd, --no-dev`, `disable developer mode`);
+    program.option(`-nd, --no-dev`, `disable dev mode`);
 
 }
 else {
 
-    program.option(`-d, --dev`, `enable developer mode`);
+    program.option(`-d, --dev`, `enable dev mode`);
 
 }
 
@@ -44,9 +46,7 @@ program.option(`-h, --help`, `output help for command`);
 
 program.on(`option:version`, () => {
 
-    log.start();
-
-    log(PackageJson().version);
+    logp(PackageJson().version);
 
     process.exit();
 
@@ -54,15 +54,23 @@ program.on(`option:version`, () => {
 
 program.on(`option:help`, () => {
 
-    log.start();
-
-    log(program.helpInformation());
+    logp(program.helpInformation());
 
     process.exit();
 
 });
 
-program.parse(process.argv);
+program.exitOverride((error) => {
+
+    console.log();
+
+    process.exit();
+
+});
+
+logp.start();
+
+program.parse(process.argv);    
 
 start({
 
