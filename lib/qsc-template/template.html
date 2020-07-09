@@ -24,15 +24,21 @@
 
     </head>
 
-    <body data-theme="dark">
+    <body>
 
-        <div class="data" id="server-pid">{{serverPid}}</div>
+        <div id="ui" data-theme="dark"></div>
 
-        <div class="data" id="synced-state-changes-string">{{syncedStateChangesString}}</div>
+        <div id="data">
 
-        <div class="data" id="url">{{url}}</div>
+            <div data-id="server-pid">{{serverPid}}</div>
 
-        <div class="data" id="version">{{version}}</div>
+            <div data-id="synced-state-changes-string">{{syncedStateChangesString}}</div>
+
+            <div data-id="url">{{url}}</div>
+
+            <div data-id="version">{{version}}</div>
+
+        </div>
 
         <script>{{{js}}}</script>
 

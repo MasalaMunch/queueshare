@@ -1,24 +1,4 @@
-body > .fab {
-
-    position: fixed;
-
-    height: 0;
-
-    width: 100%;
-
-    max-width: var(--max-width);
-
-    bottom: 0;
-
-    left: 50%;
-
-    transform: translate(-50%, 0%);
-
-    z-index: 1;
-
-}
-    
-body > .fab > *:only-child {
+#fab {
 
     background-position: center;
 
@@ -46,7 +26,7 @@ body > .fab > *:only-child {
 
 @media (any-hover: hover) {
 
-    body > .fab > *:only-child:hover {
+    #fab:hover {
 
         filter: var(--press-filter);
 
@@ -54,13 +34,13 @@ body > .fab > *:only-child {
 
 }
 
-body > .fab > *:only-child:active {
+#fab:active {
 
     filter: var(--press-filter);
     
 }
 
-body > .fab > *:only-child:focus-visible {
+#fab:focus-visible {
 
     filter: var(--press-filter);
 

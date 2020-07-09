@@ -1,0 +1,19 @@
+#fabContainer {
+
+    position: fixed;
+
+    height: 0;
+
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translate(-50%, 0%);
+
+    z-index: 1;
+
+}

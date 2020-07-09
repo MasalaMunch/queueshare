@@ -1,4 +1,4 @@
-body {
+#ui {
 
     --accent-color: mediumpurple;
 
@@ -8,9 +8,13 @@ body {
 
     --padding: 1em;
 
+    min-height: 100vh;
+
+    min-width: 100vw;
+
 }
 
-body[data-theme="dark"] {
+#ui[data-theme="dark"] {
 
     background-color: #121212;
 
@@ -18,7 +22,7 @@ body[data-theme="dark"] {
     
 }
 
-body[data-theme="light"] {
+#ui[data-theme="light"] {
 
     background-color: white;
 

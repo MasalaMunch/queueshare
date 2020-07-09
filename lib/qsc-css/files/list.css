@@ -1,4 +1,4 @@
-body > .screen {
+#list {
 
     list-style: none;
 
@@ -8,11 +8,11 @@ body > .screen {
 
     padding: var(--padding);
 
-    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
+    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));    
 
 }
 
-body > .screen > .special {
+#list > .special {
 
     color: var(--accent-color);
 

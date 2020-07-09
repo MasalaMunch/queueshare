@@ -17,6 +17,7 @@
   "dependencies": {
     "bintrees": "latest",
     "browserify": "latest",
+    "camelcase": "latest",
     "chokidar": "latest",
     "commander": "latest",
     "compression": "latest",
