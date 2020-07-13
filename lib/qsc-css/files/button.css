@@ -1,5 +1,29 @@
 button {
 
+    --press-filter: brightness(75%);
+
     cursor: pointer;
+
+}
+
+@media (any-hover: hover) {
+
+    button:hover {
+
+        filter: var(--press-filter);
+
+    }
+
+}
+
+button:active {
+
+    filter: var(--press-filter);
+    
+}
+
+button:focus-visible {
+
+    filter: var(--press-filter);
 
 }

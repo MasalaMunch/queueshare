@@ -1,7 +1,5 @@
 #fab {
 
-    --press-filter: brightness(75%);
-
     background-position: center;
 
     background-color: var(--accent-color);
@@ -21,27 +19,5 @@
     right: var(--padding);
 
     width: var(--fab-diameter);
-
-}
-
-@media (any-hover: hover) {
-
-    #fab:hover {
-
-        filter: var(--press-filter);
-
-    }
-
-}
-
-#fab:active {
-
-    filter: var(--press-filter);
-    
-}
-
-#fab:focus-visible {
-
-    filter: var(--press-filter);
 
 }
