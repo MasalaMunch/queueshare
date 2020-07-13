@@ -1,0 +1,11 @@
+#tab-bar {
+
+    display: flex;
+
+}
+
+#tab-bar > * {
+
+    flex-grow: 1;
+
+}
