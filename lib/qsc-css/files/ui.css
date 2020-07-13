@@ -2,30 +2,16 @@
 
     --accent-color: mediumpurple;
 
-    --fab-diameter: 3.5em;
+    --fab-diameter: var(--min-target-size);
 
     --max-width: 42em;
 
+    --min-target-size: 3.5em;
+
     --padding: 1em;
 
-    min-height: 100vh;
+    --search-bar-height: var(--min-target-size);
 
-    min-width: 100vw;
-
-}
-
-#ui[data-theme="dark"] {
-
-    background-color: #121212;
-
-    color: white;
-    
-}
-
-#ui[data-theme="light"] {
-
-    background-color: white;
-
-    color: black;
+    --tab-bar-height: var(--min-target-size);
 
 }

@@ -2,10 +2,20 @@
 
     display: flex;
 
+    height: var(--tab-bar-height);
+
 }
 
 #tab-bar > * {
 
     flex-grow: 1;
+
+    height: 100%;
+
+}
+
+#tab-bar > * > .icon {
+
+    height: 100%;
 
 }

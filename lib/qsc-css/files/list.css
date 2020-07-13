@@ -8,7 +8,11 @@
 
     padding: var(--padding);
 
-    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));    
+    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
+
+    position: relative;
+
+    top: calc(var(--tab-bar-height) + var(--search-bar-height));
 
 }
 
