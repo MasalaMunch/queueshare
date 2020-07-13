@@ -1,5 +1,7 @@
 #fab {
 
+    --press-filter: brightness(75%);
+
     background-position: center;
 
     background-color: var(--accent-color);
@@ -10,17 +12,15 @@
 
     border-radius: 50%;
 
-    width: var(--fab-diameter);
+    bottom: var(--padding);
 
     height: var(--fab-diameter);
 
     position: absolute;
 
-    bottom: var(--padding);
-
     right: var(--padding);
 
-    --press-filter: brightness(75%);
+    width: var(--fab-diameter);
 
 }
 
