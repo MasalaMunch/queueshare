@@ -1,21 +1,33 @@
 #tab-bar {
 
-    display: flex;
-
     height: var(--tab-bar-height);
 
+    overflow-wrap: nowrap;
+
+    overflow-x: scroll;
+
 }
 
-#tab-bar > * {
-
-    flex-grow: 1;
+#tab-bar > button {
 
     height: 100%;
 
 }
 
-#tab-bar > * > .icon {
+#tab-bar > button > .icon {
 
     height: 100%;
+
+}
+
+#tab-bar > button > .name {
+
+    display: none;
+
+}
+
+#tab-bar > button.current > .name {
+
+    display: initial;
 
 }
