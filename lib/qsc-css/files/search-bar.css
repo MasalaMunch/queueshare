@@ -1,7 +1,15 @@
 #search-bar {
 
+    background-color: #282828;
+
+    border: none;
+
+    border-radius: 0;
+
     height: var(--search-bar-height);
 
     width: 100%;
+
+    -webkit-appearance: none;
 
 }

@@ -20,15 +20,21 @@
 
 #tab-bar > button {
 
+    --padding: 0.75em;
+
+    border: none;
+
     height: 100%;
 
-    padding: 0;
+    min-width: var(--tab-bar-height);
+
+    padding: var(--padding);
+
+    text-align: left;
 
 }
 
 #tab-bar > button > * {
-
-    --padding: 0.75em;
 
     vertical-align: middle;
 
@@ -38,13 +44,23 @@
 
     height: 100%;
 
-    padding: var(--padding);
-
 }
 
 #tab-bar > button > .name {
 
     display: none;
+
+    font-weight: bold;
+
+    padding-right: 0.25em;
+
+}
+
+#tab-bar > button.current {
+
+    background-color: #282828;
+
+    /*filter: var(--press-filter);*/
 
 }
 
@@ -57,9 +73,5 @@
 #tab-bar > button.current > .name {
 
     display: initial;
-
-    font-weight: bold;
-
-    padding-right: var(--padding);
 
 }
