@@ -2,9 +2,19 @@
 
     height: var(--tab-bar-height);
 
+    -ms-overflow-style: none;
+
     overflow-x: auto;
 
+    scrollbar-width: none;
+
     white-space: nowrap;
+
+}
+
+#tab-bar::-webkit-scrollbar {
+
+    display: none;
 
 }
 
