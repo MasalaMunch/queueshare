@@ -2,9 +2,9 @@
 
     height: var(--tab-bar-height);
 
-    overflow-wrap: nowrap;
+    overflow-x: auto;
 
-    overflow-x: scroll;
+    white-space: nowrap;
 
 }
 
