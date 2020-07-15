@@ -8,7 +8,7 @@
 
     padding: var(--padding);
 
-    padding-bottom: calc(2 * var(--padding) + var(--fab-diameter));
+    padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding));
 
     position: relative;
 

@@ -1,5 +1,9 @@
 header {
 
+    --active-tab-color: #282828;
+
+    --padding: 0.75em;
+
     position: fixed;
 
     width: 100%;

@@ -1,12 +1,14 @@
 #search-bar {
 
-    background-color: #282828;
+    background-color: var(--active-tab-color);
 
     border: none;
 
     border-radius: 0;
 
     height: var(--search-bar-height);
+
+    padding: var(--padding);
 
     width: 100%;
 
