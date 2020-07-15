@@ -32,6 +32,16 @@
 
 }
 
+@media (hover: hover) {
+
+    #tab-bar > button:hover:not(.current) {
+
+        background-color: var(--bg-color-0-1);
+
+    }
+
+}
+
 #tab-bar > button > * {
 
     vertical-align: middle;
@@ -62,6 +72,6 @@
 
 #tab-bar > button.current > .name {
 
-    display: initial;
+    display: unset;
 
 }

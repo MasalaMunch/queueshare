@@ -1,5 +1,7 @@
 .icon {
 
+    --light-theme-filter: unset;
+
     --dark-theme-filter: invert(1);
 
 }
@@ -7,6 +9,12 @@
 body[data-theme="dark"] .icon {
 
     filter: var(--dark-theme-filter);
+
+}
+
+body[data-theme="light"] .icon {
+
+    filter: var(--light-theme-filter);
 
 }
 
@@ -21,6 +29,17 @@ body[data-theme="system"] .icon {
     body[data-theme="system"] .icon {
 
         filter: var(--dark-theme-filter);
+
+    }
+
+}
+
+
+@media (prefers-color-scheme: light) {
+
+    body[data-theme="system"] .icon {
+
+        filter: var(--light-theme-filter);
 
     }
 

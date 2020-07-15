@@ -1,5 +1,9 @@
 #fab {
 
+    --darker-accent-color: #8464c4;
+
+    --focus-bg: var(--darker-accent-color);
+
     background-position: center;
 
     background-color: var(--accent-color);
@@ -19,5 +23,25 @@
     right: var(--padding);
 
     width: var(--fab-diameter);
+
+}
+
+@media (hover: hover) {
+
+    #fab:hover {
+
+        background-color: var(--focus-bg);
+
+    }
+
+}
+
+@media (hover: none) {
+
+    #fab:active {
+
+        background-color: var(--focus-bg);
+        
+    }
 
 }
