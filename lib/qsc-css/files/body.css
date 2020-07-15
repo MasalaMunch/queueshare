@@ -1,15 +1,81 @@
+body {
+
+    --dark-theme-bg-color-0: #121212;
+
+    --dark-theme-bg-color-1: #282828;
+
+    --dark-theme-fg-color: white;
+
+    --light-theme-bg-color-0: white;
+
+    --light-theme-bg-color-1: #e8e8e8;
+
+    --light-theme-fg-color: black;
+
+}
+
 body[data-theme="dark"] {
 
-    background-color: #121212;
+    --bg-color-0: var(--dark-theme-bg-color-0);
 
-    color: white;
-    
+    --bg-color-1: var(--dark-theme-bg-color-1);
+
+    --fg-color: var(--dark-theme-fg-color);
+
 }
 
 body[data-theme="light"] {
 
-    background-color: white;
+    --bg-color-0: var(--light-theme-bg-color-0);
 
-    color: black;
+    --bg-color-1: var(--light-theme-bg-color-1);
+
+    --fg-color: var(--light-theme-fg-color);
+
+}
+
+body[data-theme="system"] {
+
+    --bg-color-0: var(--dark-theme-bg-color-0);
+
+    --bg-color-1: var(--dark-theme-bg-color-1);
+
+    --fg-color: var(--dark-theme-fg-color);
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+    body[data-theme="system"] {
+
+        --bg-color-0: var(--dark-theme-bg-color-0);
+
+        --bg-color-1: var(--dark-theme-bg-color-1);
+
+        --fg-color: var(--dark-theme-fg-color);
+
+    }
+
+}
+
+@media (prefers-color-scheme: light) {
+
+    body[data-theme="system"] {
+
+        --bg-color-0: var(--light-theme-bg-color-0);
+
+        --bg-color-1: var(--light-theme-bg-color-1);
+
+        --fg-color: var(--light-theme-fg-color);
+
+    }
+
+}
+
+body {
+
+    background-color: var(--bg-color-0);
+
+    color: var(--fg-color);
 
 }

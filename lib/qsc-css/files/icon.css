@@ -1,0 +1,27 @@
+.icon {
+
+    --dark-theme-filter: invert(1);
+
+}
+
+body[data-theme="dark"] .icon {
+
+    filter: var(--dark-theme-filter);
+
+}
+
+body[data-theme="system"] .icon {
+
+    filter: var(--dark-theme-filter);
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+    body[data-theme="system"] .icon {
+
+        filter: var(--dark-theme-filter);
+
+    }
+
+}

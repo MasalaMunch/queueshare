@@ -20,6 +20,8 @@
 
 #tab-bar > button {
 
+    background-color: var(--bg-color-0);
+
     border: none;
 
     height: 100%;
@@ -47,8 +49,6 @@
 #tab-bar > button > .name {
 
     display: none;
-
-    font-weight: bold;
 
     padding-right: var(--padding);
 
