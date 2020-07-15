@@ -1,6 +1,6 @@
 #search-bar {
 
-    background-color: var(--active-tab-color);
+    background-color: var(--current-tab-color);
 
     border: none;
 

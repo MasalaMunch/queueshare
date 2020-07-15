@@ -56,7 +56,7 @@
 
 #tab-bar > button.current {
 
-    background-color: var(--active-tab-color);
+    background-color: var(--current-tab-color);
 
 }
 
