@@ -14,4 +14,8 @@
 
     --tab-bar-height: var(--min-target-size);
 
+    --text-color: var(--fg-color);
+
+    color: var(--text-color);
+
 }
