@@ -6,8 +6,6 @@
 
     border-radius: 0;
 
-    caret-color: var(--accent-color);
-
     height: var(--search-bar-height);
 
     padding: var(--padding);
