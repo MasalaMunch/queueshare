@@ -42,12 +42,6 @@
 
 }
 
-#tab-bar > button > * {
-
-    vertical-align: middle;
-
-}
-
 #tab-bar > button > .icon {
 
     height: 100%;
@@ -61,6 +55,8 @@
     display: none;
 
     padding-right: var(--padding);
+
+    vertical-align: middle;
 
 }
 
