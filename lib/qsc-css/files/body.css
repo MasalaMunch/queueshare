@@ -20,6 +20,8 @@ body {
 
     --light-theme-icon-filter: unset;
 
+    background-color: var(--bg-color-0);
+
 }
 
 body[data-theme="dark"] {
@@ -52,15 +54,15 @@ body[data-theme="light"] {
 
 body[data-theme="system"] {
 
-    --bg-color-0: var(--dark-theme-bg-color-0);
+    --bg-color-0: var(--light-theme-bg-color-0);
 
-    --bg-color-0-1: var(--dark-theme-bg-color-0-1);
+    --bg-color-0-1: var(--light-theme-bg-color-0-1);
 
-    --bg-color-1: var(--dark-theme-bg-color-1);
+    --bg-color-1: var(--light-theme-bg-color-1);
 
-    --fg-color: var(--dark-theme-fg-color);
+    --fg-color: var(--light-theme-fg-color);
 
-    --icon-filter: var(--dark-theme-icon-filter);
+    --icon-filter: var(--light-theme-icon-filter);
 
 }
 
@@ -97,11 +99,5 @@ body[data-theme="system"] {
         --icon-filter: var(--light-theme-icon-filter);
 
     }
-
-}
-
-body {
-
-    background-color: var(--bg-color-0);
 
 }
