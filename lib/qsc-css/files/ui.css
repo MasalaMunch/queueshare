@@ -4,6 +4,8 @@
 
     --fab-diameter: var(--min-target-size);
 
+    --golden-ratio: 1.61803398875;
+
     --max-width: 42em;
 
     --min-target-size: 3.5em;
