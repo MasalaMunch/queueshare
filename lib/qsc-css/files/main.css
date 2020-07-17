@@ -1,12 +1,12 @@
-#list {
-
-    list-style: none;
+main {
 
     margin: auto;
 
     max-width: var(--max-width);
 
     padding: var(--padding);
+
+    padding-left: 0;
 
     padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding));
 
@@ -16,7 +16,19 @@
 
 }
 
-#list > .special {
+main ul {
+
+    list-style: none;
+
+    margin: 0;
+
+    padding: 0;
+
+    padding-left: var(--padding);
+
+}
+
+main li.special {
 
     color: var(--accent-color);
 
