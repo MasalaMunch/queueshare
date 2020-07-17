@@ -4,11 +4,11 @@ main {
 
     max-width: var(--max-width);
 
-    padding: var(--padding);
-
-    padding-left: 0;
+    padding: 0;
 
     padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding));
+
+    padding-right: var(--padding);
 
     position: relative;
 
@@ -24,7 +24,13 @@ main ul {
 
     padding: 0;
 
+}
+
+main li {
+
     padding-left: var(--padding);
+
+    padding-top: var(--padding);
 
 }
 
