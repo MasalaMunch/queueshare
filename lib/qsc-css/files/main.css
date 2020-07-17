@@ -8,8 +8,6 @@ main {
 
     padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding)/2);
 
-    padding-right: var(--padding);
-
     position: relative;
 
     top: calc(var(--tab-bar-height) + var(--search-bar-height));
@@ -24,6 +22,10 @@ main ul {
 
     padding: 0;
 
+}
+
+main li {
+
     padding-left: var(--padding);
 
 }
@@ -34,7 +36,45 @@ main li:focus {
 
 }
 
-main li.special {
+main li > h1 {
+
+    height: 3.75rem;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    position: relative;
+
+}
+
+main li > h1 > .name {
+
+    font-size: 1rem;
+
+    font-weight: normal;
+
+    line-height: 1.25rem;
+
+    /*TODO make h1 height 3*line height var*/
+
+    left: 0;
+
+    padding-bottom: calc(0.5*var(--padding));
+
+    padding-right: var(--padding);
+
+    padding-top: calc(0.5*var(--padding));
+
+    position: absolute;
+
+    top: 50%;
+
+    transform: translate(0, -50%);
+
+}
+
+main li > h1 > .name.special {
 
     color: var(--accent-color);
 
