@@ -6,9 +6,7 @@ main {
 
     padding: 0;
 
-    padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding));
-
-    padding-right: var(--padding);
+    padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding)/2);
 
     position: relative;
 
@@ -24,33 +22,15 @@ main ul {
 
     padding: 0;
 
-    padding-top: var(--padding);
-
 }
 
-main li {
-
-    padding-bottom: calc(var(--padding)/2);
+main > ul ul {
 
     padding-left: var(--padding);
 
-    padding-top: calc(var(--padding)/2);
-
 }
 
-main li:first-child {
-
-    padding-top: 0;
-
-}
-
-main li:last-child {
-
-    padding-bottom: 0;
-
-}
-
-main li.kb-focus {
+main li:focus {
 
     background-color: var(--focus-bg-color);
 
