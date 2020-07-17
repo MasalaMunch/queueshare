@@ -2,8 +2,6 @@ header {
 
     --current-tab-color: var(--bg-color-1);
 
-    --padding: 0.75em;
-
     --tab-bar-width: 100%;
 
     left: 50%;

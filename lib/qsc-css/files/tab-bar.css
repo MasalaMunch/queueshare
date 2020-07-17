@@ -24,6 +24,8 @@
 
     --current-tab-transition-color: var(--bg-color-0-1);
 
+    --padding: 0.75em;
+
     background-color: var(--bg-color-0);
 
     border: none;
