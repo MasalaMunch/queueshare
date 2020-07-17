@@ -20,6 +20,8 @@
 
 #tab-bar > button {
 
+    --current-tab-transition-color: var(--bg-color-0-1);
+
     background-color: var(--bg-color-0);
 
     border: none;
@@ -38,7 +40,7 @@
 
     #tab-bar > button:hover:not(.current) {
 
-        background-color: var(--bg-color-0-1);
+        background-color: var(--current-tab-transition-color);
 
     }
 
@@ -56,7 +58,11 @@
 
     width: 100%;
 
-    background-color: var(--bg-color-0-1);
+}
+
+#tab-bar > button > .swipe-indicator.current {
+
+    background-color: var(--current-tab-transition-color);
 
 }
 
