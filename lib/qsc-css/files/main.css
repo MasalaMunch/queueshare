@@ -24,16 +24,15 @@ main ul {
 
     padding: 0;
 
-    padding-left: var(--padding);
-
     padding-top: var(--padding);
-
 
 }
 
 main li {
 
     padding-bottom: calc(var(--padding)/2);
+
+    padding-left: var(--padding);
 
     padding-top: calc(var(--padding)/2);
 
