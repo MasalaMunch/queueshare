@@ -28,6 +28,8 @@
 
     min-width: var(--tab-bar-height);
 
+    position: relative;
+
     text-align: left;
 
 }
@@ -42,11 +44,29 @@
 
 }
 
+#tab-bar > button > .swipe-indicator {
+
+    position: absolute;
+
+    left: 0;
+
+    top: 0;
+
+    height: 100%;
+
+    width: 100%;
+
+    background-color: var(--current-tab-color);
+
+}
+
 #tab-bar > button > .icon {
 
     height: 100%;
 
     padding: var(--padding);
+
+    position: relative;
 
 }
 
@@ -55,6 +75,8 @@
     display: none;
 
     padding-right: var(--padding);
+
+    position: relative;
 
     vertical-align: middle;
 
