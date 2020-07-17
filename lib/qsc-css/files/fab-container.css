@@ -15,3 +15,57 @@
     z-index: 1;
 
 }
+
+#fab-container > button {
+
+    --darker-accent-color: #7558ad;
+
+    --focus-bg-color: var(--darker-accent-color);
+
+    background-position: center;
+
+    background-color: var(--accent-color);
+
+    background-image: url(/clientAssets/logoCenter.svg);
+
+    border-width: 0;
+
+    border-radius: 50%;
+
+    bottom: var(--padding);
+
+    height: var(--fab-diameter);
+
+    position: absolute;
+
+    right: var(--padding);
+
+    width: var(--fab-diameter);
+
+}
+
+@media (hover: hover) {
+
+    #fab-container > button:hover {
+
+        background-color: var(--focus-bg-color);
+
+    }
+
+}
+
+@media (hover: none) {
+
+    #fab-container > button:active {
+
+        background-color: var(--focus-bg-color);
+        
+    }
+
+}
+
+#fab-container > button.kb-focus {
+
+    background-color: var(--focus-bg-color);
+
+}
