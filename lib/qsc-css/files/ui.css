@@ -4,6 +4,8 @@
 
     --fab-diameter: var(--min-target-size);
 
+    --focus-bg-color: var(--bg-color-0-1);
+
     --golden-ratio: 1.61803398875;
 
     --max-width: 42em;
