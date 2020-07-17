@@ -8,6 +8,8 @@ main {
 
     padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding)/2);
 
+    padding-right: var(--padding);
+
     position: relative;
 
     top: calc(var(--tab-bar-height) + var(--search-bar-height));
@@ -21,10 +23,6 @@ main ul {
     margin: 0;
 
     padding: 0;
-
-}
-
-main > ul ul {
 
     padding-left: var(--padding);
 
