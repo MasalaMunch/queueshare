@@ -10,6 +10,8 @@
 
     white-space: nowrap;
 
+    width: var(--tab-bar-width);
+
 }
 
 #tab-bar::-webkit-scrollbar {
@@ -48,13 +50,13 @@
 
 #tab-bar > button > .swipe-indicator {
 
-    position: absolute;
+    height: 100%;
 
     left: 0;
 
-    top: 0;
+    position: absolute;
 
-    height: 100%;
+    top: 0;
 
     width: 100%;
 

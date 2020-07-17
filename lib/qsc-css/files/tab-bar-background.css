@@ -1,0 +1,15 @@
+#tab-bar-background {
+
+    background-color: var(--bg-color-0);
+
+    height: var(--tab-bar-height);
+
+    left: 0;
+
+    position: absolute;
+
+    top: 0;
+
+    width: var(--tab-bar-width);
+
+}

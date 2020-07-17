@@ -4,17 +4,19 @@ header {
 
     --padding: 0.75em;
 
-    position: fixed;
-
-    width: 100%;
-
-    max-width: var(--max-width);
-
-    top: 0;
+    --tab-bar-width: 100%;
 
     left: 50%;
 
+    max-width: var(--max-width);
+
+    position: fixed;
+
+    top: 0;
+
     transform: translate(-50%, 0%);
+
+    width: 100%;
 
     z-index: 1;
 
