@@ -1,12 +1,16 @@
 main {
 
+    margin-bottom: calc(var(--padding) + var(--fab-diameter));
+
+    margin-top: calc(var(--tab-bar-height) + var(--search-bar-height));
+
     padding: 0;
 
-    padding-bottom: calc(var(--padding) + var(--fab-diameter));
+    padding-bottom: calc(0.5*var(--padding));
+
+    padding-top: calc(0.5*var(--padding));
 
     position: relative;
-
-    top: calc(var(--tab-bar-height) + var(--search-bar-height));
 
     width: 100%;
 
@@ -48,9 +52,11 @@ main li:focus {
 
 main li > .item {
 
-    height: 3.75rem;
+    --line-height: 1.25rem;
 
-    overflow: hidden;
+    --name-height: calc(2*var(--line-height));
+
+    height: calc(0.5*var(--padding) + var(--name-height) + 0.5*var(--padding));
 
     position: relative;
 
@@ -58,21 +64,19 @@ main li > .item {
 
 main li > .item > .name {
 
-    /*line-height: 1.25rem;*/
-
-    /*TODO make .item height 3*line height var*/
-
     left: 0;
+
+    line-height: var(--line-height);
 
     margin: 0;
 
+    max-height: var(--name-height);
+
+    overflow: hidden;
+
     padding: 0;
 
-    /*padding-bottom: calc(0.5*var(--padding));*/
-
     padding-right: var(--padding);
-
-    /*padding-top: calc(0.5*var(--padding));*/
 
     position: absolute;
 
