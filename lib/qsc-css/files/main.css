@@ -68,11 +68,9 @@ main li > .item > .name {
 
     padding: 0;
 
-    /*padding-left: calc(0.5*var(--padding));*/
-
     /*padding-bottom: calc(0.5*var(--padding));*/
 
-    /*padding-right: var(--padding);*/
+    padding-right: var(--padding);
 
     /*padding-top: calc(0.5*var(--padding));*/
 
