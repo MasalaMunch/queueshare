@@ -1,16 +1,22 @@
 main {
 
-    margin: auto;
-
-    max-width: var(--max-width);
-
     padding: 0;
 
-    padding-bottom: calc(var(--padding) + var(--fab-diameter) + var(--padding)/2);
+    padding-bottom: calc(var(--padding) + var(--fab-diameter));
 
     position: relative;
 
     top: calc(var(--tab-bar-height) + var(--search-bar-height));
+
+    width: 100%;
+
+}
+
+main > ul {
+
+    margin: auto;
+
+    max-width: var(--max-width);
 
 }
 
@@ -18,9 +24,13 @@ main ul {
 
     list-style: none;
 
-    margin: 0;
-
     padding: 0;
+
+}
+
+main > ul ul {
+
+    margin: 0;
 
 }
 
@@ -36,11 +46,9 @@ main li:focus {
 
 }
 
-main li > h1 {
+main li > .item {
 
     height: 3.75rem;
-
-    margin: 0;
 
     overflow: hidden;
 
@@ -48,23 +56,25 @@ main li > h1 {
 
 }
 
-main li > h1 > .name {
+main li > .item > .name {
 
-    font-size: 1rem;
+    /*line-height: 1.25rem;*/
 
-    font-weight: normal;
-
-    line-height: 1.25rem;
-
-    /*TODO make h1 height 3*line height var*/
+    /*TODO make .item height 3*line height var*/
 
     left: 0;
 
-    padding-bottom: calc(0.5*var(--padding));
+    margin: 0;
 
-    padding-right: var(--padding);
+    padding: 0;
 
-    padding-top: calc(0.5*var(--padding));
+    /*padding-left: calc(0.5*var(--padding));*/
+
+    /*padding-bottom: calc(0.5*var(--padding));*/
+
+    /*padding-right: var(--padding);*/
+
+    /*padding-top: calc(0.5*var(--padding));*/
 
     position: absolute;
 
@@ -74,7 +84,7 @@ main li > h1 > .name {
 
 }
 
-main li > h1 > .name.special {
+main li > .item > .name.special {
 
     color: var(--accent-color);
 
