@@ -10,7 +10,9 @@ main {
 
     top: calc(var(--tab-bar-height) + var(--search-bar-height));
 
-    width: 100%;
+    min-width: 100vh;
+
+    min-height: 100vh; 
 
 }
 
