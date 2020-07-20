@@ -28,6 +28,18 @@ main details {
 
 }
 
+main details > summary > .child-toggle {
+
+    background-image: url(/clientAssets/icons/plus.svg);
+
+}
+
+main details[open] > summary > .child-toggle {
+
+    background-image: url(/clientAssets/icons/minus.svg);
+
+}
+
 main summary {
 
     align-items: center;
@@ -54,9 +66,21 @@ main summary::-webkit-details-marker {
 
 main summary > .child-toggle {
 
-    background-color: transparent;
+    background-color: transparent;  
 
-    /*padding-right: var(--padding);*/
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    background-image: url(/clientAssets/icons/plus.svg);
+
+    background-size: 50%;
+
+    border: none;
+
+    margin-right: var(--padding);
+
+    padding: 0;
 
     height: var(--tab-bar-height);
 
