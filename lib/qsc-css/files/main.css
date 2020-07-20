@@ -14,7 +14,7 @@ main {
 
 }
 
-main > ul {
+main > details {
 
     margin: auto;
 
@@ -22,72 +22,80 @@ main > ul {
 
 }
 
-main ul {
-
-    list-style: none;
-
-    padding: 0;
-
-}
-
-main > ul ul {
-
-    margin: 0;
-
-}
-
-main li {
+main details {
 
     padding-left: var(--padding);
 
 }
 
-main li.kb-focus {
+main summary {
 
-    background-color: var(--focus-bg-color);
+    align-items: center;
 
-}
+    display: flex;
 
-main li > .item {
-
-    --line-height: 1.25rem;
-
-    --name-height: calc(2*var(--line-height));
-
-    height: calc(0.5*var(--padding) + var(--name-height) + 0.5*var(--padding));
-
-    position: relative;
-
-}
-
-main li > .item > .name {
-
-    left: 0;
-
-    line-height: var(--line-height);
-
-    margin: 0;
-
-    max-height: var(--name-height);
-
-    overflow: hidden;
+    list-style: none;
 
     padding: 0;
 
+    padding-top: calc(0.5*var(--padding));
+
+    padding-bottom: calc(0.5*var(--padding));
+
     padding-right: var(--padding);
-
-    position: absolute;
-
-    top: 50%;
-
-    transform: translate(0, -50%);
 
 }
 
-main li > .item > .name.special {
+main summary::-webkit-details-marker {
+
+    display: none;
+
+}
+
+main summary > .child-toggle {
+
+    background-color: transparent;
+
+    /*padding-right: var(--padding);*/
+
+    height: var(--tab-bar-height);
+
+    min-width: var(--tab-bar-height);
+
+    max-width: var(--tab-bar-height);
+
+}
+
+main summary > .name {
+
+    --line-height: 1.25rem;
+
+    background-color: transparent;
+
+    border: none;
+
+    flex-grow: 1;
+
+    line-height: var(--line-height);
+
+    /*min-height: calc(2*var(--line-height));*/
+
+    padding: 0;
+
+    text-align: left;
+
+}
+
+main summary > .name.special {
 
     color: var(--accent-color);
 
     font-weight: bold;
+
+}
+
+main summary > .name.kb-focus {
+
+    background-color: var(--focus-bg-color);
 
 }
