@@ -34,7 +34,7 @@ main summary {
 
     --name-max-height: calc(2*var(--line-height));
 
-    --twistie-width: var(--min-target-size);
+    --twistie-width: 48px;
 
     height: calc(0.5*var(--padding) + var(--name-max-height) + 0.5*var(--padding));
 
@@ -145,7 +145,7 @@ main summary > .name {
 
     padding: 0;
 
-    width: calc(100% - var(--twistie-width));
+    width: calc(100% - var(--twistie-width) - var(--twistie-width) - var(--padding));
 
 }
 
@@ -175,7 +175,7 @@ main summary > .name > div {
 
     padding-left: calc(0.5*var(--padding));
 
-    padding-right: var(--padding);
+    padding-right: calc(0.5*var(--padding));
 
     transform: translate(0, -50%);
 
@@ -186,5 +186,37 @@ main summary > .name > div {
 main summary > .name.kb-focus {
 
     background-color: var(--focus-bg-color);
+
+}
+
+main summary > .action {
+
+    background-color: var(--bg-color-1);
+
+    border: none;
+
+    border-radius: 50%;
+
+    right: calc(0.5*var(--padding));
+
+    height: var(--twistie-width);
+
+    padding: 0;
+
+    width: var(--twistie-width);
+
+}
+
+main summary > .action > img {
+
+    height: 20px;
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
 
 }
