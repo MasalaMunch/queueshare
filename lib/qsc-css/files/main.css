@@ -1,6 +1,6 @@
 main {
 
-    min-height: 100vh; 
+    min-height: calc(100vh - var(--tab-bar-height) - var(--search-bar-height) - var(--padding) - var(--fab-diameter) - 0.5*var(--padding)); 
 
     min-width: 100vw;
 
