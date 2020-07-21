@@ -32,15 +32,13 @@ main > details details {
 
 main summary {
 
-    --line-height: calc(1rem + var(--text-padding));
+    --line-height: 1.25rem;
 
-    --max-name-height: calc(2*var(--line-height));
-
-    --text-padding: 0.25rem;
+    --name-max-height: calc(2*var(--line-height));
 
     --twistie-width: var(--min-target-size);
 
-    height: calc(0.5*var(--padding) + var(--max-name-height) + 0.5*var(--padding));
+    height: calc(0.5*var(--padding) + var(--name-max-height) + 0.5*var(--padding));
 
     list-style: none;
 
@@ -57,7 +55,7 @@ main summary::-webkit-details-marker {
 }
 
 main summary > * {
-
+    
     position: absolute;
 
     top: 50%;
@@ -86,17 +84,15 @@ main summary > * {
 
 }
 
+main summary:only-child > .twistie {
+
+    pointer-events: none;
+
+}
+
 main summary > .twistie {
 
     background-color: transparent;
-
-    background-image: url(/clientAssets/icons/plus.svg);
-
-    background-position: center;
-
-    background-repeat: no-repeat;
-
-    background-size: 1rem;
 
     border: none;
 
@@ -110,9 +106,32 @@ main summary > .twistie {
 
 }
 
-main details[open] > summary > .twistie {
+main summary > .twistie > * {
 
-    background-image: url(/clientAssets/icons/minus.svg);
+    height: 31.25%;
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+}
+
+main summary > .twistie > .collapse, 
+main details[open] > summary > .twistie > .expand,
+main summary:only-child > .twistie > .expand {
+
+    display: none;
+
+}
+
+main details[open] > summary > .twistie > .collapse,
+main summary:only-child > .twistie > .collapse {
+
+    display: unset;
 
 }
 
@@ -132,6 +151,14 @@ main summary > .name {
 
 }
 
+main summary > .name.special > div {
+
+    color: var(--accent-color);
+
+    font-weight: bold;
+
+}
+
 main summary > .name > div {
 
     line-height: var(--line-height);
@@ -140,25 +167,21 @@ main summary > .name > div {
 
     position: absolute;
 
-    max-height: var(--max-name-height);
+    max-height: var(--name-max-height);
 
     overflow-y: hidden;
 
-    left: 50%;
+    left: 0;
 
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    padding-left: calc(0.5*var(--padding));
 
-    width: calc(100% - 2*var(--text-padding));
+    padding-right: var(--padding);
 
-}
+    transform: translate(0, -50%);
 
-main summary > .name.special {
-
-    color: var(--accent-color);
-
-    font-weight: bold;
+    width: 100%;
 
 }
 
