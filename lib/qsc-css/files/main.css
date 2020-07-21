@@ -1,6 +1,6 @@
 main {
 
-    min-height: calc(100vh - var(--tab-bar-height) - var(--search-bar-height) - var(--padding) - var(--fab-diameter) - 0.5*var(--padding)); 
+    min-height: 100vh; 
 
     min-width: 100vw;
 
@@ -8,11 +8,9 @@ main {
 
     padding-bottom: calc(var(--padding) + var(--fab-diameter) + 0.5*var(--padding));
 
-    padding-top: calc(0.5*var(--padding));
+    padding-top: calc(var(--tab-bar-height) + var(--search-bar-height) + 0.5*var(--padding));
 
     position: relative;
-
-    top: calc(var(--tab-bar-height) + var(--search-bar-height));
 
 }
 
