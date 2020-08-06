@@ -46,6 +46,8 @@ program.option(`-v, --version`, `output the current version`);
 
 program.option(`-h, --help`, `output help`);
 
+logp.startIfNotStarted();
+
 program.on(`option:version`, () => {
 
     logp(PackageJson().version);
@@ -69,8 +71,6 @@ program.exitOverride((error) => {
     process.exit();
 
 });
-
-logp.start();
 
 program.parse(process.argv);    
 
