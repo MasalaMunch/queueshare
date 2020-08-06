@@ -44,7 +44,7 @@ else {
 
 program.option(`-v, --version`, `output the current version`);
 
-program.option(`-h, --help`, `output help for command`);
+program.option(`-h, --help`, `output help`);
 
 program.on(`option:version`, () => {
 
