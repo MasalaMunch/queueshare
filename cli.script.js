@@ -11,6 +11,8 @@ const start = require(`./lib/start-qss`);
 
 const {program} = commander;
 
+program.storeOptionsAsProperties(true);
+
 program.option(
     `-f, --folder <folder>`, 
     `store data in <folder>`, 
