@@ -2,10 +2,10 @@
 
 "use strict";
 
-const logp = require(`./lib/logp`);
 const commander = require(`commander`);
 
 const defaultConfig = require(`./lib/default-qss-config`);
+const log = require(`./lib/log-to-qss`);
 const PackageJson = require(`./lib/qsp-json`);
 const start = require(`./lib/start-qss`);
 
@@ -46,7 +46,7 @@ program.option(`-h, --help`, `output help for command`);
 
 program.on(`option:version`, () => {
 
-    logp(PackageJson().version);
+    log(PackageJson().version);
 
     process.exit();
 
@@ -54,7 +54,7 @@ program.on(`option:version`, () => {
 
 program.on(`option:help`, () => {
 
-    logp(program.helpInformation());
+    log(program.helpInformation());
 
     process.exit();
 
@@ -68,7 +68,7 @@ program.exitOverride((error) => {
 
 });
 
-logp.start();
+log.start();
 
 program.parse(process.argv);    
 
